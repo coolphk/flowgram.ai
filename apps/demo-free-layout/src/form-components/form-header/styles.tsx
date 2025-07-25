@@ -4,8 +4,10 @@
  */
 
 import styled from 'styled-components';
-
-export const Header = styled.div`
+interface HeaderProps {
+  primaryColor?: string;
+}
+export const Header = styled.div<HeaderProps>`
   box-sizing: border-box;
   display: flex;
   justify-content: flex-start;
@@ -15,7 +17,10 @@ export const Header = styled.div`
   border-radius: 8px 8px 0 0;
   cursor: move;
 
-  background: linear-gradient(#f2f2ff 0%, rgb(251, 251, 251) 100%);
+  background: ${(props) => {
+    const color = props.primaryColor || '#f2f2ff';
+    return `linear-gradient(${color} 0%, rgba(0, 0, 0, 0.02) 100%)`;
+  }};
   overflow: hidden;
 
   padding: 8px;

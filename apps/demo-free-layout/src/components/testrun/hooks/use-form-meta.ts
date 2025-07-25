@@ -41,7 +41,7 @@ const getWorkflowInputsDeclare = (document: WorkflowDocument): IJsonSchema => {
 
 export const useFormMeta = (): TestRunFormMetaItem[] => {
   const document = useService(WorkflowDocument);
-
+  console.log('document',document)
   // Add state for form values
   const formMeta = useMemo(() => {
     const formFields: TestRunFormMetaItem[] = [];

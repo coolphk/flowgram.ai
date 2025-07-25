@@ -6,6 +6,7 @@
 import { EditorRenderer, FreeLayoutEditorProvider } from '@flowgram.ai/free-layout-editor';
 
 import '@flowgram.ai/free-layout-editor/index.css';
+import './styles/coze.css';
 import './styles/index.css';
 import { nodeRegistries } from './nodes';
 import { initialData } from './initial-data';

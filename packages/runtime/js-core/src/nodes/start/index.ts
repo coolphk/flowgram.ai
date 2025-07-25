@@ -14,6 +14,7 @@ export class StartExecutor implements INodeExecutor {
   public readonly type = FlowGramNode.Start;
 
   public async execute(context: ExecutionContext): Promise<ExecutionResult> {
+    // console.log('Start node executed', context.runtime.ioCenter.inputs)
     return {
       outputs: context.runtime.ioCenter.inputs,
     };

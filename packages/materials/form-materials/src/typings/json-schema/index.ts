@@ -10,7 +10,8 @@ export type JsonSchemaBasicType =
   | 'number'
   | 'object'
   | 'array'
-  | 'map';
+  | 'map'
+  | 'file';
 
 export interface IJsonSchema<T = string> {
   type?: T;

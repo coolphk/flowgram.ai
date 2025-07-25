@@ -16,4 +16,6 @@ export enum WorkflowNodeType {
   Comment = 'comment',
   Continue = 'continue',
   Break = 'break',
+  DataSlot = 'data-slot',
+  Workflow = 'workflow',
 }

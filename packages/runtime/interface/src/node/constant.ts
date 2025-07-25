@@ -18,4 +18,6 @@ export enum FlowGramNode {
   HTTP = 'http',
   Break = 'break',
   Continue = 'continue',
+  Workflow = 'workflow',
+  DataSlot = 'data-slot',
 }

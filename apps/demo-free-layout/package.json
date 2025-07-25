@@ -45,7 +45,8 @@
     "react": "^18",
     "react-dom": "^18",
     "styled-components": "^5",
-    "classnames": "^2.5.1"
+    "classnames": "^2.5.1",
+    "alova": "^3.3.4"
   },
   "devDependencies": {
     "@flowgram.ai/ts-config": "workspace:*",

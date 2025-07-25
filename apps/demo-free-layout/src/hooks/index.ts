@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-export { useEditorProps } from './use-editor-props';
-export { useNodeRenderContext } from './use-node-render-context';
-export { useIsSidebar } from './use-is-sidebar';
-export { usePortClick } from './use-port-click';
+export {useEditorProps} from './use-editor-props';
+export {useNodeRenderContext} from './use-node-render-context';
+export {useIsSidebar} from './use-is-sidebar';
+export {usePortClick} from './use-port-click';
+export {useTagLength} from './use-tag-length'

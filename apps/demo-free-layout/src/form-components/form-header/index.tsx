@@ -17,7 +17,12 @@ import { getIcon } from './utils';
 import { TitleInput } from './title-input';
 import { Header, Operators } from './styles';
 
-export function FormHeader() {
+interface FormHeaderProps {
+  primaryColor?: string;
+}
+
+export function FormHeader({ primaryColor }: FormHeaderProps = {}) {
+
   const { node, expanded, toggleExpand, readonly } = useNodeRenderContext();
   const [titleEdit, updateTitleEdit] = useState<boolean>(false);
   const ctx = useClientContext();
@@ -35,7 +40,7 @@ export function FormHeader() {
   };
 
   return (
-    <Header>
+    <Header primaryColor={primaryColor}>
       {getIcon(node)}
       <TitleInput readonly={readonly} updateTitleEdit={updateTitleEdit} titleEdit={titleEdit} />
       {node.renderData.expandable && !isSidebar && (

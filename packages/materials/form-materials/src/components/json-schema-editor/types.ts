@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { IJsonSchema } from '../../typings';
+import {IJsonSchema} from '../../typings';
 
 export interface PropertyValueType extends IJsonSchema {
   name?: string;

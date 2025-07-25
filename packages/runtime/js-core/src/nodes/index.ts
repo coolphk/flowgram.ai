@@ -3,18 +3,19 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { INodeExecutorFactory } from '@flowgram.ai/runtime-interface';
+import {INodeExecutorFactory} from '@flowgram.ai/runtime-interface';
 
-import { StartExecutor } from './start';
-import { LoopExecutor } from './loop';
-import { LLMExecutor } from './llm';
-import { HTTPExecutor } from './http';
-import { EndExecutor } from './end';
-import { BlockEndExecutor, BlockStartExecutor } from './empty';
-import { ContinueExecutor } from './continue';
-import { ConditionExecutor } from './condition';
-import { CodeExecutor } from './code';
-import { BreakExecutor } from './break';
+import {StartExecutor} from './start';
+import {LoopExecutor} from './loop';
+import {LLMExecutor} from './llm';
+import {HTTPExecutor} from './http';
+import {EndExecutor} from './end';
+import {BlockEndExecutor, BlockStartExecutor} from './empty';
+import {ContinueExecutor} from './continue';
+import {ConditionExecutor} from './condition';
+import {CodeExecutor} from './code';
+import {BreakExecutor} from './break';
+import {WorkflowExecutor} from "@nodes/workflow";
 
 export const WorkflowRuntimeNodeExecutors: INodeExecutorFactory[] = [
   StartExecutor,
@@ -28,4 +29,5 @@ export const WorkflowRuntimeNodeExecutors: INodeExecutorFactory[] = [
   CodeExecutor,
   BreakExecutor,
   ContinueExecutor,
+  WorkflowExecutor
 ];
