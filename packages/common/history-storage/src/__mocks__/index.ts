@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 export const MOCK_RESOURCE_URI1 = 'resource-uri1'
 export const MOCK_RESOURCE_URI2 = 'resource-uri2'
 

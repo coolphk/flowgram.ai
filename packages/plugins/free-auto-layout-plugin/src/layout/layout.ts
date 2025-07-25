@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { LayoutConfig, LayoutOptions, LayoutParams } from './type';
 import { LayoutStore } from './store';
 import { LayoutPosition } from './position';

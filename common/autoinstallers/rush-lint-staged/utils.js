@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 const { RushConfiguration } = require('@microsoft/rush-lib')
 const { ESLint } = require('eslint')
 const path = require('path')

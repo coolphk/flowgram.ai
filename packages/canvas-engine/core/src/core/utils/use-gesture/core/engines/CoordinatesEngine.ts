@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { V } from '../utils/maths';
 import { getPointerType } from '../utils/events';
 import { CoordinatesKey, Vector2 } from '../types';

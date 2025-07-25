@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { inject, injectable, optional } from 'inversify';
 import { Scope, VariableEngine } from '@flowgram.ai/variable-core';
 import { FlowDocument } from '@flowgram.ai/document';

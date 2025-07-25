@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { inject, injectable, multiInject, optional } from 'inversify';
 import { I18n } from '@flowgram.ai/i18n';
 import { type Layer, type LayerRegistry, PipelineRegistry } from '@flowgram.ai/core';

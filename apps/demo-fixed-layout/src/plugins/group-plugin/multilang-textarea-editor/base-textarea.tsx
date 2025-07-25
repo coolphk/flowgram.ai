@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import type { AutosizeRow } from '@douyinfe/semi-ui/lib/es/input/textarea';

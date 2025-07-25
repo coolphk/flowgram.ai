@@ -3,12 +3,17 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { useMemo } from 'react';
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
 
-import { debounce } from 'lodash-es';
-import { createMinimapPlugin } from '@flowgram.ai/minimap-plugin';
-import { createGroupPlugin } from '@flowgram.ai/group-plugin';
-import { defaultFixedSemiMaterials } from '@flowgram.ai/fixed-semi-materials';
+import { useMemo } from "react";
+
+import { debounce } from "lodash-es";
+import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
+import { createGroupPlugin } from "@flowgram.ai/group-plugin";
+import { defaultFixedSemiMaterials } from "@flowgram.ai/fixed-semi-materials";
 import {
   FixedLayoutProps,
   FlowDocumentJSON,
@@ -16,18 +21,18 @@ import {
   FlowRendererKey,
   ShortcutsRegistry,
   ConstantKeys,
-} from '@flowgram.ai/fixed-layout-editor';
+} from "@flowgram.ai/fixed-layout-editor";
 
-import { type FlowNodeRegistry } from '../typings';
-import { shortcutGetter } from '../shortcuts';
-import { CustomService } from '../services';
-import { GroupBoxHeader, GroupNode } from '../plugins/group-plugin';
-import { createClipboardPlugin, createVariablePanelPlugin } from '../plugins';
-import { SelectorBoxPopover } from '../components/selector-box-popover';
-import NodeAdder from '../components/node-adder';
-import BranchAdder from '../components/branch-adder';
-import { BaseNode } from '../components/base-node';
-import { DragNode, AgentAdder } from '../components';
+import { type FlowNodeRegistry } from "../typings";
+import { shortcutGetter } from "../shortcuts";
+import { CustomService } from "../services";
+import { GroupBoxHeader, GroupNode } from "../plugins/group-plugin";
+import { createClipboardPlugin, createVariablePanelPlugin } from "../plugins";
+import { SelectorBoxPopover } from "../components/selector-box-popover";
+import NodeAdder from "../components/node-adder";
+import BranchAdder from "../components/branch-adder";
+import { BaseNode } from "../components/base-node";
+import { DragNode, AgentAdder } from "../components";
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
@@ -104,8 +109,8 @@ export function useEditorProps(
         // [ConstantKeys.INLINE_BLOCKS_INLINE_SPACING_TOP]: 23,
         // [ConstantKeys.INLINE_BLOCKS_PADDING_BOTTOM]: 30,
         // [ConstantKeys.COLLAPSED_SPACING]: 10,
-        [ConstantKeys.BASE_COLOR]: '#B8BCC1',
-        [ConstantKeys.BASE_ACTIVATED_COLOR]: '#82A7FC',
+        [ConstantKeys.BASE_COLOR]: "#B8BCC1",
+        [ConstantKeys.BASE_ACTIVATED_COLOR]: "#82A7FC",
       },
       /**
        * SelectBox config
@@ -148,7 +153,7 @@ export function useEditorProps(
         enableChangeNode: true, // Listen Node engine data change
         onApply: debounce((ctx, opt) => {
           // Listen change to trigger auto save
-          console.log('auto save: ', ctx.document.toJSON());
+          console.log("auto save: ", ctx.document.toJSON());
         }, 100),
       },
       /**
@@ -178,11 +183,11 @@ export function useEditorProps(
         },
         renderDefaultNode: BaseNode, // node render
         renderTexts: {
-          'loop-end-text': 'Loop End',
-          'loop-traverse-text': 'Loop',
-          'try-start-text': 'Try Start',
-          'try-end-text': 'Try End',
-          'catch-text': 'Catch Error',
+          "loop-end-text": "Loop End",
+          "loop-traverse-text": "Loop",
+          "try-start-text": "Try Start",
+          "try-end-text": "Try End",
+          "catch-text": "Catch Error",
         },
       },
       /**
@@ -207,7 +212,7 @@ export function useEditorProps(
          * 也可以通过 fromJSON 动态加载数据
          */
         // ctx.document.fromJSON(initialData)
-        console.log('---- Playground Init ----');
+        console.log("---- Playground Init ----");
       },
       /**
        * Playground render
@@ -222,7 +227,7 @@ export function useEditorProps(
        * Playground dispose
        */
       onDispose: () => {
-        console.log('---- Playground Dispose ----');
+        console.log("---- Playground Dispose ----");
       },
       plugins: () => [
         /**
@@ -236,18 +241,18 @@ export function useEditorProps(
             canvasWidth: 182,
             canvasHeight: 102,
             canvasPadding: 50,
-            canvasBackground: 'rgba(245, 245, 245, 1)',
+            canvasBackground: "rgba(245, 245, 245, 1)",
             canvasBorderRadius: 10,
-            viewportBackground: 'rgba(235, 235, 235, 1)',
+            viewportBackground: "rgba(235, 235, 235, 1)",
             viewportBorderRadius: 4,
-            viewportBorderColor: 'rgba(201, 201, 201, 1)',
+            viewportBorderColor: "rgba(201, 201, 201, 1)",
             viewportBorderWidth: 1,
             viewportBorderDashLength: 2,
-            nodeColor: 'rgba(255, 255, 255, 1)',
+            nodeColor: "rgba(255, 255, 255, 1)",
             nodeBorderRadius: 2,
             nodeBorderWidth: 0.145,
-            nodeBorderColor: 'rgba(6, 7, 9, 0.10)',
-            overlayColor: 'rgba(255, 255, 255, 0)',
+            nodeBorderColor: "rgba(6, 7, 9, 0.10)",
+            overlayColor: "rgba(255, 255, 255, 0)",
           },
           inactiveDebounceTime: 1,
         }),

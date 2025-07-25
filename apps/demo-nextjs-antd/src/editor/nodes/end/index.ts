@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { FlowNodeRegistry } from '@editor/typings';
 import { WorkflowNodeType } from '../constants';
 import iconEnd from '../../assets/icon-end.jpg';

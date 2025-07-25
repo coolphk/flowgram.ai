@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { chain } from './utils/fn';
 import { isTouch, parseProp, toHandlerProp, touchIds } from './utils/events';
 import {

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { TransformData } from '@flowgram.ai/core';
 import { type IPoint } from '@flowgram.ai/utils';
 

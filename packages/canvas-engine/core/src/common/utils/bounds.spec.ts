@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 // nolint: cyclo_complexity,method_line
 import { expect, describe, beforeEach, it } from 'vitest';
 import { Container } from 'inversify';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { IPoint, Rectangle } from '@flowgram.ai/utils';
 import { WorkflowNodeEntity, WorkflowPortEntity } from '@flowgram.ai/free-layout-core';
 import { FlowNodeTransformData } from '@flowgram.ai/document';

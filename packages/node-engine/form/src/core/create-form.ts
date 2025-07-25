@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { CreateFormReturn, FormOptions } from '../types/form';
 import { Field, FieldArray, FieldName, FieldValue } from '../types';
 import { toForm } from './to-form';

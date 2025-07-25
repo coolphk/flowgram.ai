@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { isEqual } from 'lodash-es';
 import { domUtils, type IPoint, Rectangle } from '@flowgram.ai/utils';
 import { Entity, type EntityOpts } from '@flowgram.ai/core';

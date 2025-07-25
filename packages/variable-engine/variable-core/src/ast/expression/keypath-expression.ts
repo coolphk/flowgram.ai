@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { shallowEqual } from 'fast-equals';
 
 import { ASTNodeJSON, ASTKind, CreateASTParams } from '../types';

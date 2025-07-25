@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { Container, ContainerModule, type interfaces } from 'inversify';
 import { CommandService, CommandContainerModule } from '@flowgram.ai/command';
 

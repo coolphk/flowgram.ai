@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { describe, expect, test } from 'vitest';
 import { VariableEngine } from '@flowgram.ai/variable-core';
 import { ASTKind } from '@flowgram.ai/variable-core';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 const { RushConfiguration } = require('@rushstack/rush-sdk')
 
 const getRushConfiguration = (function () {

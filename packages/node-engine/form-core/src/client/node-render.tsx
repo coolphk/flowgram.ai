@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import React, { memo, useCallback, useEffect } from 'react';
 
 import { PlaygroundContext, useRefresh, useService, PluginContext } from '@flowgram.ai/core';

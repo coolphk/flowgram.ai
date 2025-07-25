@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { domUtils } from '@flowgram.ai/utils';
 import { Layer, observeEntity, PlaygroundConfigEntity, SCALE_WIDTH } from '@flowgram.ai/core';
 

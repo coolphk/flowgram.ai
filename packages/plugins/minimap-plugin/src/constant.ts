@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import type { MinimapCanvasStyle, MinimapInactiveStyle, MinimapServiceOptions } from './type';
 
 export const MinimapDefaultCanvasStyle: MinimapCanvasStyle = {

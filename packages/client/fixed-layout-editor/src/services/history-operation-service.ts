@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { inject, injectable, postConstruct } from 'inversify';
 import { HistoryService } from '@flowgram.ai/history';
 import { FixedHistoryService } from '@flowgram.ai/fixed-history-plugin';

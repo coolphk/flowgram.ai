@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import {FormMeta, FormRenderProps, ValidateTrigger} from '@flowgram.ai/free-layout-editor';
 import {provideJsonSchemaOutputs, syncVariableTitle} from '@flowgram.ai/form-materials';
 

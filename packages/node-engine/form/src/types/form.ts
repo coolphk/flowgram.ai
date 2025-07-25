@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { FormModel } from '../core/form-model';
 import { Errors, FormValidateReturn, Validate, ValidateTrigger, Warnings } from './validate';
 import { Field, FieldArray, FieldName, FieldValue } from './field';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { IMessageCenter, WorkflowMessages } from '@runtime/message';
 import { StatusData, IStatusCenter } from '../status';
 import { Snapshot, ISnapshotCenter } from '../snapshot';

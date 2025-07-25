@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { DOMHandlers, EventHandler } from './utils';
 import { FullGestureState, State, EventTypes } from './state';
 import { GestureKey } from './config';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 export * from './flow-nodes-transform-layer';
 export * from './flow-nodes-content-layer';
 export * from './flow-lines-layer';

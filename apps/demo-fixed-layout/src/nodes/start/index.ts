@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { FlowNodeRegistry } from '../../typings';
 import iconStart from '../../assets/icon-start.jpg';
 import { formMeta } from './form-meta';

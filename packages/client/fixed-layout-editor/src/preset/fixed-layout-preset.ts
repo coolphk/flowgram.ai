@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { createSelectBoxPlugin } from '@flowgram.ai/select-box-plugin';
 import { FixedLayoutContainerModule } from '@flowgram.ai/fixed-layout-core';
 import { FixedHistoryService, createFixedHistoryPlugin } from '@flowgram.ai/fixed-history-plugin';

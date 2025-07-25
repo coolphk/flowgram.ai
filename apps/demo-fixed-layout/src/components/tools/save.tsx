@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 
 import { useClientContext, getNodeForm, FlowNodeEntity } from '@flowgram.ai/fixed-layout-editor';

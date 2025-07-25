@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 // TODO copy packages/materials/form-materials/src/typings/json-schema/index.ts
 
 export type JsonSchemaBasicType =

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 export { FlowNodeVariableData } from './flow-node-variable-data';
 export { FreeLayoutScopeChain } from './chains/free-layout-scope-chain';
 export { VariableChainConfig } from './variable-chain-config';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { interfaces } from 'inversify';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { IPoint } from '@flowgram.ai/utils';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { get } from 'lodash';
 import { FormModelV2, isFormModelV2 } from '@flowgram.ai/node';
 import { HistoryService, Operation } from '@flowgram.ai/history';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { baseMock } from '../flow.mock';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { nanoid } from 'nanoid';
 import { inject, injectable } from 'inversify';
 import { EntityManager } from '@flowgram.ai/core';

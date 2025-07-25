@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { type PluginContext } from '@flowgram.ai/core';
 import { WorkflowLinesManager } from '@flowgram.ai/free-layout-core';
 import { type OperationMeta } from '@flowgram.ai/history';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 /* eslint-disable import/no-unresolved */
 import { PreviewEditor } from '../preview-editor';
 import { InfiniteCanvas } from './infinite-canvas.tsx';

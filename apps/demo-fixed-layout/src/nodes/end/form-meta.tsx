@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { mapValues } from 'lodash-es';
 import { IFlowValue } from '@flowgram.ai/form-materials';
 import { Field, FieldRenderProps, FormMeta } from '@flowgram.ai/fixed-layout-editor';

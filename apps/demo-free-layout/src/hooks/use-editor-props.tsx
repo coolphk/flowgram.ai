@@ -4,31 +4,40 @@
  */
 
 /* eslint-disable no-console */
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { debounce } from 'lodash-es';
-import { createMinimapPlugin } from '@flowgram.ai/minimap-plugin';
-import { createFreeSnapPlugin } from '@flowgram.ai/free-snap-plugin';
-import { createFreeNodePanelPlugin } from '@flowgram.ai/free-node-panel-plugin';
-import { createFreeLinesPlugin } from '@flowgram.ai/free-lines-plugin';
-import { FreeLayoutProps, WorkflowNodeLinesData } from '@flowgram.ai/free-layout-editor';
-import { createFreeGroupPlugin } from '@flowgram.ai/free-group-plugin';
-import { createContainerNodePlugin } from '@flowgram.ai/free-container-plugin';
+import { debounce } from "lodash-es";
+import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
+import { createFreeSnapPlugin } from "@flowgram.ai/free-snap-plugin";
+import { createFreeNodePanelPlugin } from "@flowgram.ai/free-node-panel-plugin";
+import { createFreeLinesPlugin } from "@flowgram.ai/free-lines-plugin";
+import {
+  FreeLayoutProps,
+  WorkflowNodeLinesData,
+} from "@flowgram.ai/free-layout-editor";
+import { createFreeGroupPlugin } from "@flowgram.ai/free-group-plugin";
+import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
 
-import { onDragLineEnd } from '../utils';
-import { FlowNodeRegistry, FlowDocumentJSON } from '../typings';
-import { shortcuts } from '../shortcuts';
-import { CustomService } from '../services';
-import { WorkflowRuntimeService } from '../plugins/runtime-plugin/runtime-service';
+import { onDragLineEnd } from "../utils";
+import { FlowNodeRegistry, FlowDocumentJSON } from "../typings";
+import { shortcuts } from "../shortcuts";
+import { CustomService } from "../services";
+import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
 import {
   createRuntimePlugin,
   createContextMenuPlugin,
   createVariablePanelPlugin,
-} from '../plugins';
-import { defaultFormMeta } from '../nodes/default-form-meta';
-import { WorkflowNodeType } from '../nodes';
-import { SelectorBoxPopover } from '../components/selector-box-popover';
-import { BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel } from '../components';
+} from "../plugins";
+import { defaultFormMeta } from "../nodes/default-form-meta";
+import { WorkflowNodeType } from "../nodes";
+import { SelectorBoxPopover } from "../components/selector-box-popover";
+import {
+  BaseNode,
+  CommentRender,
+  GroupNodeRender,
+  LineAddButton,
+  NodePanel,
+} from "../components";
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
@@ -86,13 +95,13 @@ export function useEditorProps(
         return json;
       },
       lineColor: {
-        hidden: 'var(--g-workflow-line-color-hidden,transparent)',
-        default: 'var(--g-workflow-line-color-default,#4d53e8)',
-        drawing: 'var(--g-workflow-line-color-drawing, #5DD6E3)',
-        hovered: 'var(--g-workflow-line-color-hover,#37d0ff)',
-        selected: 'var(--g-workflow-line-color-selected,#37d0ff)',
-        error: 'var(--g-workflow-line-color-error,red)',
-        flowing: 'var(--g-workflow-line-color-flowing,#4d53e8)',
+        hidden: "var(--g-workflow-line-color-hidden,transparent)",
+        default: "var(--g-workflow-line-color-default,#4d53e8)",
+        drawing: "var(--g-workflow-line-color-drawing, #5DD6E3)",
+        hovered: "var(--g-workflow-line-color-hover,#37d0ff)",
+        selected: "var(--g-workflow-line-color-selected,#37d0ff)",
+        error: "var(--g-workflow-line-color-error,red)",
+        flowing: "var(--g-workflow-line-color-flowing,#4d53e8)",
       },
       /*
        * Check whether the line can be added
@@ -114,7 +123,9 @@ export function useEditorProps(
          * 线条环检测，不允许连接到前面的节点
          * Line loop detection, which is not allowed to connect to the node in front of it
          */
-        return !fromPort.node.getData(WorkflowNodeLinesData).allInputNodes.includes(toPort.node);
+        return !fromPort.node
+          .getData(WorkflowNodeLinesData)
+          .allInputNodes.includes(toPort.node);
       },
       /**
        * Check whether the line can be deleted, this triggers on the default shortcut `Bakspace` or `Delete`
@@ -210,12 +221,13 @@ export function useEditorProps(
        * Content change
        */
       onContentChange: debounce((ctx, event) => {
-        console.log('Auto Save: ', event, ctx.document.toJSON());
+        console.log("Auto Save: ", event, ctx.document.toJSON());
       }, 1000),
       /**
        * Running line
        */
-      isFlowingLine: (ctx, line) => ctx.get(WorkflowRuntimeService).isFlowingLine(line),
+      isFlowingLine: (ctx, line) =>
+        ctx.get(WorkflowRuntimeService).isFlowingLine(line),
 
       /**
        * Shortcuts
@@ -231,7 +243,7 @@ export function useEditorProps(
        * Playground init
        */
       onInit() {
-        console.log('--- Playground init ---');
+        console.log("--- Playground init ---");
       },
       /**
        * Playground render
@@ -239,22 +251,22 @@ export function useEditorProps(
       onAllLayersRendered(ctx) {
         // ctx.tools.autoLayout(); // init auto layout
         ctx.document.fitView(false); // init fit view
-        console.log('--- Playground rendered ---');
+        console.log("--- Playground rendered ---");
       },
       /**
        * Playground dispose
        */
       onDispose() {
-        console.log('---- Playground Dispose ----');
+        console.log("---- Playground Dispose ----");
       },
       i18n: {
         locale: navigator.language,
         languages: {
-          'zh-CN': {
-            'Never Remind': '不再提示',
-            'Hold {{key}} to drag node out': '按住 {{key}} 可以将节点拖出',
+          "zh-CN": {
+            "Never Remind": "不再提示",
+            "Hold {{key}} to drag node out": "按住 {{key}} 可以将节点拖出",
           },
-          'en-US': {},
+          "en-US": {},
         },
       },
       plugins: () => [
@@ -275,18 +287,18 @@ export function useEditorProps(
             canvasWidth: 182,
             canvasHeight: 102,
             canvasPadding: 50,
-            canvasBackground: 'rgba(242, 243, 245, 1)',
+            canvasBackground: "rgba(242, 243, 245, 1)",
             canvasBorderRadius: 10,
-            viewportBackground: 'rgba(255, 255, 255, 1)',
+            viewportBackground: "rgba(255, 255, 255, 1)",
             viewportBorderRadius: 4,
-            viewportBorderColor: 'rgba(6, 7, 9, 0.10)',
+            viewportBorderColor: "rgba(6, 7, 9, 0.10)",
             viewportBorderWidth: 1,
             viewportBorderDashLength: undefined,
-            nodeColor: 'rgba(0, 0, 0, 0.10)',
+            nodeColor: "rgba(0, 0, 0, 0.10)",
             nodeBorderRadius: 2,
             nodeBorderWidth: 0.145,
-            nodeBorderColor: 'rgba(6, 7, 9, 0.10)',
-            overlayColor: 'rgba(255, 255, 255, 0.55)',
+            nodeBorderColor: "rgba(6, 7, 9, 0.10)",
+            overlayColor: "rgba(255, 255, 255, 0.55)",
           },
           inactiveDebounceTime: 1,
         }),
@@ -296,8 +308,8 @@ export function useEditorProps(
          * 自动对齐及辅助线插件
          */
         createFreeSnapPlugin({
-          edgeColor: '#00B2B2',
-          alignColor: '#00B2B2',
+          edgeColor: "#00B2B2",
+          alignColor: "#00B2B2",
           edgeLineWidth: 1,
           alignLineWidth: 1,
           alignCrossWidth: 8,
@@ -326,11 +338,11 @@ export function useEditorProps(
         createContextMenuPlugin({}),
         createRuntimePlugin({
           // mode: 'browser',
-          mode: 'server',
+          mode: "server",
           serverConfig: {
-            domain: 'localhost',
+            domain: "localhost",
             port: 4000,
-            protocol: 'http',
+            protocol: "http",
           },
         }),
 

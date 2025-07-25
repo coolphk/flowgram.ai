@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { useRef, useEffect } from 'react';
 
 import { Field, FieldRenderProps } from '@flowgram.ai/fixed-layout-editor';

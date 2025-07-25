@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { validateInputsSchema } from './validate-inputs';
 import { twoLLMSchema } from './two-llm';
 import { loopBreakContinueSchema } from './loop-break-continue';

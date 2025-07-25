@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { DEFAULT_SPACING } from '../typings';
 import { FlowDocumentOptions } from '../flow-document-options';
 import { FlowNodeEntity } from '../entities/flow-node-entity';

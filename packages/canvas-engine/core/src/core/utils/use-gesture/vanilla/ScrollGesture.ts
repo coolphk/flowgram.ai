@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { UserScrollConfig, Handler, EventTypes } from '../core/types';
 import { registerAction, scrollAction } from '../core/actions';
 import { Recognizer } from './Recognizer';

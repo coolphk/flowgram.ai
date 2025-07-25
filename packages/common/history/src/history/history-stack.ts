@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { cloneDeep } from 'lodash';
 import { injectable, inject } from 'inversify';
 import { DisposableCollection, Emitter } from '@flowgram.ai/utils';

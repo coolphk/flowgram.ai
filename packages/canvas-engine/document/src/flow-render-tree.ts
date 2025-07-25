@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { FlowDocumentConfigEnum, FlowNodeBaseType, FlowNodeSplitType } from './typings';
 import { FlowVirtualTree } from './flow-virtual-tree';
 import type { FlowDocument } from './flow-document';

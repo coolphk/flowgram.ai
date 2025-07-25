@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { type ReactNode, type Ref, forwardRef } from 'react';
 
 import Icon, { type IconProps } from '@douyinfe/semi-icons';

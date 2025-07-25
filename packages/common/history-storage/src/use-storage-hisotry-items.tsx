@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { groupBy } from 'lodash';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { HistoryItem, HistoryOperation, HistoryStack } from '@flowgram.ai/history';

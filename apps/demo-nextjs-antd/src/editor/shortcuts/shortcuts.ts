@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { FreeLayoutPluginContext, ShortcutsRegistry } from '@flowgram.ai/free-layout-editor';
 
 import { ZoomOutShortcut } from './zoom-out';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 export * from './add-from-node';
 import { ungroupOperationMeta } from './ungroup';
 import { moveNodesOperationMeta } from './move-nodes';

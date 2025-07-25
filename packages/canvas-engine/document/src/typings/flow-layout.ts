@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { IPoint, PaddingSchema, ScrollSchema, SizeSchema } from '@flowgram.ai/utils';
 
 import { type FlowNodeEntity } from '../entities';

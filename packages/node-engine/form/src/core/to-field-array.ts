@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { Field, FieldArray } from '../types/field';
 import { toField } from './to-field';
 import { FieldArrayModel } from './field-array-model';

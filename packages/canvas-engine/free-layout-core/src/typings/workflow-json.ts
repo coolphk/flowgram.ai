@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { type WorkflowLineEntity, type WorkflowNodeEntity } from '../entities';
 import { type WorkflowNodeJSON } from './workflow-node';
 import { type WorkflowEdgeJSON } from './workflow-edge';

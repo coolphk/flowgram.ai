@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { ClipboardService } from '@flowgram.ai/fixed-layout-editor';
 
 export const readData = async (clipboard: ClipboardService) => {

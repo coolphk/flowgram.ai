@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 import { DynamicValueInput, PromptEditorWithVariables } from '@flowgram.ai/form-materials';
 import { Field } from '@flowgram.ai/fixed-layout-editor';
 

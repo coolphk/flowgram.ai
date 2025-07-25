@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 export { Editor } from './editor';
 export { FieldTitle, FieldWrapper } from './components';
 export { DEFAULT_FORM_META } from './form-meta';

@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 const isBrowser = typeof window !== 'undefined' && window.document && window.document.createElement
 
 function supportsTouchEvents(): boolean {

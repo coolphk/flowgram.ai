@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useMemo, useState} from 'react';
 
