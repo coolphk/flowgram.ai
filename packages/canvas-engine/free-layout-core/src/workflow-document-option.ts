@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { FlowNodeErrorData } from '@flowgram.ai/form-core';
 import { FlowDocumentOptions, FlowNodeTransformData, FlowNodeType } from '@flowgram.ai/document';

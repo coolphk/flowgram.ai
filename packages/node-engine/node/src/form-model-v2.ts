@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { get, groupBy, isEmpty, mapKeys } from 'lodash';
 import { Disposable, DisposableCollection, Emitter } from '@flowgram.ai/utils';

@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+
+
 import type { CommentEditorEvent } from './constant';
 
 interface CommentEditorChangeEvent {

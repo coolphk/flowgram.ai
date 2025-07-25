@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { VariablePluginOptions } from '@flowgram.ai/variable-plugin';
 import { ReduxDevToolPluginOptions } from '@flowgram.ai/redux-devtool-plugin';

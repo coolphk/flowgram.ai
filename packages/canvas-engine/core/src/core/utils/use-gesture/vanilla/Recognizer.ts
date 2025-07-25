@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { GestureKey, InternalHandlers, NativeHandlers, UserGestureConfig } from '../core/types';
 import { Controller } from '../core';

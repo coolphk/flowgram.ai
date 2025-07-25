@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+
+
 export function IconMouse(props: { width?: number; height?: number }) {
   const { width, height } = props;
   return (

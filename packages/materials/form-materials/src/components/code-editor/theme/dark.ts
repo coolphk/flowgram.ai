@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { createTheme, tags as t } from '@coze-editor/editor/preset-code';
 import { type Extension } from '@codemirror/state';

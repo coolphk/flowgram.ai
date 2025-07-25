@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { Container, ContainerModule, interfaces } from 'inversify';
 import { ScopeChain, VariableContainerModule } from '../src';

@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+
+
 /* eslint-disable @typescript-eslint/naming-convention -- enum */
 
 export enum CommentEditorFormField {

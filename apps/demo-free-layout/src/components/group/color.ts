@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+
+
 type GroupColor = {
   '50': string;
   '300': string;

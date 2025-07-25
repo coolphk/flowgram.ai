@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { Observable, Subject, merge, share, skip, switchMap } from 'rxjs';
 import { DisposableCollection, Emitter } from '@flowgram.ai/utils';

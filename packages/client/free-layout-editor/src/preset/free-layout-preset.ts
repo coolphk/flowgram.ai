@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { createSelectBoxPlugin } from '@flowgram.ai/select-box-plugin';
 import { createFreeStackPlugin, StackingContextManager } from '@flowgram.ai/free-stack-plugin';

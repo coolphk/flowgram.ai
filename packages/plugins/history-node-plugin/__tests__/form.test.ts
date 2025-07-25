@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { beforeEach, describe, it, expect, vi } from 'vitest';
 import { FieldArrayModel, FormModel } from '@flowgram.ai/form';

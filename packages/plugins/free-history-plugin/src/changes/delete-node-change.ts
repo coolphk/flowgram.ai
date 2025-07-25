@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import { WorkflowContentChangeType } from '@flowgram.ai/free-layout-core';
 import { type FlowNodeEntity } from '@flowgram.ai/document';

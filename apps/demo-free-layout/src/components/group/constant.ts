@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+
+
 export const HEADER_HEIGHT = 30;
 export const HEADER_PADDING = 5;
 

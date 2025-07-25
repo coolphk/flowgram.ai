@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+
+
 import { createRoot } from 'react-dom/client';
 
 import { Editor } from './editor';

@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 /* eslint-disable import/no-unresolved */
 import { FixedLayoutSimple } from './fixed-layout-simple.tsx';

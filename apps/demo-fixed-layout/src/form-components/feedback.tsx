@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+
+
+
 
 import styled from 'styled-components';
 import { FieldError, FieldState, FieldWarning } from '@flowgram.ai/fixed-layout-editor';
