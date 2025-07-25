@@ -8,11 +8,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 
-import { MinimapInactiveStyle } from './type';
-import { FlowMinimapService } from './service';
-import { MinimapDefaultInactiveStyle } from './constant';
+import { MinimapInactiveStyle } from "./type";
+import { FlowMinimapService } from "./service";
+import { MinimapDefaultInactiveStyle } from "./constant";
 
 interface MinimapProps {
   service: FlowMinimapService;
@@ -60,29 +60,29 @@ export const MinimapRender: React.FC<MinimapProps> = (props) => {
     <div
       className="minimap-container"
       style={{
-        position: 'fixed',
+        position: "fixed",
         right: 30,
         bottom: 70,
-        transition: 'all 0.3s ease', // 添加过渡效果
+        transition: "all 0.3s ease", // 添加过渡效果
         transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)`,
         opacity: opacity,
-        transformOrigin: 'bottom right', // 设置变换的原点
+        transformOrigin: "bottom right", // 设置变换的原点
         ...containerStyles,
       }}
     >
       <div
         className="minimap-panel"
         style={{
-          display: 'flex',
-          width: '100%',
-          height: '100%',
-          borderRadius: '10px',
-          backgroundColor: 'rgba(255, 255, 255, 1)',
-          border: '0.572px solid rgba(6, 7, 9, 0.10)',
-          overflow: 'hidden',
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          borderRadius: "10px",
+          backgroundColor: "rgba(255, 255, 255, 1)",
+          border: "0.572px solid rgba(6, 7, 9, 0.10)",
+          overflow: "hidden",
           boxShadow:
-            '0px 2.289px 6.867px 0px rgba(0, 0, 0, 0.08), 0px 4.578px 13.733px 0px rgba(0, 0, 0, 0.04)',
-          boxSizing: 'border-box',
+            "0px 2.289px 6.867px 0px rgba(0, 0, 0, 0.08), 0px 4.578px 13.733px 0px rgba(0, 0, 0, 0.04)",
+          boxSizing: "border-box",
           padding: 8,
           ...panelStyles,
         }}

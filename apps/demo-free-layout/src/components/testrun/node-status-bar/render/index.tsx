@@ -3,32 +3,33 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState } from "react";
 
-import classnames from 'classnames';
-import { NodeReport, WorkflowStatus } from '@flowgram.ai/runtime-interface';
-import { Tag, Button, Select } from '@douyinfe/semi-ui';
-import { IconSpin } from '@douyinfe/semi-icons';
+import classnames from "classnames";
+import { NodeReport, WorkflowStatus } from "@flowgram.ai/runtime-interface";
+import { Tag, Button, Select } from "@douyinfe/semi-ui";
+import { IconSpin } from "@douyinfe/semi-icons";
 
-import { NodeStatusHeader } from '../header';
-import { NodeStatusGroup } from '../group';
-import { IconWarningFill } from '../../../../assets/icon-warning';
-import { IconSuccessFill } from '../../../../assets/icon-success';
+import { NodeStatusHeader } from "../header";
+import { NodeStatusGroup } from "../group";
+import { IconWarningFill } from "../../../../assets/icon-warning";
+import { IconSuccessFill } from "../../../../assets/icon-success";
 
-import styles from './index.module.less';
+import styles from "./index.module.less";
 
 interface NodeStatusRenderProps {
   report: NodeReport;
 }
 
-const msToSeconds = (ms: number): string => (ms / 1000).toFixed(2) + 's';
+const msToSeconds = (ms: number): string => (ms / 1000).toFixed(2) + "s";
 const displayCount = 6;
 
 export const NodeStatusRender: FC<NodeStatusRenderProps> = ({ report }) => {
   const { status: nodeStatus } = report;
   const [currentSnapshotIndex, setCurrentSnapshotIndex] = useState(0);
-
+  // console.log("report:", report);
   const snapshots = report.snapshots || [];
+  // console.log("snapshots:", snapshots);
   const currentSnapshot = snapshots[currentSnapshotIndex] || snapshots[0];
 
   // 节点 5 个状态
@@ -52,7 +53,9 @@ export const NodeStatusRender: FC<NodeStatusRenderProps> = ({ report }) => {
 
   const renderIcon = () => {
     if (isNodeProcessing) {
-      return <IconSpin spin className={classnames(styles.icon, styles.processing)} />;
+      return (
+        <IconSpin spin className={classnames(styles.icon, styles.processing)} />
+      );
     }
     if (isNodeSucceed) {
       return <IconSuccessFill />;
@@ -62,15 +65,15 @@ export const NodeStatusRender: FC<NodeStatusRenderProps> = ({ report }) => {
   const renderDesc = () => {
     const getDesc = () => {
       if (isNodeProcessing) {
-        return 'Running';
+        return "Running";
       } else if (isNodePending) {
-        return 'Run terminated';
+        return "Run terminated";
       } else if (isNodeSucceed) {
-        return 'Succeed';
+        return "Succeed";
       } else if (isNodeFailed) {
-        return 'Failed';
+        return "Failed";
       } else if (isNodeCanceled) {
-        return 'Canceled';
+        return "Canceled";
       }
     };
 
@@ -100,7 +103,7 @@ export const NodeStatusRender: FC<NodeStatusRenderProps> = ({ report }) => {
               <Button
                 key={index}
                 size="small"
-                type={currentSnapshotIndex === index ? 'primary' : 'tertiary'}
+                type={currentSnapshotIndex === index ? "primary" : "tertiary"}
                 onClick={() => setCurrentSnapshotIndex(index)}
                 className={classnames(styles.snapshotButton, {
                   [styles.active]: currentSnapshotIndex === index,
@@ -135,7 +138,11 @@ export const NodeStatusRender: FC<NodeStatusRenderProps> = ({ report }) => {
             </Button>
           ))}
           <Select
-            value={currentSnapshotIndex >= displayCount ? currentSnapshotIndex : undefined}
+            value={
+              currentSnapshotIndex >= displayCount
+                ? currentSnapshotIndex
+                : undefined
+            }
             onChange={(value) => setCurrentSnapshotIndex(value as number)}
             className={classnames(styles.snapshotSelect, {
               [styles.active]: currentSnapshotIndex >= displayCount,
@@ -179,7 +186,11 @@ export const NodeStatusRender: FC<NodeStatusRenderProps> = ({ report }) => {
         {renderSnapshotNavigation()}
         <NodeStatusGroup title="Inputs" data={currentSnapshot?.inputs} />
         <NodeStatusGroup title="Outputs" data={currentSnapshot?.outputs} />
-        <NodeStatusGroup title="Branch" data={currentSnapshot?.branch} optional />
+        <NodeStatusGroup
+          title="Branch"
+          data={currentSnapshot?.branch}
+          optional
+        />
         <NodeStatusGroup title="Data" data={currentSnapshot?.data} optional />
       </div>
     </NodeStatusHeader>

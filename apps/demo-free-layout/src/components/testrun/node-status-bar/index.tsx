@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from "react";
 
-import { NodeReport } from '@flowgram.ai/runtime-interface';
-import { useCurrentEntity, useService } from '@flowgram.ai/free-layout-editor';
+import {NodeReport} from "@flowgram.ai/runtime-interface";
+import {useCurrentEntity, useService} from "@flowgram.ai/free-layout-editor";
 
-import { WorkflowRuntimeService } from '../../../plugins/runtime-plugin/runtime-service';
-import { NodeStatusRender } from './render';
+import {WorkflowRuntimeService} from "../../../plugins/runtime-plugin/runtime-service";
+import {NodeStatusRender} from "./render";
 
 const useNodeReport = () => {
   const node = useCurrentEntity();
@@ -18,7 +18,9 @@ const useNodeReport = () => {
   const runtimeService = useService(WorkflowRuntimeService);
 
   useEffect(() => {
+    // console.log("runtimeService", node, runtimeService);
     const reportDisposer = runtimeService.onNodeReportChange((nodeReport) => {
+      // console.log('nodeReport', nodeReport);
       if (nodeReport.id !== node.id) {
         return;
       }
@@ -38,10 +40,11 @@ const useNodeReport = () => {
 
 export const NodeStatusBar = () => {
   const report = useNodeReport();
+  console.log("NodeStatusBar report:", report);
 
   if (!report) {
     return null;
   }
 
-  return <NodeStatusRender report={report} />;
+  return <NodeStatusRender report={report}/>;
 };

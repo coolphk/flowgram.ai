@@ -103,6 +103,7 @@ export class WorkflowRuntimeService {
         inputs,
       });
       taskID = output?.taskID;
+      console.log('task_run output')
     } catch (e) {
       this.resultEmitter.fire({
         errors: [(e as Error)?.message],

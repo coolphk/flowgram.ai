@@ -27,6 +27,7 @@ import {
   createRuntimePlugin,
   createContextMenuPlugin,
   createVariablePanelPlugin,
+  createRunHistoryPlugin,
 } from "../plugins";
 import { defaultFormMeta } from "../nodes/default-form-meta";
 import { WorkflowNodeType } from "../nodes";
@@ -351,6 +352,12 @@ export function useEditorProps(
          * 变量面板插件
          */
         createVariablePanelPlugin({}),
+
+        /**
+         * Run history plugin
+         * 运行历史插件
+         */
+        createRunHistoryPlugin({}),
       ],
     }),
     []

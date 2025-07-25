@@ -97,7 +97,7 @@ export const initialData: FlowDocumentJSON = {
         },
       },
     },*/
-    {
+    /*{
       id: 'workflow_0',
       type: 'workflow',
       meta: {
@@ -117,7 +117,7 @@ export const initialData: FlowDocumentJSON = {
           properties: {},
         },
       },
-    },
+    },*/
     {
       id: 'end_0',
       type: 'end',
@@ -135,12 +135,12 @@ export const initialData: FlowDocumentJSON = {
   edges: [
     {
       sourceNodeID: 'start_0',
-      targetNodeID: 'workflow_0',
-    },
-    {
-      sourceNodeID: 'workflow_0',
       targetNodeID: 'end_0',
     },
+    /*{
+      sourceNodeID: 'workflow_0',
+      targetNodeID: 'end_0',
+    },*/
     /*{
      sourceNodeID: 'start_0',
      targetNodeID: 'condition_0',

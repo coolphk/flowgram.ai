@@ -4,26 +4,30 @@
  */
 
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useMemo, useState} from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 
-import {nanoid} from 'nanoid';
-import {useRequest} from 'alova/client';
-import {Field, FieldRenderProps, useNodeRender} from '@flowgram.ai/free-layout-editor';
-import {Collapse, Divider, Select} from '@douyinfe/semi-ui';
+import { nanoid } from "nanoid";
+import { useRequest } from "alova/client";
+import {
+  Field,
+  FieldRenderProps,
+  useNodeRender,
+} from "@flowgram.ai/free-layout-editor";
+import { Collapse, Divider, Select } from "@douyinfe/semi-ui";
 
-import {FlowNodeJSON, JsonSchema, Workflow} from '../../../typings';
-import {JsonSchemaEditor} from '@flowgram.ai/form-materials';
-import {FormHeader, FormInputs} from '../../../form-components';
-import {getWorkflows} from '../../../api/workflow';
+import { FlowNodeJSON, JsonSchema, Workflow } from "../../../typings";
+import { JsonSchemaEditor } from "@flowgram.ai/form-materials";
+import { FormHeader, FormInputs } from "../../../form-components";
+import { getWorkflows } from "../../../api/workflow";
 
 export const SidebarRender: React.FC = () => {
-  const {data, error} = useRequest(getWorkflows<Workflow[]>, {
+  const { data, error } = useRequest(getWorkflows<Workflow[]>, {
     initialData: [],
-    immediate: true
+    immediate: true,
   });
-  const {data: nodeData, form} = useNodeRender();
+  const { data: nodeData, form } = useNodeRender();
 
-  const [wfId, setWfId] = useState<string>(nodeData?.rawData?.id || '');
+  const [wfId, setWfId] = useState<string>(nodeData?.rawData?.id || "");
   // console.log('wfId1', wfId);
   // 使用 useMemo 优化 flowNodeJSON 计算
   const flowNodeJSON = useMemo(() => {
@@ -31,41 +35,43 @@ export const SidebarRender: React.FC = () => {
     const base: FlowNodeJSON = {
       id: `workflow-${nanoid(5)}`,
       data: {
-        title: 'Workflow',
+        title: "Workflow",
         inputs: {
-          type: 'object',
-          properties: {}
+          type: "object",
+          properties: {},
         },
         outputs: {
-          type: 'object',
-          properties: {}
+          type: "object",
+          properties: {},
         },
         inputsValues: {},
-        rawData: workflow
+        rawData: workflow,
       },
-      type: 'workflow'
+      type: "workflow",
     };
 
     if (workflow) {
       workflow.inputs.forEach((item) => {
-        base.data.inputsValues![item.name] = nodeData?.inputsValues?.[item.name] || {
-          type: 'constant',
-          content: ''
+        base.data.inputsValues![item.name] = nodeData?.inputsValues?.[
+          item.name
+        ] || {
+          type: "constant",
+          content: "",
         };
         base.data.inputs!.properties![item.name] = {
-          type: 'file'
+          type: "file",
         };
       });
 
       workflow.outputs.forEach((item) => {
         base.data.outputs!.properties![item.name] = {
-          type: 'file'
+          type: "file",
         };
       });
     }
 
     return base;
-  }, [wfId]);
+  }, [wfId, nodeData, data]);
 
   // 当 flowNodeJSON 变化时更新节点数据
   useEffect(() => {
@@ -73,14 +79,14 @@ export const SidebarRender: React.FC = () => {
     if (workflow) {
       const data = {
         ...nodeData,
-        ...flowNodeJSON.data
+        ...flowNodeJSON.data,
       };
 
       Object.keys(data!).forEach((key) => {
         form?.setValueIn(key, data[key]);
-      })
+      });
     }
-  }, [wfId]);
+  }, [wfId, nodeData, data]);
 
   if (error) {
     return <div>加载工作流失败</div>;
@@ -88,16 +94,16 @@ export const SidebarRender: React.FC = () => {
 
   return (
     <>
-      <FormHeader/>
-      <Divider/>
-      <Collapse defaultActiveKey={['1', '2','3']}>
+      <FormHeader />
+      <Divider />
+      <Collapse defaultActiveKey={["1", "2", "3"]}>
         <Collapse.Panel header="工作流" itemKey="1">
           <Field
             name="workflow"
-            render={({field: {onChange}}: FieldRenderProps<string>) => (
+            render={({ field: { onChange } }: FieldRenderProps<string>) => (
               <>
                 <Select
-                  style={{width: '100%'}}
+                  style={{ width: "100%" }}
                   placeholder="请选择工作流"
                   value={wfId} // 绑定 value 到 wfId 状态
                   onChange={(value) => {
@@ -115,12 +121,14 @@ export const SidebarRender: React.FC = () => {
           />
         </Collapse.Panel>
         <Collapse.Panel header="输入参数" itemKey="2">
-          <FormInputs/>
+          <FormInputs />
         </Collapse.Panel>
         <Collapse.Panel header="输出参数" itemKey="3">
           <Field
             name="outputs"
-            render={({field: {value, onChange}}: FieldRenderProps<JsonSchema>) => (
+            render={({
+              field: { value, onChange },
+            }: FieldRenderProps<JsonSchema>) => (
               <>
                 <JsonSchemaEditor
                   readonly={true}
