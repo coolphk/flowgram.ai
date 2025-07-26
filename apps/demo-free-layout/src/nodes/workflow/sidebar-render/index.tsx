@@ -6,8 +6,6 @@
 
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useMemo, useState} from 'react';
-
-import {nanoid} from 'nanoid';
 import {useRequest} from 'alova/client';
 import {Field, FieldRenderProps, useNodeRender} from '@flowgram.ai/free-layout-editor';
 import {Collapse, Divider, Select} from '@douyinfe/semi-ui';
@@ -25,12 +23,15 @@ export const SidebarRender: React.FC = () => {
   const {data: nodeData, form} = useNodeRender();
 
   const [wfId, setWfId] = useState<string>(nodeData?.rawData?.id || '');
+  const workflow = useMemo(() => {
+    return data.find((item: Workflow) => item.id === wfId);
+  }, [wfId, data]);
   // console.log('wfId1', wfId);
   // 使用 useMemo 优化 flowNodeJSON 计算
   const flowNodeJSON = useMemo(() => {
-    const workflow = data.find((item: Workflow) => item.id === wfId);
+
     const base: FlowNodeJSON = {
-      id: `workflow-${nanoid(5)}`,
+      id: nodeData?.id,
       data: {
         title: 'Workflow',
         inputs: {
@@ -44,7 +45,7 @@ export const SidebarRender: React.FC = () => {
         inputsValues: {},
         rawData: workflow
       },
-      type: 'workflow'
+      type: nodeData.type
     };
 
     if (workflow) {
@@ -70,7 +71,7 @@ export const SidebarRender: React.FC = () => {
 
   // 当 flowNodeJSON 变化时更新节点数据
   useEffect(() => {
-    const workflow = data.find((item: Workflow) => item.id === wfId);
+
     if (workflow) {
       const data = {
         ...nodeData,
@@ -81,7 +82,7 @@ export const SidebarRender: React.FC = () => {
         form?.setValueIn(key, data[key]);
       })
     }
-  }, [wfId]);
+  }, [flowNodeJSON]);
 
   if (error) {
     return <div>加载工作流失败</div>;
@@ -91,7 +92,7 @@ export const SidebarRender: React.FC = () => {
     <>
       <FormHeader/>
       <Divider/>
-      <Collapse defaultActiveKey={['1', '2','3']}>
+      <Collapse defaultActiveKey={['1', '2', '3']}>
         <Collapse.Panel header="工作流" itemKey="1">
           <Field
             name="workflow"
