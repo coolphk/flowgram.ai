@@ -3,34 +3,34 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { useState, useEffect } from "react";
 
+import { useRefresh } from "@flowgram.ai/free-layout-editor";
+import { useClientContext } from "@flowgram.ai/free-layout-editor";
+import { Tooltip, IconButton, Divider } from "@douyinfe/semi-ui";
+import { IconUndo, IconRedo } from "@douyinfe/semi-icons";
 
-import {useState, useEffect} from 'react';
-
-import {useRefresh} from '@flowgram.ai/free-layout-editor';
-import {useClientContext} from '@flowgram.ai/free-layout-editor';
-import {Tooltip, IconButton, Divider} from '@douyinfe/semi-ui';
-import {IconUndo, IconRedo} from '@douyinfe/semi-icons';
-
-import {TestRunButton} from '../testrun/testrun-button';
-import {AddNode} from '../add-node';
-import {ZoomSelect} from './zoom-select';
-import {SwitchLine} from './switch-line';
-import {ToolContainer, ToolSection} from './styles';
-import {Readonly} from './readonly';
-import {MinimapSwitch} from './minimap-switch';
-import {Minimap} from './minimap';
-import {Interactive} from './interactive';
-import {FitView} from './fit-view';
-import {Comment} from './comment';
-import {AutoLayout} from './auto-layout';
-import {RunHistory} from "./run-history";
+import { TestRunButton } from "../testrun/testrun-button";
+import { AddNode } from "../add-node";
+import { ZoomSelect } from "./zoom-select";
+import { SwitchLine } from "./switch-line";
+import { ToolContainer, ToolSection } from "./styles";
+import { Readonly } from "./readonly";
+import { MinimapSwitch } from "./minimap-switch";
+import { Minimap } from "./minimap";
+import { Interactive } from "./interactive";
+import { FitView } from "./fit-view";
+import { Comment } from "./comment";
+import { AutoLayout } from "./auto-layout";
+import { RunHistory } from "./run-history";
+import { RunHistorySwitch } from "./run-history-switch";
 
 export const DemoTools = () => {
-  const {history, playground} = useClientContext();
+  const { history, playground } = useClientContext();
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [minimapVisible, setMinimapVisible] = useState(true);
+  const [runHistoryVisible, setRunHistoryVisible] = useState(false);
   useEffect(() => {
     const disposable = history.undoRedoService.onChange(() => {
       setCanUndo(history.canUndo());
@@ -41,27 +41,32 @@ export const DemoTools = () => {
   const refresh = useRefresh();
 
   useEffect(() => {
-    const disposable = playground.config.onReadonlyOrDisabledChange(() => refresh());
+    const disposable = playground.config.onReadonlyOrDisabledChange(() =>
+      refresh()
+    );
     return () => disposable.dispose();
   }, [playground]);
 
   return (
     <ToolContainer className="demo-free-layout-tools">
       <ToolSection>
-        <Interactive/>
-        <AutoLayout/>
-        <SwitchLine/>
-        <ZoomSelect/>
-        <FitView/>
-        <MinimapSwitch minimapVisible={minimapVisible} setMinimapVisible={setMinimapVisible}/>
-        <Minimap visible={minimapVisible}/>
-        <Readonly/>
-        <Comment/>
+        <Interactive />
+        <AutoLayout />
+        <SwitchLine />
+        <ZoomSelect />
+        <FitView />
+        <MinimapSwitch
+          minimapVisible={minimapVisible}
+          setMinimapVisible={setMinimapVisible}
+        />
+        <Minimap visible={minimapVisible} />
+        <Readonly />
+        <Comment />
         <Tooltip content="Undo">
           <IconButton
             type="tertiary"
             theme="borderless"
-            icon={<IconUndo/>}
+            icon={<IconUndo />}
             disabled={!canUndo || playground.config.readonly}
             onClick={() => history.undo()}
           />
@@ -70,16 +75,20 @@ export const DemoTools = () => {
           <IconButton
             type="tertiary"
             theme="borderless"
-            icon={<IconRedo/>}
+            icon={<IconRedo />}
             disabled={!canRedo || playground.config.readonly}
             onClick={() => history.redo()}
           />
         </Tooltip>
-        <RunHistory/>
-        <Divider layout="vertical" style={{height: '16px'}} margin={3}/>
-        <AddNode disabled={playground.config.readonly}/>
-        <Divider layout="vertical" style={{height: '16px'}} margin={3}/>
-        <TestRunButton disabled={playground.config.readonly}/>
+        <RunHistorySwitch
+          runHistoryVisible={runHistoryVisible}
+          setRunHistoryVisible={setRunHistoryVisible}
+        />
+        <RunHistory visible={runHistoryVisible} />
+        <Divider layout="vertical" style={{ height: "16px" }} margin={3} />
+        <AddNode disabled={playground.config.readonly} />
+        <Divider layout="vertical" style={{ height: "16px" }} margin={3} />
+        <TestRunButton disabled={playground.config.readonly} />
       </ToolSection>
     </ToolContainer>
   );

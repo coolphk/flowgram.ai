@@ -3,42 +3,34 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
+import { RunHistoryRender } from "../../plugins/run-history-plugin/components/run-history-render";
+import { RunHistoryContainer } from "./styles";
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
-
-import React from 'react';
-import { useService } from '@flowgram.ai/free-layout-editor';
-import { Tooltip, IconButton } from '@douyinfe/semi-ui';
-import { IconHistogram } from '@douyinfe/semi-icons';
-import { RunHistoryService } from '../../plugins/run-history-plugin';
-
-export const RunHistory: React.FC = () => {
-  const runHistoryService = useService(RunHistoryService);
-  
-  const handleToggleRunHistory = () => {
-    try {
-      runHistoryService.togglePanel();
-    } catch (error) {
-      console.warn('RunHistoryService not available:', error);
-    }
-  };
-
+export const RunHistory = ({ visible }: { visible?: boolean }) => {
+  if (!visible) {
+    return <></>;
+  }
   return (
-    <Tooltip content="运行记录">
-      <IconButton
-        type="tertiary"
-        theme="borderless"
-        icon={<IconHistogram />}
-        onClick={handleToggleRunHistory}
-        data-testid="run-history-button"
-      />
-    </Tooltip>
+    <RunHistoryContainer>
+      <RunHistoryRender />
+      {/* <MinimapRender
+        service={minimapService}
+        panelStyles={{}}
+        containerStyles={{
+          pointerEvents: "auto",
+          position: "relative",
+          top: "unset",
+          right: "unset",
+          bottom: "unset",
+          left: "unset",
+        }}
+        inactiveStyle={{
+          opacity: 1,
+          scale: 1,
+          translateX: 0,
+          translateY: 0,
+        }}
+      /> */}
+    </RunHistoryContainer>
   );
 };

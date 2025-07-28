@@ -17,7 +17,7 @@ export class WorkflowExecutor implements INodeExecutor {
 
   public async execute(context: ExecutionContext): Promise<ExecutionResult> {
     // console.log('Start node executed', context.runtime.ioCenter.inputs)
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
     return {
       outputs: {
         type: 'object',

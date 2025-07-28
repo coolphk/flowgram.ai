@@ -14,7 +14,7 @@ import {
   WorkflowInputs,
   WorkflowOutputs,
   WorkflowStatus,
-} from '@flowgram.ai/runtime-interface';
+} from "@flowgram.ai/runtime-interface";
 import {
   injectable,
   inject,
@@ -25,12 +25,12 @@ import {
   WorkflowNodeLinesData,
   Emitter,
   getNodeForm,
-} from '@flowgram.ai/free-layout-editor';
+} from "@flowgram.ai/free-layout-editor";
 
-import { WorkflowRuntimeClient } from '../client';
-import { WorkflowNodeType } from '../../../nodes';
+import { WorkflowRuntimeClient } from "../client";
+import { WorkflowNodeType } from "../../../nodes";
 
-const SYNC_TASK_REPORT_INTERVAL = 500;
+const SYNC_TASK_REPORT_INTERVAL = 1000;
 
 interface NodeRunningStatus {
   nodeID: string;
@@ -85,7 +85,7 @@ export class WorkflowRuntimeService {
     const isFormValid = await this.validateForm();
     if (!isFormValid) {
       this.resultEmitter.fire({
-        errors: ['Form validation failed'],
+        errors: ["Form validation failed"],
       });
       return;
     }
@@ -96,7 +96,7 @@ export class WorkflowRuntimeService {
     });
     if (!validateResult?.valid) {
       this.resultEmitter.fire({
-        errors: validateResult?.errors ?? ['Internal Server Error'],
+        errors: validateResult?.errors ?? ["Internal Server Error"],
       });
       return;
     }
@@ -108,7 +108,7 @@ export class WorkflowRuntimeService {
         inputs,
       });
       taskID = output?.taskID;
-      console.log('task_run output')
+      console.log("task_run output");
     } catch (e) {
       this.resultEmitter.fire({
         errors: [(e as Error)?.message],
@@ -117,7 +117,7 @@ export class WorkflowRuntimeService {
     }
     if (!taskID) {
       this.resultEmitter.fire({
-        errors: ['Task run failed'],
+        errors: ["Task run failed"],
       });
       return;
     }
@@ -138,9 +138,15 @@ export class WorkflowRuntimeService {
   }
 
   private async validateForm(): Promise<boolean> {
-    const allForms = this.document.getAllNodes().map((node) => getNodeForm(node));
-    const formValidations = await Promise.all(allForms.map(async (form) => form?.validate()));
-    const validations = formValidations.filter((validation) => validation !== undefined);
+    const allForms = this.document
+      .getAllNodes()
+      .map((node) => getNodeForm(node));
+    const formValidations = await Promise.all(
+      allForms.map(async (form) => form?.validate())
+    );
+    const validations = formValidations.filter(
+      (validation) => validation !== undefined
+    );
     const isValid = validations.every((validation) => validation);
     return isValid;
   }
@@ -164,7 +170,7 @@ export class WorkflowRuntimeService {
     });
     if (!report) {
       clearInterval(this.syncTaskReportIntervalID);
-      console.error('Sync task report failed');
+      console.error("Sync task report failed");
       return;
     }
     const { workflowStatus, inputs, outputs, messages } = report;
@@ -175,7 +181,9 @@ export class WorkflowRuntimeService {
       } else {
         this.resultEmitter.fire({
           errors: messages?.error?.map((message) =>
-            message.nodeID ? `${message.nodeID}: ${message.message}` : message.message
+            message.nodeID
+              ? `${message.nodeID}: ${message.message}`
+              : message.message
           ),
         });
       }

@@ -3,12 +3,10 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { FlowMinimapService, MinimapRender } from "@flowgram.ai/minimap-plugin";
+import { useService } from "@flowgram.ai/free-layout-editor";
 
-
-import { FlowMinimapService, MinimapRender } from '@flowgram.ai/minimap-plugin';
-import { useService } from '@flowgram.ai/free-layout-editor';
-
-import { MinimapContainer } from './styles';
+import { MinimapContainer } from "./styles";
 
 export const Minimap = ({ visible }: { visible?: boolean }) => {
   const minimapService = useService(FlowMinimapService);
@@ -21,12 +19,12 @@ export const Minimap = ({ visible }: { visible?: boolean }) => {
         service={minimapService}
         panelStyles={{}}
         containerStyles={{
-          pointerEvents: 'auto',
-          position: 'relative',
-          top: 'unset',
-          right: 'unset',
-          bottom: 'unset',
-          left: 'unset',
+          pointerEvents: "auto",
+          position: "relative",
+          top: "unset",
+          right: "unset",
+          bottom: "unset",
+          left: "unset",
         }}
         inactiveStyle={{
           opacity: 1,
