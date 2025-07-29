@@ -3,16 +3,19 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { RunHistoryRender } from "../../plugins/run-history-plugin/components/run-history-render";
-import { RunHistoryContainer } from "./styles";
+import {RunHistoryContainer} from "./styles";
+import {RunHistoryService} from "../../plugins/run-history-plugin/service";
+import {useService} from "@flowgram.ai/free-layout-editor";
+import {RunHistoryPanel} from "../../plugins/run-history-plugin/components/run-history-panel";
 
-export const RunHistory = ({ visible }: { visible?: boolean }) => {
+export const RunHistory = ({visible}: { visible?: boolean }) => {
+  const runHistoryService = useService(RunHistoryService);
   if (!visible) {
     return <></>;
   }
   return (
     <RunHistoryContainer>
-      <RunHistoryRender />
+      <RunHistoryPanel service={runHistoryService}/>
       {/* <MinimapRender
         service={minimapService}
         panelStyles={{}}
