@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "npm run build:fast -- --dts-resolve",
-    "build:fast": "tsup src/index.ts --format cjs,esm --sourcemap --legacy-output",
+    "build:fast": "tsup src/index.ts --format esm --sourcemap --legacy-output",
     "build:watch": "npm run build:fast -- --dts-resolve",
     "clean": "rimraf dist",
     "test": "exit 0",

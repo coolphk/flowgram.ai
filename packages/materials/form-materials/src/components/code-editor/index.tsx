@@ -19,6 +19,7 @@ import preset, { type EditorAPI } from '@coze-editor/editor/preset-code';
 import { EditorView } from '@codemirror/view';
 
 import { getSuffixByLanguageId } from './utils';
+import { initTsWorker } from './language-features';
 
 import './theme';
 import './language-features';
@@ -57,6 +58,12 @@ export function CodeEditor({
   readonly,
 }: CodeEditorPropsType) {
   const editorRef = useRef<EditorAPI | null>(null);
+
+  useEffect(() => {
+    if (languageId === 'typescript') {
+      initTsWorker();
+    }
+  }, [languageId]);
 
   useEffect(() => {
     // listen to value change

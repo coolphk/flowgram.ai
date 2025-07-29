@@ -17,8 +17,8 @@ export const rules: IRules = {
     [Op.NOT_CONTAINS]: 'string',
     [Op.IN]: 'array',
     [Op.NIN]: 'array',
-    [Op.IS_EMPTY]: 'string',
-    [Op.IS_NOT_EMPTY]: 'string',
+    [Op.IS_EMPTY]: null,
+    [Op.IS_NOT_EMPTY]: null,
   },
   number: {
     [Op.EQ]: 'number',
@@ -29,8 +29,6 @@ export const rules: IRules = {
     [Op.LTE]: 'number',
     [Op.IN]: 'array',
     [Op.NIN]: 'array',
-    [Op.IS_EMPTY]: null,
-    [Op.IS_NOT_EMPTY]: null,
   },
   integer: {
     [Op.EQ]: 'number',
@@ -41,8 +39,6 @@ export const rules: IRules = {
     [Op.LTE]: 'number',
     [Op.IN]: 'array',
     [Op.NIN]: 'array',
-    [Op.IS_EMPTY]: null,
-    [Op.IS_NOT_EMPTY]: null,
   },
   boolean: {
     [Op.EQ]: 'boolean',
@@ -51,8 +47,6 @@ export const rules: IRules = {
     [Op.IS_FALSE]: null,
     [Op.IN]: 'array',
     [Op.NIN]: 'array',
-    [Op.IS_EMPTY]: null,
-    [Op.IS_NOT_EMPTY]: null,
   },
   object: {
     [Op.IS_EMPTY]: null,
