@@ -3,16 +3,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
-
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
-
 import {
   IReport,
   NodeReport,
@@ -61,6 +51,8 @@ export class WorkflowRuntimeService {
 
   private resetEmitter = new Emitter<{}>();
 
+  private taskIdEmitter = new Emitter<string>();
+
   private resultEmitter = new Emitter<{
     errors?: string[];
     result?: {
@@ -75,7 +67,13 @@ export class WorkflowRuntimeService {
 
   public onReset = this.resetEmitter.event;
 
+  public onTaskIdGenerated = this.taskIdEmitter.event;
+
   public onResultChanged = this.resultEmitter.event;
+
+  public getTaskId(): string | undefined {
+    return this.taskID;
+  }
 
   public isFlowingLine(line: WorkflowLineEntity) {
     return this.runningNodes.some((node) =>
@@ -127,6 +125,7 @@ export class WorkflowRuntimeService {
       return;
     }
     this.taskID = taskID;
+    this.taskIdEmitter.fire(taskID);
     this.syncTaskReportIntervalID = setInterval(() => {
       this.syncTaskReport();
     }, SYNC_TASK_REPORT_INTERVAL);
