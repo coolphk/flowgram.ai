@@ -97,7 +97,8 @@ export function useVariableTree(params: {
       icon: getVariableTypeIcon(variable),
       children,
       disabled: !isSchemaMatch,
-      rootMeta: parentFields[0]?.meta,
+      rootMeta: parentFields[0]?.meta || variable.meta,
+      isRoot: !parentFields?.length,
     };
   };
 

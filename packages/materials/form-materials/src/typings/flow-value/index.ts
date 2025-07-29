@@ -9,25 +9,33 @@
 
 import { IJsonSchema } from '../json-schema';
 
+export interface IFlowValueExtra {
+  index?: number;
+}
+
 export interface IFlowConstantValue {
   type: 'constant';
   content?: string | number | boolean;
   schema?: IJsonSchema;
+  extra?: IFlowValueExtra;
 }
 
 export interface IFlowRefValue {
   type: 'ref';
   content?: string[];
+  extra?: IFlowValueExtra;
 }
 
 export interface IFlowExpressionValue {
   type: 'expression';
   content?: string;
+  extra?: IFlowValueExtra;
 }
 
 export interface IFlowTemplateValue {
   type: 'template';
   content?: string;
+  extra?: IFlowValueExtra;
 }
 
 export type IFlowValue =
