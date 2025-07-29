@@ -3,41 +3,42 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { FC } from "react";
 
+import { Field } from "@flowgram.ai/free-layout-editor";
 
-import {FC} from 'react';
-
-import {Field} from '@flowgram.ai/free-layout-editor';
-
-import {TypeTag} from '../type-tag';
-import {JsonSchema} from '../../typings';
-import {useIsSidebar} from '../../hooks';
-import {FormOutputsContainer, LabelContainer} from './styles';
+import { TypeTag } from "../type-tag";
+import { JsonSchema } from "../../typings";
+import { useIsSidebar } from "../../hooks";
+import { FormOutputsContainer, LabelContainer } from "./styles";
 
 interface FormOutputsProps {
   name?: string;
   label?: string;
 }
 
-export const FormOutputs: FC<FormOutputsProps> = ({name = 'outputs', label = ''}) => {
+export const FormOutputs: FC<FormOutputsProps> = ({
+  name = "outputs",
+  label = "",
+}) => {
   const isSidebar = useIsSidebar();
   if (isSidebar) {
     return null;
   }
   return (
     <Field<JsonSchema> name={name}>
-      {({field}) => {
+      {({ field }) => {
+        console.log('field', field);
         const properties = field.value?.properties;
         if (properties) {
-          console.log(111, field, properties);
           const content = Object.keys(properties).map((key) => {
             const property = properties[key];
-            // console.log('property', property);
-            return <TypeTag key={key} name={key} type={property.type as string}/>;
+            return (
+              <TypeTag key={key} name={key} type={property.type as string}  />
+            );
           });
           return (
             <FormOutputsContainer>
-              {/*{name}*/}
               <LabelContainer>{label}</LabelContainer>
               {content}
             </FormOutputsContainer>

@@ -27,7 +27,6 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
     <>
       <FormHeader primaryColor="var(--coz-mg-color-blue)"/>
       <FormContent>
-        {/*<FormSources/>*/}
         <FormOutputs name="inputs" label="输入"/>
         <FormOutputs label="输出"/>
         <WFTemplateRender/>

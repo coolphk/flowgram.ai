@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant I as index.ts
+    participant C as create-api.ts
+    participant FA as FlowGramAPIs<br/>(@flowgram.ai/runtime-interface)
+    participant RA as WorkflowRuntimeAPIs<br/>(@flowgram.ai/runtime-js)
+    participant T as trpc.ts
+    participant R as router<br/>(@trpc/server)
+    
+    I->>FA: FlowGramAPINames.map()
+    FA-->>I: 返回API名称列表
+    
+    loop 为每个API名称创建处理程序
+      I->>C: createAPI(apiName)
+      C->>FA: FlowGramAPIs[apiName]
+      FA-->>C: 返回API定义(define)
+      C->>RA: WorkflowRuntimeAPIs[apiName]
+      RA-->>C: 返回API调用函数(caller)
+      C->>C: 构建procedure<br/>(使用publicProcedure.input/output/query/mutation)
+      C-->>I: 返回APIHandler{define, procedure}
+    end
+    
+    I->>I: APIS.reduce()<br/>(构建routers对象)
+    
+    I->>T: router(routers)
+    T->>R: 调用@trpc/server的router()
+    R-->>T: 返回appRouter
+    T-->>I: 返回appRouter
+    
+    note over I: 导出appRouter和AppRouter类型

@@ -3,17 +3,17 @@
  * SPDX-License-Identifier: MIT
  */
 
-
-
-import styled from 'styled-components';
-import { VariableTypeIcons, ArrayIcons } from '@flowgram.ai/form-materials';
-import { Tag, Tooltip } from '@douyinfe/semi-ui';
+import styled from "styled-components";
+import { VariableTypeIcons, ArrayIcons } from "@flowgram.ai/form-materials";
+import { Tag, Tooltip } from "@douyinfe/semi-ui";
+import { TagColor } from "@douyinfe/semi-ui/lib/es/tag";
 
 interface PropsType {
   name?: string | JSX.Element;
   type: string;
   className?: string;
   isArray?: boolean;
+  color?: TagColor;
 }
 
 const TooltipContainer = styled.div`
@@ -23,7 +23,13 @@ const TooltipContainer = styled.div`
   column-gap: 6px;
 `;
 
-export function TypeTag({ name, type, isArray, className }: PropsType) {
+export function TypeTag({
+  name,
+  type,
+  isArray,
+  className,
+  color = "white",
+}: PropsType) {
   const icon = isArray ? ArrayIcons[type] : VariableTypeIcons[type];
   return (
     <Tooltip
@@ -33,19 +39,22 @@ export function TypeTag({ name, type, isArray, className }: PropsType) {
         </TooltipContainer>
       }
     >
-      <Tag color="white" className={className} style={{ padding: 4, maxWidth: 450 }}>
+      <Tag
+        color={color}
+        className={className}
+        style={{ padding: 4, maxWidth: 450 }}
+      >
         {icon}
         {name && (
           <span
             style={{
-              display: 'inline-block',
+              display: "inline-block",
               marginLeft: 4,
               marginTop: -1,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            {' '}
             {name}
           </span>
         )}
