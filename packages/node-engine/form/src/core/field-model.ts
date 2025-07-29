@@ -393,4 +393,8 @@ export class FieldModel<TValue extends FieldValue = FieldValue> implements Dispo
   onDispose(fn: () => void) {
     this.toDispose.onDispose(fn);
   }
+
+  get disposed() {
+    return this.toDispose.disposed;
+  }
 }

@@ -55,6 +55,11 @@ export function Field<TValue>({
   const refresh = useRefresh();
 
   React.useEffect(() => {
+    // 当 Field 加上 key 且 key 变化时候会销毁 FieldModel
+    if (fieldModel.disposed) {
+      refresh();
+      return () => {};
+    }
     fieldModel.renderCount = fieldModel.renderCount + 1;
 
     if (!formModel.getValueIn(name) !== undefined && defaultValue !== undefined) {
@@ -103,6 +108,7 @@ export function Field<TValue>({
 
     return React.cloneElement(children as React.ReactElement, { ...field });
   };
+  if (fieldModel.disposed) return <></>;
 
   return (
     <FieldModelContext.Provider value={fieldModel}>{renderInner()}</FieldModelContext.Provider>
