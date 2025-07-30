@@ -10,7 +10,7 @@
 import { useEffect, useState } from 'react';
 
 import { nanoid } from 'nanoid';
-import { difference } from 'lodash';
+import { difference, get, isObject, set } from 'lodash';
 
 function genId() {
   return nanoid();
@@ -27,15 +27,20 @@ type ObjectType<ValueType> = Record<string, ValueType | undefined>;
 export function useObjectList<ValueType>({
   value,
   onChange,
+  sortIndexKey,
 }: {
   value?: ObjectType<ValueType>;
   onChange: (value?: ObjectType<ValueType>) => void;
+  sortIndexKey?: string;
 }) {
   const [list, setList] = useState<ListItem<ValueType>[]>([]);
 
   useEffect(() => {
     setList((_prevList) => {
-      const newKeys = Object.keys(value || {});
+      const newKeys = Object.entries(value || {})
+        .sort((a, b) => get(a[1], sortIndexKey || 0) - get(b[1], sortIndexKey || 0))
+        .map(([key]) => key);
+
       const oldKeys = _prevList.map((item) => item.key).filter(Boolean) as string[];
       const addKeys = difference(newKeys, oldKeys);
 
@@ -79,7 +84,15 @@ export function useObjectList<ValueType>({
 
       onChange(
         Object.fromEntries(
-          nextList.filter((item) => item.key).map((item) => [item.key!, item.value])
+          nextList
+            .filter((item) => item.key)
+            .map((item) => [item.key!, item.value])
+            .map((_res, idx) => {
+              if (isObject(_res[1]) && sortIndexKey) {
+                set(_res[1], sortIndexKey, idx);
+              }
+              return _res;
+            })
         )
       );
 

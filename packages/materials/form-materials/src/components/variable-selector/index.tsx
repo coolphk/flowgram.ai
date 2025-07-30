@@ -102,7 +102,9 @@ export const VariableSelector = ({
 
           const rootTitle = (
             <UIRootTitle>
-              {_option.rootMeta?.title ? `${_option.rootMeta?.title} -` : null}
+              {_option.rootMeta?.title
+                ? `${_option.rootMeta?.title} ${_option.isRoot ? '' : '-'} `
+                : null}
             </UIRootTitle>
           );
 
@@ -123,7 +125,7 @@ export const VariableSelector = ({
                   onClose={() => onChange(undefined)}
                 >
                   {rootTitle}
-                  <UIVarName $inSelector>{_option.label}</UIVarName>
+                  {!_option.isRoot && <UIVarName $inSelector>{_option.label}</UIVarName>}
                 </UITag>
               </Popover>
             </div>

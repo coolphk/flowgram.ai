@@ -9,7 +9,7 @@
 
 import React from 'react';
 
-import { Button, IconButton, Input } from '@douyinfe/semi-ui';
+import { Button, IconButton } from '@douyinfe/semi-ui';
 import { IconDelete, IconPlus } from '@douyinfe/semi-icons';
 
 import { PropsType } from './types';
@@ -17,11 +17,21 @@ import { DynamicValueInput } from '../dynamic-value-input';
 import { IFlowConstantRefValue, IFlowValue } from '../../typings';
 import { useObjectList } from '../../hooks';
 import { UIRow, UIRows } from './styles';
+import { BlurInput } from './components/blur-input';
 
-export function InputsValues({ value, onChange, style, readonly, constantProps }: PropsType) {
+export function InputsValues({
+  value,
+  onChange,
+  style,
+  readonly,
+  constantProps,
+  schema,
+  hasError,
+}: PropsType) {
   const { list, updateKey, updateValue, remove, add } = useObjectList<IFlowValue | undefined>({
     value,
     onChange,
+    sortIndexKey: 'extra.index',
   });
 
   return (
@@ -29,18 +39,21 @@ export function InputsValues({ value, onChange, style, readonly, constantProps }
       <UIRows style={style}>
         {list.map((item) => (
           <UIRow key={item.id}>
-            <Input
+            <BlurInput
               style={{ width: 100, minWidth: 100, maxWidth: 100 }}
               disabled={readonly}
               size="small"
               value={item.key}
               onChange={(v) => updateKey(item.id, v)}
+              placeholder="Input Key"
             />
             <DynamicValueInput
               style={{ flexGrow: 1 }}
               readonly={readonly}
               value={item.value as IFlowConstantRefValue}
               onChange={(v) => updateValue(item.id, v)}
+              schema={schema}
+              hasError={hasError}
               constantProps={{
                 ...constantProps,
                 strategies: [...(constantProps?.strategies || [])],

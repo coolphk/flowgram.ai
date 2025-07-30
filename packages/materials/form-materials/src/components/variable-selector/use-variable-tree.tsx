@@ -22,8 +22,9 @@ type VariableField = BaseVariableField<{ icon?: string | JSX.Element; title?: st
 export function useVariableTree(params: {
   includeSchema?: IJsonSchema | IJsonSchema[];
   excludeSchema?: IJsonSchema | IJsonSchema[];
+  customSkip?: (variable: VariableField) => boolean;
 }): TreeNodeData[] {
-  const { includeSchema, excludeSchema } = params;
+  const { includeSchema, excludeSchema, customSkip } = params;
 
   const variables = useAvailableVariables();
 
@@ -81,8 +82,9 @@ export function useVariableTree(params: {
     const isSchemaExclude = excludeSchema
       ? JsonSchemaUtils.isASTMatchSchema(type, excludeSchema)
       : false;
+    const isCustomSkip = customSkip ? customSkip(variable) : false;
 
-    const isSchemaMatch = isSchemaInclude && !isSchemaExclude;
+    const isSchemaMatch = isSchemaInclude && !isSchemaExclude && !isCustomSkip;
 
     // If not match, and no children, return null
     if (!isSchemaMatch && !children?.length) {
@@ -97,7 +99,8 @@ export function useVariableTree(params: {
       icon: getVariableTypeIcon(variable),
       children,
       disabled: !isSchemaMatch,
-      rootMeta: parentFields[0]?.meta,
+      rootMeta: parentFields[0]?.meta || variable.meta,
+      isRoot: !parentFields?.length,
     };
   };
 

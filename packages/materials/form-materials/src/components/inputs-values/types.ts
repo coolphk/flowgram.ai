@@ -8,13 +8,14 @@
 
 
 import { Strategy } from '../constant-input/types';
-import { IFlowValue } from '../../typings';
+import { IFlowValue, IJsonSchema } from '../../typings';
 
 export interface PropsType {
   value?: Record<string, IFlowValue | undefined>;
   onChange: (value?: Record<string, IFlowValue | undefined>) => void;
   readonly?: boolean;
   hasError?: boolean;
+  schema?: IJsonSchema;
   style?: React.CSSProperties;
   constantProps?: {
     strategies?: Strategy[];
