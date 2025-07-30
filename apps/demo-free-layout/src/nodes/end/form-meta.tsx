@@ -4,25 +4,25 @@
  */
 
 
+import {Field, FormMeta} from '@flowgram.ai/free-layout-editor';
+import {createInferInputsPlugin, IFlowValue, InputsValues} from '@flowgram.ai/form-materials';
 
-import { Field, FormMeta } from '@flowgram.ai/free-layout-editor';
-import { createInferInputsPlugin, IFlowValue, InputsValues } from '@flowgram.ai/form-materials';
-
-import { defaultFormMeta } from '../default-form-meta';
-import { useIsSidebar } from '../../hooks';
-import { FormHeader, FormContent, FormOutputs } from '../../form-components';
+import {defaultFormMeta} from '../default-form-meta';
+import {useIsSidebar} from '../../hooks';
+import {FormContent, FormHeader} from '../../form-components';
 
 export const renderForm = () => {
   const isSidebar = useIsSidebar();
   if (isSidebar) {
     return (
       <>
-        <FormHeader />
+        <FormHeader/>
         <FormContent>
           <Field<Record<string, IFlowValue | undefined> | undefined> name="inputsValues">
-            {({ field: { value, onChange } }) => (
+            {({field: {value, onChange}}) => (
               <>
-                <InputsValues value={value} onChange={(_v) => onChange(_v)} />
+                {/*<Button onClick={() => console.log(value)}>ss</Button>*/}
+                <InputsValues value={value} onChange={(_v) => onChange(_v)}/>
               </>
             )}
           </Field>
@@ -32,12 +32,12 @@ export const renderForm = () => {
   }
   return (
     <>
-      <FormHeader />
+      <FormHeader/>
       <FormContent>
         <Field<Record<string, IFlowValue | undefined> | undefined> name="inputsValues">
-          {({ field: { value, onChange } }) => (
+          {({field: {value, onChange}}) => (
             <>
-              <InputsValues value={value} onChange={(_v) => onChange(_v)} />
+              <InputsValues value={value} onChange={(_v) => onChange(_v)}/>
             </>
           )}
         </Field>

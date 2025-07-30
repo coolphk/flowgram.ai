@@ -4,14 +4,13 @@
  */
 
 
-
-import { FC, useState } from 'react';
+import {FC, useState} from 'react';
 
 import classNames from 'classnames';
-import { Tag } from '@douyinfe/semi-ui';
-import { IconSmallTriangleDown } from '@douyinfe/semi-icons';
+import {Tag} from '@douyinfe/semi-ui';
+import {IconSmallTriangleDown} from '@douyinfe/semi-icons';
 
-import { DataStructureViewer } from '../viewer';
+import {DataStructureViewer} from '../viewer';
 
 import styles from './index.module.less';
 
@@ -25,14 +24,14 @@ interface NodeStatusGroupProps {
 const isObjectHasContent = (obj: any = {}): boolean => obj && Object.keys(obj).length > 0;
 
 export const NodeStatusGroup: FC<NodeStatusGroupProps> = ({
-  title,
-  data,
-  optional = false,
-  disableCollapse = false,
-}) => {
+                                                            title,
+                                                            data,
+                                                            optional = false,
+                                                            disableCollapse = false,
+                                                          }) => {
   const hasContent = isObjectHasContent(data);
   const [isExpanded, setIsExpanded] = useState(true);
-
+  console.log(title, data)
   if (optional && !hasContent) {
     return null;
   }
@@ -57,7 +56,7 @@ export const NodeStatusGroup: FC<NodeStatusGroupProps> = ({
           </Tag>
         )}
       </div>
-      {hasContent && isExpanded ? <DataStructureViewer data={data} /> : null}
+      {hasContent && isExpanded ? <DataStructureViewer data={data}/> : null}
     </>
   );
 };

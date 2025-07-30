@@ -4,14 +4,13 @@
  */
 
 
+import {Field} from '@flowgram.ai/free-layout-editor';
+import {DynamicValueInput, PromptEditorWithVariables} from '@flowgram.ai/form-materials';
 
-import { Field } from '@flowgram.ai/free-layout-editor';
-import { DynamicValueInput, PromptEditorWithVariables } from '@flowgram.ai/form-materials';
-
-import { FormItem } from '../form-item';
-import { Feedback } from '../feedback';
-import { JsonSchema } from '../../typings';
-import { useNodeRenderContext } from '../../hooks';
+import {FormItem} from '../form-item';
+import {Feedback} from '../feedback';
+import {JsonSchema} from '../../typings';
+import {useNodeRenderContext} from '../../hooks';
 
 export function FormInputs() {
   const { readonly } = useNodeRenderContext();
@@ -40,6 +39,7 @@ export function FormInputs() {
                   type={property.type as string}
                   required={required.includes(key)}
                 >
+                  {/*<Button onClick={() => console.log(field)}>ss</Button>*/}
                   {formComponent === 'prompt-editor' && (
                     <PromptEditorWithVariables
                       value={field.value}

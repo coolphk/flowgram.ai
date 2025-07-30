@@ -4,21 +4,20 @@
  */
 
 
-
-import { FC, useContext, useEffect, useState } from 'react';
+import {FC, useContext, useEffect, useState} from 'react';
 
 import classnames from 'classnames';
-import { WorkflowInputs, WorkflowOutputs } from '@flowgram.ai/runtime-interface';
-import { useService } from '@flowgram.ai/free-layout-editor';
-import { Button, SideSheet, Switch } from '@douyinfe/semi-ui';
-import { IconClose, IconPlay, IconSpin } from '@douyinfe/semi-icons';
+import {WorkflowInputs, WorkflowOutputs} from '@flowgram.ai/runtime-interface';
+import {useService} from '@flowgram.ai/free-layout-editor';
+import {Button, SideSheet, Switch} from '@douyinfe/semi-ui';
+import {IconClose, IconPlay, IconSpin} from '@douyinfe/semi-icons';
 
-import { TestRunJsonInput } from '../testrun-json-input';
-import { TestRunForm } from '../testrun-form';
-import { NodeStatusGroup } from '../node-status-bar/group';
-import { WorkflowRuntimeService } from '../../../plugins/runtime-plugin/runtime-service';
-import { SidebarContext } from '../../../context';
-import { IconCancel } from '../../../assets/icon-cancel';
+import {TestRunJsonInput} from '../testrun-json-input';
+import {TestRunForm} from '../testrun-form';
+import {NodeStatusGroup} from '../node-status-bar/group';
+import {WorkflowRuntimeService} from '../../../plugins/runtime-plugin/runtime-service';
+import {SidebarContext} from '../../../context';
+import {IconCancel} from '../../../assets/icon-cancel';
 
 import styles from './index.module.less';
 
@@ -27,18 +26,18 @@ interface TestRunSidePanelProps {
   onCancel: () => void;
 }
 
-export const TestRunSidePanel: FC<TestRunSidePanelProps> = ({ visible, onCancel }) => {
+export const TestRunSidePanel: FC<TestRunSidePanelProps> = ({visible, onCancel}) => {
   const runtimeService = useService(WorkflowRuntimeService);
-  const { nodeId: sidebarNodeId, setNodeId } = useContext(SidebarContext);
+  const {nodeId: sidebarNodeId, setNodeId} = useContext(SidebarContext);
 
   const [isRunning, setRunning] = useState(false);
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [errors, setErrors] = useState<string[]>();
   const [result, setResult] = useState<
     | {
-        inputs: WorkflowInputs;
-        outputs: WorkflowOutputs;
-      }
+    inputs: WorkflowInputs;
+    outputs: WorkflowOutputs;
+  }
     | undefined
   >();
 
@@ -76,8 +75,9 @@ export const TestRunSidePanel: FC<TestRunSidePanelProps> = ({ visible, onCancel 
   // runtime effect
   useEffect(() => {
     setNodeId(undefined);
-    const disposer = runtimeService.onResultChanged(({ result, errors }) => {
+    const disposer = runtimeService.onResultChanged(({result, errors}) => {
       setRunning(false);
+      console.log('runtime result', result)
       setResult(result);
       if (errors) {
         setErrors(errors);
@@ -97,7 +97,7 @@ export const TestRunSidePanel: FC<TestRunSidePanelProps> = ({ visible, onCancel 
 
   const renderRunning = (
     <div className={styles['testrun-panel-running']}>
-      <IconSpin spin size="large" />
+      <IconSpin spin size="large"/>
       <div className={styles.text}>Running...</div>
     </div>
   );
@@ -114,24 +114,24 @@ export const TestRunSidePanel: FC<TestRunSidePanelProps> = ({ visible, onCancel 
         />
       </div>
       {inputJSONMode ? (
-        <TestRunJsonInput values={values} setValues={setValues} />
+        <TestRunJsonInput values={values} setValues={setValues}/>
       ) : (
-        <TestRunForm values={values} setValues={setValues} />
+        <TestRunForm values={values} setValues={setValues}/>
       )}
       {errors?.map((e) => (
         <div className={styles.error} key={e}>
           {e}
         </div>
       ))}
-      <NodeStatusGroup title="Inputs Result" data={result?.inputs} optional disableCollapse />
-      <NodeStatusGroup title="Outputs Result" data={result?.outputs} optional disableCollapse />
+      <NodeStatusGroup title="Inputs Result" data={result?.inputs} optional disableCollapse/>
+      <NodeStatusGroup title="Outputs Result" data={result?.outputs} optional disableCollapse/>
     </div>
   );
 
   const renderButton = (
     <Button
       onClick={onTestRun}
-      icon={isRunning ? <IconCancel /> : <IconPlay size="small" />}
+      icon={isRunning ? <IconCancel/> : <IconPlay size="small"/>}
       className={classnames(styles.button, {
         [styles.running]: isRunning,
         [styles.default]: !isRunning,
@@ -166,7 +166,7 @@ export const TestRunSidePanel: FC<TestRunSidePanelProps> = ({ visible, onCancel 
           <Button
             className={styles['testrun-panel-title']}
             type="tertiary"
-            icon={<IconClose />}
+            icon={<IconClose/>}
             size="small"
             theme="borderless"
             onClick={onClose}

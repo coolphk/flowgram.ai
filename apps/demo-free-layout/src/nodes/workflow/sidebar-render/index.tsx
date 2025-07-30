@@ -46,6 +46,7 @@ export const SidebarRender: React.FC = () => {
           properties: {},
         },
         inputsValues: {},
+        outputsValues: {},
         rawData: workflow,
       },
       type: nodeData.type,
@@ -65,6 +66,12 @@ export const SidebarRender: React.FC = () => {
       });
 
       workflow.outputs.forEach((item) => {
+        base.data.outputsValues![item.name] = nodeData?.outputsValues?.[
+          item.name
+        ] || {
+          type: "constant",
+          content: "",
+        };
         base.data.outputs!.properties![item.name] = {
           type: "file",
         };
@@ -131,7 +138,6 @@ export const SidebarRender: React.FC = () => {
             }: FieldRenderProps<JsonSchema>) => (
               <>
                 <JsonSchemaEditor
-                  readonly={true}
                   value={value}
                   onChange={(value) => onChange(value as JsonSchema)}
                 />

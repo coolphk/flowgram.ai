@@ -181,6 +181,7 @@ export class WorkflowRuntimeService {
     if (workflowStatus.terminated) {
       clearInterval(this.syncTaskReportIntervalID);
       if (Object.keys(outputs).length > 0) {
+        console.log('workflowStatus.terminated', outputs)
         this.resultEmitter.fire({ result: { inputs, outputs } });
       } else {
         this.resultEmitter.fire({
