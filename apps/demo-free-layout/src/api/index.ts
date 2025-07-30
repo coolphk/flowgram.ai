@@ -9,6 +9,7 @@ import adapterFetch from "alova/fetch";
 export const alovaInstance = createAlova({
   // baseURL: 'https://api.dt.hitdttest.tech',
   baseURL: "https://api.dt.hitwin.tech",
+  // baseURL: "https://api.dt.hitwin.tech",
   statesHook: reactHook,
   requestAdapter: adapterFetch(),
   responded: {
