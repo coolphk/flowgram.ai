@@ -6,14 +6,10 @@
 /* eslint-disable prettier/prettier */
 import React from "react";
 
-import { Field, FieldRenderProps } from "@flowgram.ai/free-layout-editor";
-import { TagGroup } from "@douyinfe/semi-ui";
+import {Field, FieldRenderProps} from "@flowgram.ai/free-layout-editor";
 
-import {
-  FormOutputsContainer,
-  LabelContainer,
-} from "../../../../form-components/form-outputs/styles";
-import { TypeTag } from "../../../../form-components";
+import {FormOutputsContainer, LabelContainer,} from "../../../../form-components/form-outputs/styles";
+import {TypeTag} from "../../../../form-components";
 
 export const WFTemplateRender: React.FC = () => (
   <div>

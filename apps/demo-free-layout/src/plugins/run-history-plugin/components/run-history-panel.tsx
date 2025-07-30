@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Table, Tag, Tooltip } from "@douyinfe/semi-ui";
+import { Button, Table, Tag, Tooltip } from "@douyinfe/semi-ui";
 import { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
 import { WorkflowStatus } from "@flowgram.ai/runtime-interface";
 import { IconSpin } from "@douyinfe/semi-icons";
 import classnames from "classnames";
 import { RunHistoryService } from "../service";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IconWarningFill } from "../../../assets/icon-warning";
 import { IconSuccessFill } from "../../../assets/icon-success";
 
@@ -21,6 +21,7 @@ interface RunHistoryPanelProps {
 
 export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
   const { service } = props;
+
   const [dataSource, setDataSource] = useState<Record<string, any>[]>([]);
   const [columns, setColumns] = useState<ColumnProps[]>([]);
 
@@ -150,35 +151,38 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
     // 监听列配置变化
     const columnsDisposer = service.onColumnsChange((newColumns) => {
       // 为新的列配置添加自定义渲染
-         const enhancedNewColumns = newColumns.map((col) => {
-           if (col.dataIndex === "taskId") {
-             return {
-               ...col,
-               render: (taskId: string) => {
-                 const shortTaskId = taskId ? taskId.substring(0, 8) + "..." : "";
-                 return (
-                   <Tooltip content={taskId} position="top">
-                     <span style={{ cursor: "pointer" }}>{shortTaskId}</span>
-                   </Tooltip>
-                 );
-               },
-               width: 100,
-             };
-           } else if (col.dataIndex === "startTime" || col.dataIndex === "endTime") {
-             return {
-               ...col,
-               render: (time: string) => time || "-",
-               width: 150,
-             };
-           } else if (col.dataIndex !== "title") {
-             return {
-               ...col,
-               render: (status: WorkflowStatus) => renderStatus(status),
-               width: 120,
-             };
-           }
-           return col;
-         });
+      const enhancedNewColumns = newColumns.map((col) => {
+        if (col.dataIndex === "taskId") {
+          return {
+            ...col,
+            render: (taskId: string) => {
+              const shortTaskId = taskId ? taskId.substring(0, 8) + "..." : "";
+              return (
+                <Tooltip content={taskId} position="top">
+                  <span style={{ cursor: "pointer" }}>{shortTaskId}</span>
+                </Tooltip>
+              );
+            },
+            width: 100,
+          };
+        } else if (
+          col.dataIndex === "startTime" ||
+          col.dataIndex === "endTime"
+        ) {
+          return {
+            ...col,
+            render: (time: string) => time || "-",
+            width: 150,
+          };
+        } else if (col.dataIndex !== "title") {
+          return {
+            ...col,
+            render: (status: WorkflowStatus) => renderStatus(status),
+            width: 120,
+          };
+        }
+        return col;
+      });
       setColumns([...enhancedNewColumns]);
     });
 
@@ -203,6 +207,7 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
         padding: 8,
       }}
     >
+      <Button onClick={() => service.getResult()}>result</Button>
       <Table
         columns={columns}
         dataSource={dataSource}

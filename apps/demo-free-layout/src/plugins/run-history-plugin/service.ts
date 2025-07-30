@@ -12,17 +12,19 @@ import {
   getNodeForm,
   Disposable,
 } from "@flowgram.ai/free-layout-editor";
-import { NodeReport } from "@flowgram.ai/runtime-interface";
+import {NodeReport} from "@flowgram.ai/runtime-interface";
 
-import { WorkflowRuntimeService } from "../runtime-plugin/runtime-service";
-import { getSubsequentNodes } from "../../utils";
-import { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
+import {WorkflowRuntimeService} from "../runtime-plugin/runtime-service";
+import {getSubsequentNodes} from "../../utils";
+import {ColumnProps} from "@douyinfe/semi-ui/lib/es/table";
+import {WorkflowRuntimeClient} from "../runtime-plugin";
 
 @injectable()
 export class RunHistoryService {
   @inject(WorkflowRuntimeService)
   private runtimeService: WorkflowRuntimeService;
   @inject(WorkflowDocument) private readonly document: WorkflowDocument;
+  @inject(WorkflowRuntimeClient) runtimeClient: WorkflowRuntimeClient;
   private row: Record<string, any> | null = {};
   private dataSource: Record<string, any>[] = [];
   private columns: ColumnProps[] = [];
@@ -34,10 +36,13 @@ export class RunHistoryService {
   private dataChangeEmitter = new Emitter<Record<string, any>[]>();
   private columnsChangeEmitter = new Emitter<ColumnProps[]>();
   private currentTaskId: string | undefined;
+  private historySnapshot: Record<string, any> = {};
 
   public onDataChange = this.dataChangeEmitter.event;
   public onColumnsChange = this.columnsChangeEmitter.event;
+
   public init(): void {
+
     // 监听文档内容变化事件，重新设置列配置
     this.contentChangeDisposer = this.document.onContentChange(() => {
       this.columns = [];
@@ -54,14 +59,16 @@ export class RunHistoryService {
     // 监听taskId生成事件，创建新的记录行
     this.taskIdDisposer = this.runtimeService.onTaskIdGenerated(
       (taskId: string) => {
+        console.log("onTaskIdGenerated");
         this.currentTaskId = taskId;
-        this.row = { 
+        this.row = {
           taskId: this.currentTaskId,
-          startTime: new Date().toLocaleString('zh-CN'),
-          endTime: undefined
+          startTime: new Date().toLocaleString("zh-CN"),
+          endTime: undefined,
         };
         // 将新的记录行添加到dataSource中
-        this.dataSource.push({ ...this.row });
+        this.historySnapshot[taskId] = {};
+        this.dataSource.push({...this.row});
         // 触发数据变化事件
         this.dataChangeEmitter.fire([...this.dataSource]);
       }
@@ -70,14 +77,16 @@ export class RunHistoryService {
     // 监听运行时服务的事件
     this.reportDisposer = this.runtimeService.onNodeReportChange(
       (nodeReport: NodeReport) => {
-        // console.log("222,nodeReport:", nodeReport);
+        console.log("222,nodeReport:", nodeReport);
         // 更新当前运行的row对象
         if (this.row) {
+          this.historySnapshot[this.currentTaskId!][nodeReport.id] =
+            nodeReport.snapshots;
           this.row[nodeReport.id] = nodeReport.status;
           // 更新dataSource中对应的记录
           const lastIndex = this.dataSource.length - 1;
           if (lastIndex >= 0) {
-            this.dataSource[lastIndex] = { ...this.row };
+            this.dataSource[lastIndex] = {...this.row};
             // 触发数据变化事件
             this.dataChangeEmitter.fire([...this.dataSource]);
           }
@@ -87,12 +96,13 @@ export class RunHistoryService {
 
     // 监听任务结果变化事件，记录结束时间
     this.resultDisposer = this.runtimeService.onResultChanged((result) => {
+      console.log("onResultChanged", result);
       if (this.row) {
-        this.row.endTime = new Date().toLocaleString('zh-CN');
+        this.row.endTime = new Date().toLocaleString("zh-CN");
         // 更新dataSource中对应的记录
         const lastIndex = this.dataSource.length - 1;
         if (lastIndex >= 0) {
-          this.dataSource[lastIndex] = { ...this.row };
+          this.dataSource[lastIndex] = {...this.row};
           // 触发数据变化事件
           this.dataChangeEmitter.fire([...this.dataSource]);
         }
@@ -100,9 +110,14 @@ export class RunHistoryService {
     });
   }
 
+  public get snapshot() {
+    return this.historySnapshot;
+  }
+
   public getDataSource(): Array<Record<string, any>> {
     return this.dataSource;
   }
+
   public getColumns() {
     if (this.columns.length === 0) {
       this.initColumns();
@@ -145,6 +160,15 @@ export class RunHistoryService {
     });
   }
 
+  public getResult() {
+    console.log('this.currentTaskId', this.currentTaskId);
+    this.runtimeClient.TaskResult({
+      taskID: this.currentTaskId!,
+    }).then((result) => {
+      console.log('result', result);
+    });
+  }
+
   private getStartNode() {
     return this.document.getAllNodes().find((node) => node.isStart);
   }
@@ -156,6 +180,7 @@ export class RunHistoryService {
       document: this.document,
     });
   }
+
   public dispose(): void {
     if (this.reportDisposer) {
       this.reportDisposer.dispose();
