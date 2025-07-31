@@ -59,6 +59,7 @@ export const TestRunSidePanel: FC<TestRunSidePanelProps> = ({visible, onCancel})
     }
     setResult(undefined);
     setErrors(undefined);
+    console.log('test run values', values)
     const taskID = await runtimeService.taskRun(values);
     if (taskID) {
       setRunning(true);

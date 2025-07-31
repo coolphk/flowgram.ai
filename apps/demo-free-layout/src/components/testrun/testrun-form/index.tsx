@@ -26,7 +26,6 @@ interface TestRunFormProps {
 
 export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
   const formMeta = useFormMeta();
-  console.log("formMeta", formMeta);
   const fields = useFields({
     formMeta,
     values,

@@ -13,7 +13,7 @@ export const useFields = (params: {
   setValues: (values: Record<string, unknown>) => void;
 }): TestRunFormField[] => {
   const { formMeta, values, setValues } = params;
-
+  console.log('useFields', params);
   // Convert each meta item to a form field with value and onChange handler
   const fields: TestRunFormField[] = formMeta.map((meta) => {
     // Handle object type specially - serialize object to JSON string for display
