@@ -42,7 +42,6 @@ export class RunHistoryService {
   public onColumnsChange = this.columnsChangeEmitter.event;
 
   public init(): void {
-
     // 监听文档内容变化事件，重新设置列配置
     this.contentChangeDisposer = this.document.onContentChange(() => {
       this.columns = [];
@@ -160,13 +159,12 @@ export class RunHistoryService {
     });
   }
 
-  public getResult() {
-    console.log('this.currentTaskId', this.currentTaskId);
-    this.runtimeClient.TaskResult({
-      taskID: this.currentTaskId!,
-    }).then((result) => {
-      console.log('result', result);
+  public async getNodeReport(taskID: string) {
+    console.log("getNodeReport", taskID)
+    const report = await this.runtimeClient.TaskReport({
+      taskID,
     });
+    return report
   }
 
   private getStartNode() {

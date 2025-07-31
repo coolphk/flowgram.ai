@@ -3,17 +3,19 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Button, Table, Tag, Tooltip } from "@douyinfe/semi-ui";
+import { Table, Tag, Modal, Tooltip } from "@douyinfe/semi-ui";
 import { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
-import { WorkflowStatus } from "@flowgram.ai/runtime-interface";
+import { NodeReport, WorkflowStatus } from "@flowgram.ai/runtime-interface";
 import { IconSpin } from "@douyinfe/semi-icons";
 import classnames from "classnames";
 import { RunHistoryService } from "../service";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IconWarningFill } from "../../../assets/icon-warning";
 import { IconSuccessFill } from "../../../assets/icon-success";
 
 import styles from "./run-history-panel.module.less";
+import { NodeStatusRender } from "../../../components/testrun/node-status-bar/render";
+import { NodeStatusGroup } from "../../../components/testrun/node-status-bar/group";
 
 interface RunHistoryPanelProps {
   service: RunHistoryService;
@@ -24,9 +26,35 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
 
   const [dataSource, setDataSource] = useState<Record<string, any>[]>([]);
   const [columns, setColumns] = useState<ColumnProps[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedNodeReport, setSelectedNodeReport] = useState<NodeReport>();
+
+  // 处理Tag点击事件
+  const handleTagClick = useCallback(
+    async (record: Record<string, any>, dataIndex: string) => {
+      const report = await service.getNodeReport(record?.taskId);
+      const nodeReport = report?.reports?.[dataIndex];
+      if (nodeReport) {
+        console.log("nodeReport", nodeReport);
+        setSelectedNodeReport(nodeReport);
+        setModalVisible(true);
+      }
+    },
+    [service]
+  );
+
+  // 关闭Modal
+  const handleModalClose = useCallback(() => {
+    setModalVisible(false);
+    setSelectedNodeReport(undefined);
+  }, []);
 
   // 状态渲染函数
-  const renderStatus = (status: WorkflowStatus) => {
+  const renderStatus = (
+    status: WorkflowStatus,
+    record: Record<string, any>,
+    dataIndex: string
+  ) => {
     const isNodePending = status === WorkflowStatus.Pending;
     const isNodeProcessing = status === WorkflowStatus.Processing;
     const isNodeFailed = status === WorkflowStatus.Failed;
@@ -98,7 +126,12 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
     return (
       <div className={styles.statusContainer}>
         {config.icon}
-        <Tag size="small" className={config.className}>
+        <Tag
+          size="small"
+          className={config.className}
+          onClick={() => handleTagClick(record, dataIndex)}
+          style={{ cursor: "pointer" }}
+        >
           {config.text}
         </Tag>
       </div>
@@ -123,19 +156,17 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
               </Tooltip>
             );
           },
-          width: 100,
         };
       } else if (col.dataIndex === "startTime" || col.dataIndex === "endTime") {
         return {
           ...col,
           render: (time: string) => time || "-",
-          width: 150,
         };
       } else if (col.dataIndex !== "title") {
         return {
           ...col,
-          render: (status: WorkflowStatus) => renderStatus(status),
-          width: 120,
+          render: (status: WorkflowStatus, record: Record<string, any>) =>
+            renderStatus(status, record, col.dataIndex!),
         };
       }
       return col;
@@ -177,7 +208,11 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
         } else if (col.dataIndex !== "title") {
           return {
             ...col,
-            render: (status: WorkflowStatus) => renderStatus(status),
+            render: (
+              status: WorkflowStatus,
+              record: Record<string, any>,
+              index: number
+            ) => renderStatus(status, record, col.dataIndex!),
             width: 120,
           };
         }
@@ -207,7 +242,6 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
         padding: 8,
       }}
     >
-      <Button onClick={() => service.getResult()}>result</Button>
       <Table
         columns={columns}
         dataSource={dataSource}
@@ -220,6 +254,18 @@ export const RunHistoryPanel: React.FC<RunHistoryPanelProps> = (props) => {
         className={styles.historyTable}
         rowKey="taskId"
       />
+      <Modal
+        title="Node Status Details"
+        visible={modalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+        width={600}
+      >
+        <NodeStatusGroup
+          title="Outputs"
+          data={selectedNodeReport?.snapshots[0].outputs}
+        />
+      </Modal>
     </div>
   );
 };
