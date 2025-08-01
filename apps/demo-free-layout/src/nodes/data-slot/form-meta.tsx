@@ -9,14 +9,14 @@ import { FormMeta, FormRenderProps, ValidateTrigger } from '@flowgram.ai/free-la
 import { provideJsonSchemaOutputs, syncVariableTitle } from '@flowgram.ai/form-materials';
 
 import { FlowNodeJSON } from '../../typings';
-import { FormContent, FormHeader, FormOutputs, FormSources } from '../../form-components';
+import { FormContent, FormHeader } from '../../form-components';
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => (
   <>
     <FormHeader primaryColor="var(--coz-mg-hglt-secondary-green)" />
     <FormContent>
-      <FormSources />
-      <FormOutputs />
+      {/*<FormSources />*/}
+      {/*<FormOutputs />*/}
     </FormContent>
   </>
 );
