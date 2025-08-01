@@ -49,6 +49,11 @@ export const defaultFormMeta: FormMeta<FlowNodeJSON['data']> = {
    * @param ctx
    */
   formatOnSubmit: (value, ctx) => value,
+  /**
+   * Supported writing as:
+   * 1: validate as options: { title: () => {} , ... }
+   * 2: validate as dynamic function: (values,  ctx) => ({ title: () => {}, ... })
+   */
   validate: {
     title: ({ value }) => (value ? undefined : 'Title is required'),
     'inputsValues.*': ({ value, context, formValues, name }) => {

@@ -3,5 +3,7 @@
   "depMaterials": [
     "flow-value"
   ],
-  "depPackages": []
+  "depPackages": [
+    "@flowgram.ai/json-schema"
+  ]
 }

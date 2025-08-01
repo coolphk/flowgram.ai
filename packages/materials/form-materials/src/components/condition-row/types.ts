@@ -3,11 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { JsonSchemaBasicType } from '@flowgram.ai/json-schema';
 
-
-
-
-import { IFlowConstantRefValue, IFlowRefValue, JsonSchemaBasicType } from '../../typings';
+import { IFlowConstantRefValue, IFlowRefValue } from '../../typings';
 
 export enum Op {
   EQ = 'eq',

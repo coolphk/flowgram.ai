@@ -377,13 +377,8 @@ export const initialData: FlowDocumentJSON = {
       blocks: [],
       data: {
         title: 'End',
-        outputs: {
-          type: 'object',
-          properties: {
-            result: {
-              type: 'string',
-            },
-          },
+        inputsValues: {
+          success: { type: 'constant', content: true, schema: { type: 'boolean' } },
         },
       },
     },

@@ -9,10 +9,10 @@
 
 import React, { useMemo } from 'react';
 
-import { Cascader, IconButton } from '@douyinfe/semi-ui';
+import { IJsonSchema } from '@flowgram.ai/json-schema';
+import { Cascader, Icon, IconButton } from '@douyinfe/semi-ui';
 
-import { IJsonSchema } from '../../typings';
-import { ArrayIcons, VariableTypeIcons, getSchemaIcon, options } from './constants';
+import { useTypeManager } from '../../plugins';
 
 interface PropTypes {
   value?: Partial<IJsonSchema>;
@@ -24,6 +24,10 @@ interface PropTypes {
   disabled?: boolean;
   style?: React.CSSProperties;
 }
+
+const labelStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 5 };
+
+const firstUppercase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 export const getTypeSelectValue = (value?: Partial<IJsonSchema>): string[] | undefined => {
   if (value?.type === 'array' && value?.items) {
@@ -48,17 +52,51 @@ export function TypeSelector(props: PropTypes) {
 
   const selectValue = useMemo(() => getTypeSelectValue(value), [value]);
 
+  const typeManager = useTypeManager();
+
+  const icon = typeManager.getDisplayIcon(value || {});
+
+  const options = useMemo(
+    () =>
+      typeManager.getTypeRegistriesWithParentType().map((_type) => {
+        const isArray = _type.type === 'array';
+
+        return {
+          label: (
+            <div style={labelStyle}>
+              <Icon size="small" svg={_type.icon} />
+              {firstUppercase(_type.type)}
+            </div>
+          ),
+          value: _type.type,
+          children: isArray
+            ? typeManager.getTypeRegistriesWithParentType('array').map((_type) => ({
+                label: (
+                  <div style={labelStyle}>
+                    <Icon
+                      size="small"
+                      svg={typeManager.getDisplayIcon({
+                        type: 'array',
+                        items: { type: _type.type },
+                      })}
+                    />
+                    {firstUppercase(_type.type)}
+                  </div>
+                ),
+                value: _type.type,
+              }))
+            : [],
+        };
+      }),
+    []
+  );
+
   return (
     <Cascader
       disabled={readonly || disabled}
       size="small"
       triggerRender={() => (
-        <IconButton
-          size="small"
-          style={style}
-          disabled={readonly || disabled}
-          icon={getSchemaIcon(value)}
-        />
+        <IconButton size="small" style={style} disabled={readonly || disabled} icon={icon} />
       )}
       treeData={options}
       value={selectValue}
@@ -69,5 +107,3 @@ export function TypeSelector(props: PropTypes) {
     />
   );
 }
-
-export { VariableTypeIcons, ArrayIcons, getSchemaIcon };

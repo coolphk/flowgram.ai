@@ -1,0 +1,9 @@
+{
+  "name": "json-schema-preset",
+  "depMaterials": [
+    "components/code-editor-mini"
+  ],
+  "depPackages": [
+    "@flowgram.ai/json-schema"
+  ]
+}

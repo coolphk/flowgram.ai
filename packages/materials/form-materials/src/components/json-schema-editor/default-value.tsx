@@ -9,6 +9,7 @@
 
 import React, { useRef, useState, useCallback } from 'react';
 
+import { IJsonSchema } from '@flowgram.ai/json-schema';
 import { IconButton, JsonViewer, Tooltip } from '@douyinfe/semi-ui';
 import { IconBrackets } from '@douyinfe/semi-icons';
 
@@ -21,7 +22,6 @@ import {
   JSONViewerWrapper,
 } from './styles';
 import { ConstantInput } from '../constant-input';
-import { IJsonSchema } from '../../typings';
 
 /**
  * 根据不同的数据类型渲染对应的默认值输入组件。

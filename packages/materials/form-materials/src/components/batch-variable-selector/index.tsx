@@ -9,10 +9,10 @@
 
 import React from 'react';
 
+import { IJsonSchema } from '@flowgram.ai/json-schema';
 import { PrivateScopeProvider } from '@flowgram.ai/editor';
 
 import { VariableSelector, VariableSelectorProps } from '../variable-selector';
-import { IJsonSchema } from '../../typings';
 
 const batchVariableSchema: IJsonSchema = {
   type: 'array',

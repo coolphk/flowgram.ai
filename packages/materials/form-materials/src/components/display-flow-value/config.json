@@ -1,0 +1,8 @@
+{
+  "name": "display-flow-value",
+  "depMaterials": [
+    "components/display-schema-tag",
+    "typings/flow-value"
+  ],
+  "depPackages": []
+}

@@ -1,0 +1,10 @@
+{
+  "name": "display-schema-tag",
+  "depMaterials": [
+    "components/display-schema-tree"
+  ],
+  "depPackages": [
+    "@douyinfe/semi-ui",
+    "styled-components"
+  ]
+}

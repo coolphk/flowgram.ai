@@ -64,6 +64,8 @@ export const nodeRegistries: FlowNodeRegistry[] = [
       validateTrigger: ValidateTrigger.onChange,
       /**
        * Configure validation rules, 'content' is the field path, the following configuration values validate data under this path
+       * Use Dynamic function  to generate a validator based on values:
+       *  validate: (values, ctx) => ({ content: () => {}, })
        */
       validate: {
         content: ({ value }) => (value ? undefined : 'Content is required'),
@@ -246,6 +248,10 @@ export const VALIDATE_EXAMPLE: FormMeta = {
   render: renderValidateExample,
   // Validation timing configuration
   validateTrigger: ValidateTrigger.onChange,
+  /*
+   * Use Dynamic function to generate a validator based on values:
+   *  validate: (values, ctx) => ({ a: () => '', b: () => '', c, () => '' })
+  */
   validate: {
     // Simply validate value
     a: ({ value }) => (value.length > 5 ? 'Max length is 5' : undefined),

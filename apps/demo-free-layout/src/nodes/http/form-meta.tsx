@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-
-
-import { FormMeta, FormRenderProps } from '@flowgram.ai/free-layout-editor';
-import { createInferInputsPlugin } from '@flowgram.ai/form-materials';
+import { Field, FormMeta, FormRenderProps } from '@flowgram.ai/free-layout-editor';
+import { createInferInputsPlugin, DisplayOutputs, IJsonSchema } from '@flowgram.ai/form-materials';
 import { Divider } from '@douyinfe/semi-ui';
 
-import { FormHeader, FormContent, FormOutputs } from '../../form-components';
+import { FormHeader, FormContent } from '../../form-components';
 import { HTTPNodeJSON } from './types';
 import { Timeout } from './components/timeout';
 import { Params } from './components/params';
@@ -31,7 +29,8 @@ export const FormRender = ({ form }: FormRenderProps<HTTPNodeJSON>) => (
       <Body />
       <Divider />
       <Timeout />
-      <FormOutputs />
+      <Divider />
+      <DisplayOutputs displayFromScope />
     </FormContent>
   </>
 );

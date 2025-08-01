@@ -1,5 +1,9 @@
 {
   "name": "batch-variable-selector",
-  "depMaterials": ["variable-selector"],
-  "depPackages": []
+  "depMaterials": [
+    "variable-selector"
+  ],
+  "depPackages": [
+    "@flowgram.ai/json-schema"
+  ]
 }

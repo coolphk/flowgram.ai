@@ -2,12 +2,12 @@
   "name": "json-schema-editor",
   "depMaterials": [
     "type-selector",
-    "typings/json-schema",
     "constant-inputs"
   ],
   "depPackages": [
     "@douyinfe/semi-ui",
     "@douyinfe/semi-icons",
-    "styled-components"
+    "styled-components",
+    "@flowgram.ai/json-schema"
   ]
 }

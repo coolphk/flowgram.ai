@@ -3,24 +3,19 @@
  * SPDX-License-Identifier: MIT
  */
 
+import React from 'react';
 
-
-
-
-import React, { useMemo, useState } from 'react';
-
-import { useScopeAvailable } from '@flowgram.ai/editor';
+import { JsonSchemaUtils, IJsonSchema } from '@flowgram.ai/json-schema';
 import { IconButton } from '@douyinfe/semi-ui';
 import { IconSetting } from '@douyinfe/semi-icons';
 
-import { Strategy } from '../constant-input/types';
-import { ConstantInput } from '../constant-input';
-import { JsonSchemaUtils } from '../../utils';
-import { IFlowConstantRefValue } from '../../typings/flow-value';
-import { UIContainer, UIMain, UITrigger, UIType } from './styles';
 import { VariableSelector } from '../variable-selector';
 import { TypeSelector } from '../type-selector';
-import { IJsonSchema } from '../../typings';
+import { Strategy } from '../constant-input/types';
+import { ConstantInput } from '../constant-input';
+import { IFlowConstantRefValue } from '../../typings/flow-value';
+import { UIContainer, UIMain, UITrigger, UIType } from './styles';
+import { useIncludeSchema, useRefVariable, useSelectSchema } from './hooks';
 
 interface PropsType {
   value?: IFlowConstantRefValue;
@@ -44,16 +39,9 @@ export function DynamicValueInput({
   schema: schemaFromProps,
   constantProps,
 }: PropsType) {
-  const available = useScopeAvailable();
-  const refVariable = useMemo(() => {
-    if (value?.type === 'ref') {
-      return available.getByKeyPath(value.content);
-    }
-  }, [value, available]);
-
-  const [selectSchema, setSelectSchema] = useState(
-    schemaFromProps || constantProps?.schema || { type: 'string' }
-  );
+  const refVariable = useRefVariable(value);
+  const [selectSchema, setSelectSchema] = useSelectSchema(schemaFromProps, constantProps, value);
+  const includeSchema = useIncludeSchema(schemaFromProps);
 
   const renderTypeSelector = () => {
     if (schemaFromProps) {
@@ -69,22 +57,32 @@ export function DynamicValueInput({
     return (
       <TypeSelector
         value={selectSchema}
-        onChange={(_v) => setSelectSchema(_v || { type: 'string' })}
+        onChange={(_v) => {
+          setSelectSchema(_v || { type: 'string' });
+          let content;
+
+          if (_v?.type === 'object') {
+            content = '{}';
+          }
+
+          if (_v?.type === 'array') {
+            content = '[]';
+          }
+
+          if (_v?.type === 'boolean') {
+            content = false;
+          }
+
+          onChange({
+            type: 'constant',
+            content,
+            schema: _v || { type: 'string' },
+          });
+        }}
         readonly={readonly}
       />
     );
   };
-
-  // When is number type, include integer as well
-  const includeSchema = useMemo(() => {
-    if (!schemaFromProps) {
-      return;
-    }
-    if (schemaFromProps?.type === 'number') {
-      return [schemaFromProps, { type: 'integer' }];
-    }
-    return { ...schemaFromProps, extra: { ...schemaFromProps?.extra, weak: true } };
-  }, [schemaFromProps]);
 
   const renderMain = () => {
     if (value?.type === 'ref') {

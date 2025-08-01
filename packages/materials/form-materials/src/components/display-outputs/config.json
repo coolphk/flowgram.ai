@@ -1,0 +1,10 @@
+{
+  "name": "display-outputs",
+  "depMaterials": [
+    "components/display-flow-value"
+  ],
+  "depPackages": [
+    "@douyinfe/semi-ui",
+    "styled-components"
+  ]
+}

@@ -11,13 +11,15 @@ import {
   BatchOutputs,
   BatchVariableSelector,
   createBatchOutputsFormPlugin,
+  DisplayOutputs,
   IFlowRefValue,
+  IJsonSchema,
   provideBatchInputEffect,
 } from '@flowgram.ai/form-materials';
 
 import { defaultFormMeta } from '../default-form-meta';
 import { useIsSidebar, useNodeRenderContext } from '../../hooks';
-import { FormHeader, FormContent, FormOutputs, FormItem, Feedback } from '../../form-components';
+import { FormHeader, FormContent, FormItem, Feedback } from '../../form-components';
 
 interface LoopNodeJSON extends FlowNodeJSON {
   data: {
@@ -71,7 +73,6 @@ export const LoopFormRender = ({ form }: FormRenderProps<LoopNodeJSON>) => {
         <FormContent>
           {loopFor}
           {loopOutputs}
-          <FormOutputs />
         </FormContent>
       </>
     );
@@ -82,7 +83,7 @@ export const LoopFormRender = ({ form }: FormRenderProps<LoopNodeJSON>) => {
       <FormContent>
         {loopFor}
         <SubCanvasRender offsetY={-formHeight} />
-        <FormOutputs />
+        <DisplayOutputs displayFromScope />
       </FormContent>
     </>
   );

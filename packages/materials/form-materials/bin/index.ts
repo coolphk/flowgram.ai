@@ -72,11 +72,17 @@ program
     const { allMaterials, allPackages } = bfsMaterials(material!, materials);
 
     // 4. Install the dependencies
-    let flowgramPackage = `@flowgram.ai/editor`;
-    if (projectInfo.flowgramVersion !== 'workspace:*') {
-      flowgramPackage = `@flowgram.ai/editor@${projectInfo.flowgramVersion}`;
-    }
-    const packagesToInstall: string[] = [flowgramPackage, ...allPackages];
+    allPackages.push(`@flowgram.ai/editor`);
+    const packagesToInstall: string[] = allPackages.map((_pkg) => {
+      if (
+        _pkg.startsWith(`@flowgram.ai/`) &&
+        projectInfo.flowgramVersion !== 'workspace:*' &&
+        !_pkg.endsWith(`@${projectInfo.flowgramVersion}`)
+      ) {
+        return `${_pkg}@${projectInfo.flowgramVersion}`;
+      }
+      return _pkg;
+    });
 
     console.log(chalk.bold('These npm dependencies will be added to your project'));
     console.log(packagesToInstall);

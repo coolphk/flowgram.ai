@@ -32,7 +32,6 @@ import {
   SubscribeConfig,
   GlobalEventActionType,
   DisposeASTAction,
-  NewASTAction,
   UpdateASTAction,
 } from './types';
 import { ASTNodeFlags } from './flags';
@@ -142,8 +141,6 @@ export abstract class ASTNode<JSON extends ASTNodeJSON = any, InjectOpts = any>
 
     // 后续调用 fromJSON 内的所有 fireChange 合并成一个
     this.fromJSON = this.withBatchUpdate(this.fromJSON.bind(this));
-
-    this.dispatchGlobalEvent<NewASTAction>({ type: 'NewAST' });
   }
 
   /**

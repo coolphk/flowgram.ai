@@ -36,6 +36,7 @@
     "@douyinfe/semi-illustrations": "^2.80.0",
     "@douyinfe/semi-ui": "^2.80.0",
     "@flowgram.ai/editor": "workspace:*",
+    "@flowgram.ai/json-schema": "workspace:*",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.2",
     "commander": "^11.0.0",

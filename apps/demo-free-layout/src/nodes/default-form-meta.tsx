@@ -15,17 +15,20 @@ import {
   autoRenameRefEffect,
   provideJsonSchemaOutputs,
   syncVariableTitle,
+  DisplayOutputs,
 } from '@flowgram.ai/form-materials';
+import { Divider } from '@douyinfe/semi-ui';
 
 import { FlowNodeJSON } from '../typings';
-import { FormHeader, FormContent, FormInputs, FormOutputs } from '../form-components';
+import { FormHeader, FormContent, FormInputs } from '../form-components';
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => (
   <>
     <FormHeader />
     <FormContent>
       <FormInputs />
-      <FormOutputs />
+      <Divider />
+      <DisplayOutputs displayFromScope />
     </FormContent>
   </>
 );
@@ -33,6 +36,11 @@ export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => (
 export const defaultFormMeta: FormMeta<FlowNodeJSON> = {
   render: renderForm,
   validateTrigger: ValidateTrigger.onChange,
+  /**
+   * Supported writing as:
+   * 1: validate as options: { title: () => {} , ... }
+   * 2: validate as dynamic function: (values,  ctx) => ({ title: () => {}, ... })
+   */
   validate: {
     title: ({ value }) => (value ? undefined : 'Title is required'),
     'inputsValues.*': ({ value, context, formValues, name }) => {

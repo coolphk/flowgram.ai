@@ -1,5 +1,9 @@
 {
   "name": "type-selector",
-  "depMaterials": ["typings/json-schema"],
-  "depPackages": ["@douyinfe/semi-ui", "@douyinfe/semi-icons"]
+  "depMaterials": [],
+  "depPackages": [
+    "@douyinfe/semi-ui",
+    "@douyinfe/semi-icons",
+    "@flowgram.ai/json-schema"
+  ]
 }

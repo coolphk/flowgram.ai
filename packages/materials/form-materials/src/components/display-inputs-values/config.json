@@ -1,0 +1,9 @@
+{
+  "name": "display-outputs",
+  "depMaterials": [
+    "components/display-schema-tag"
+  ],
+  "depPackages": [
+    "@douyinfe/semi-ui"
+  ]
+}

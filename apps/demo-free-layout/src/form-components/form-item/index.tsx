@@ -7,9 +7,9 @@
 
 import React, { useCallback } from 'react';
 
+import { DisplaySchemaTag } from '@flowgram.ai/form-materials';
 import { Typography, Tooltip } from '@douyinfe/semi-ui';
 
-import { TypeTag } from '../type-tag';
 import './index.css';
 
 const { Text } = Typography;
@@ -21,6 +21,7 @@ interface FormItemProps {
   required?: boolean;
   description?: string;
   labelWidth?: number;
+  labelStyle?: React.CSSProperties;
   vertical?: boolean;
   style?: React.CSSProperties;
 }
@@ -31,6 +32,7 @@ export function FormItem({
   description,
   type,
   labelWidth,
+  labelStyle,
   vertical,
   style,
 }: FormItemProps): JSX.Element {
@@ -75,9 +77,10 @@ export function FormItem({
           display: 'flex',
           columnGap: 4,
           flexShrink: 0,
+          ...labelStyle,
         }}
       >
-        {type && <TypeTag className="form-item-type-tag" type={type} />}
+        {type && <DisplaySchemaTag value={{ type }} />}
         {description ? <Tooltip content={description}>{renderTitle()}</Tooltip> : renderTitle(true)}
       </div>
 

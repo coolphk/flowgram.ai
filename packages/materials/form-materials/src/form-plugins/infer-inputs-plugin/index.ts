@@ -8,6 +8,7 @@
 
 
 import { get, set } from 'lodash';
+import { JsonSchemaUtils, IJsonSchema } from '@flowgram.ai/json-schema';
 import {
   defineFormPluginCreator,
   getNodePrivateScope,
@@ -15,8 +16,7 @@ import {
   Scope,
 } from '@flowgram.ai/editor';
 
-import { JsonSchemaUtils } from '../../utils';
-import { IFlowConstantValue, IFlowRefValue, IFlowTemplateValue, IJsonSchema } from '../../typings';
+import { IFlowConstantValue, IFlowRefValue, IFlowTemplateValue } from '../../typings';
 
 interface InputConfig {
   sourceKey: string;

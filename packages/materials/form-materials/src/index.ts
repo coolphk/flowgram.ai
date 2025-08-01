@@ -9,6 +9,7 @@
 
 export * from './components';
 export * from './effects';
-export * from './utils';
+export * from './shared';
 export * from './typings';
 export * from './form-plugins';
+export * from './plugins';

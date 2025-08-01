@@ -19,9 +19,10 @@ interface HookParams {
   rule?: IRule;
   op?: Op;
   onChange: (op: Op) => void;
+  readonly?: boolean;
 }
 
-export function useOp({ rule, op, onChange }: HookParams) {
+export function useOp({ rule, op, onChange, readonly }: HookParams) {
   const options = useMemo(
     () =>
       Object.keys(rule || {}).map((_op) => ({
@@ -36,6 +37,7 @@ export function useOp({ rule, op, onChange }: HookParams) {
   const renderOpSelect = () => (
     <Select
       style={{ height: 22 }}
+      disabled={readonly}
       size="small"
       value={op}
       optionList={options}

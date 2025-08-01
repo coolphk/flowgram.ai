@@ -52,11 +52,13 @@ export function ConditionInputs() {
                       }
                     />
 
-                    <Button
-                      type="text"
-                      icon={<CloseCircleOutlined />}
-                      onClick={() => field.delete(index)}
-                    />
+                    {!readonly && (
+                      <Button
+                        type="text"
+                        icon={<CloseCircleOutlined />}
+                        onClick={() => field.delete(index)}
+                      />
+                    )}
                   </div>
 
                   <Feedback errors={childState?.errors} invalid={childState?.invalid} />

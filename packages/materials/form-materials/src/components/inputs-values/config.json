@@ -7,6 +7,7 @@
   "depPackages": [
     "@douyinfe/semi-ui",
     "@douyinfe/semi-icons",
-    "styled-components"
+    "styled-components",
+    "@flowgram.ai/json-schema"
   ]
 }

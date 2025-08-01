@@ -10,8 +10,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { omit } from 'lodash';
+import { IJsonSchema } from '@flowgram.ai/json-schema';
 
-import { IJsonSchema } from '../../typings';
 import { PropertyValueType } from './types';
 
 let _id = 0;

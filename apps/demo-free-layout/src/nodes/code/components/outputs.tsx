@@ -6,7 +6,7 @@
 
 
 import { Field } from '@flowgram.ai/free-layout-editor';
-import { IJsonSchema, JsonSchemaEditor } from '@flowgram.ai/form-materials';
+import { DisplayOutputs, IJsonSchema, JsonSchemaEditor } from '@flowgram.ai/form-materials';
 import { Divider } from '@douyinfe/semi-ui';
 
 import { useIsSidebar, useNodeRenderContext } from '../../../hooks';
@@ -17,7 +17,14 @@ export function Outputs() {
   const isSidebar = useIsSidebar();
 
   if (!isSidebar) {
-    return null;
+    return (
+      <>
+        <Divider />
+        <Field<IJsonSchema> name="outputs">
+          {({ field }) => <DisplayOutputs value={field.value} />}
+        </Field>
+      </>
+    );
   }
 
   return (

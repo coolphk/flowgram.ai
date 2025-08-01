@@ -13,6 +13,8 @@ import {
   ValidateTrigger,
 } from '@flowgram.ai/free-layout-editor';
 import {
+  DisplayOutputs,
+  IJsonSchema,
   JsonSchemaEditor,
   provideJsonSchemaOutputs,
   syncVariableTitle,
@@ -20,7 +22,7 @@ import {
 
 import { FlowNodeJSON, JsonSchema } from '../../typings';
 import { useIsSidebar } from '../../hooks';
-import { FormHeader, FormContent, FormOutputs } from '../../form-components';
+import { FormHeader, FormContent } from '../../form-components';
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
   const isSidebar = useIsSidebar();
@@ -48,7 +50,7 @@ export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
     <>
       <FormHeader />
       <FormContent>
-        <FormOutputs />
+        <DisplayOutputs displayFromScope />
       </FormContent>
     </>
   );

@@ -9,6 +9,7 @@
 
 import React, { useMemo, useState } from 'react';
 
+import { IJsonSchema } from '@flowgram.ai/json-schema';
 import { Button, Checkbox, IconButton } from '@douyinfe/semi-ui';
 import {
   IconExpand,
@@ -20,7 +21,6 @@ import {
 } from '@douyinfe/semi-icons';
 
 import { TypeSelector } from '../type-selector';
-import { IJsonSchema } from '../../typings';
 import { ConfigType, PropertyValueType } from './types';
 import {
   IconAddChildren,

@@ -9,12 +9,12 @@
 
 import React, { useMemo } from 'react';
 
+import { IJsonSchema } from '@flowgram.ai/json-schema';
 import { TriggerRenderProps } from '@douyinfe/semi-ui/lib/es/treeSelect';
 import { TreeNodeData } from '@douyinfe/semi-ui/lib/es/tree';
 import { Popover } from '@douyinfe/semi-ui';
 import { IconChevronDownStroked, IconIssueStroked } from '@douyinfe/semi-icons';
 
-import { IJsonSchema } from '../../typings/json-schema';
 import { useVariableTree } from './use-variable-tree';
 import { UIPopoverContent, UIRootTitle, UITag, UITreeSelect, UIVarName } from './styles';
 

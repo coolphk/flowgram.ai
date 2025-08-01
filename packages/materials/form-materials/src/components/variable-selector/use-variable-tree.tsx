@@ -9,15 +9,18 @@
 
 import React, { useCallback } from 'react';
 
+import { IJsonSchema, JsonSchemaUtils } from '@flowgram.ai/json-schema';
 import { ASTMatch, BaseVariableField, useAvailableVariables } from '@flowgram.ai/editor';
 import { TreeNodeData } from '@douyinfe/semi-ui/lib/es/tree';
 import { Icon } from '@douyinfe/semi-ui';
 
-import { ArrayIcons, VariableTypeIcons } from '../type-selector/constants';
-import { JsonSchemaUtils } from '../../utils/json-schema';
-import { IJsonSchema } from '../../typings/json-schema';
+import { useTypeManager } from '../../plugins';
 
-type VariableField = BaseVariableField<{ icon?: string | JSX.Element; title?: string }>;
+type VariableField = BaseVariableField<{
+  icon?: string | JSX.Element;
+  title?: string;
+  disabled?: boolean;
+}>;
 
 export function useVariableTree(params: {
   includeSchema?: IJsonSchema | IJsonSchema[];
@@ -26,6 +29,7 @@ export function useVariableTree(params: {
 }): TreeNodeData[] {
   const { includeSchema, excludeSchema, customSkip } = params;
 
+  const typeManager = useTypeManager();
   const variables = useAvailableVariables();
 
   const getVariableTypeIcon = useCallback((variable: VariableField) => {
@@ -37,22 +41,9 @@ export function useVariableTree(params: {
       return variable.meta.icon;
     }
 
-    const _type = variable.type;
+    const schema = JsonSchemaUtils.astToSchema(variable.type, { drilldownObject: false });
 
-    if (ASTMatch.isArray(_type)) {
-      return (
-        <Icon
-          size="small"
-          svg={ArrayIcons[_type.items?.kind.toLowerCase()] || VariableTypeIcons.array}
-        />
-      );
-    }
-
-    if (ASTMatch.isCustomType(_type)) {
-      return <Icon size="small" svg={VariableTypeIcons[_type.typeName.toLowerCase()]} />;
-    }
-
-    return <Icon size="small" svg={VariableTypeIcons[variable.type?.kind.toLowerCase()]} />;
+    return <Icon size="small" svg={typeManager.getDisplayIcon(schema || {})} />;
   }, []);
 
   const renderVariable = (
@@ -84,7 +75,10 @@ export function useVariableTree(params: {
       : false;
     const isCustomSkip = customSkip ? customSkip(variable) : false;
 
-    const isSchemaMatch = isSchemaInclude && !isSchemaExclude && !isCustomSkip;
+    // disabled in meta when created
+    const isMetaDisabled = variable.meta?.disabled;
+
+    const isSchemaMatch = isSchemaInclude && !isSchemaExclude && !isCustomSkip && !isMetaDisabled;
 
     // If not match, and no children, return null
     if (!isSchemaMatch && !children?.length) {

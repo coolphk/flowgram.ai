@@ -24,7 +24,7 @@ import {
   OnFormValuesUpdatedPayload,
 } from '../types/form';
 import { FieldName, FieldValue } from '../types/field';
-import { Errors, FeedbackLevel, FormValidateReturn, Warnings } from '../types';
+import { Errors, FeedbackLevel, FormValidateReturn, Validate, Warnings } from '../types';
 import { createFormModelState } from '../constants';
 import { getValidByErrors, mergeFeedbacks } from './utils';
 import { Store } from './store';
@@ -248,16 +248,17 @@ export class FormModel<TValues = any> implements Disposable {
   }
 
   async validateIn(name: FieldName) {
-    if (!this._options.validate) {
+    const validateOptions = this.getValidateOptions();
+    if (!validateOptions) {
       return;
     }
 
-    const validateKeys = Object.keys(this._options.validate).filter((pattern) =>
+    const validateKeys = Object.keys(validateOptions).filter((pattern) =>
       Glob.isMatch(pattern, name)
     );
 
     const validatePromises = validateKeys.map(async (validateKey) => {
-      const validate = this._options.validate![validateKey];
+      const validate = validateOptions![validateKey];
 
       return validate({
         value: this.getValueIn(name),
@@ -270,19 +271,29 @@ export class FormModel<TValues = any> implements Disposable {
     return Promise.all(validatePromises);
   }
 
+  protected getValidateOptions(): Record<string, Validate> | undefined {
+    const validate = this._options.validate;
+    if (typeof validate === 'function') {
+      return validate(this.values, this.context);
+    }
+    return validate;
+  }
+
   async validate(): Promise<FormValidateReturn> {
-    if (!this._options.validate) {
+    const validateOptions = this.getValidateOptions();
+    if (!validateOptions) {
       return [];
     }
 
-    const feedbacksArrPromises = Object.keys(this._options.validate).map(async (nameRule) => {
-      const validate = this._options.validate![nameRule];
-      const paths = Glob.findMatchPathsWithEmptyValue(this.values, nameRule);
+    const feedbacksArrPromises = Object.keys(validateOptions).map(async (nameRule) => {
+      const validate = validateOptions![nameRule];
+      const values = this.values;
+      const paths = Glob.findMatchPathsWithEmptyValue(values, nameRule);
       return Promise.all(
         paths.map(async (path) => {
           const result = await validate({
-            value: get(this.values, path),
-            formValues: this.values,
+            value: get(values, path),
+            formValues: values,
             context: this.context,
             name: path,
           });

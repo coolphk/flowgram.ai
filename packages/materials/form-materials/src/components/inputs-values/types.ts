@@ -3,12 +3,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-
-
-
+import { IJsonSchema } from '@flowgram.ai/json-schema';
 
 import { Strategy } from '../constant-input/types';
-import { IFlowValue, IJsonSchema } from '../../typings';
+import { IFlowValue } from '../../typings';
 
 export interface PropsType {
   value?: Record<string, IFlowValue | undefined>;

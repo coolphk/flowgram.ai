@@ -1,5 +1,13 @@
 {
   "name": "condition-row",
-  "depMaterials": ["variable-selector", "dynamic-value-input", "flow-value", "utils/json-schema", "typings/json-schema"],
-  "depPackages": ["@douyinfe/semi-ui", "styled-components"]
+  "depMaterials": [
+    "variable-selector",
+    "dynamic-value-input",
+    "flow-value"
+  ],
+  "depPackages": [
+    "@douyinfe/semi-ui",
+    "styled-components",
+    "@flowgram.ai/json-schema"
+  ]
 }

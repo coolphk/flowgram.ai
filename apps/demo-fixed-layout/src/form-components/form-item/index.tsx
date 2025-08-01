@@ -9,9 +9,9 @@
 
 import React, { useCallback } from 'react';
 
+import { DisplaySchemaTag } from '@flowgram.ai/form-materials';
 import { Typography, Tooltip } from '@douyinfe/semi-ui';
 
-import { TypeTag } from '../type-tag';
 import './index.css';
 
 const { Text } = Typography;
@@ -74,7 +74,7 @@ export function FormItem({
           flexShrink: 0,
         }}
       >
-        <TypeTag className="form-item-type-tag" type={type} />
+        <DisplaySchemaTag value={{ type }} />
         {description ? <Tooltip content={description}>{renderTitle()}</Tooltip> : renderTitle(true)}
       </div>
 

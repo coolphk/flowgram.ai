@@ -57,7 +57,9 @@ export interface FormOptions<TValues = any> {
   /**
    * Form data's validation rules. It's a key value map, where the key is a pattern of data's path (or field name), the value is a validate function.
    */
-  validate?: Record<string, Validate>;
+  validate?:
+    | Record<string, Validate>
+    | ((value: TValues, ctx: Context) => Record<string, Validate>);
   /**
    * Custom context. It will be accessible via form instance or in validate function.
    */

@@ -48,11 +48,14 @@ export function ConditionInputs() {
                       onChange={(v) => childField.onChange({ value: v, key: childField.value.key })}
                     />
 
-                    <Button
-                      theme="borderless"
-                      icon={<IconCrossCircleStroked />}
-                      onClick={() => field.delete(index)}
-                    />
+                    {!readonly && (
+                      <Button
+                        theme="borderless"
+                        disabled={readonly}
+                        icon={<IconCrossCircleStroked />}
+                        onClick={() => field.delete(index)}
+                      />
+                    )}
                   </div>
 
                   <Feedback errors={childState?.errors} invalid={childState?.invalid} />

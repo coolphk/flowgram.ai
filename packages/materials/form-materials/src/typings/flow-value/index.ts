@@ -3,11 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-
-
-
-
-import { IJsonSchema } from '../json-schema';
+import { IJsonSchema } from '@flowgram.ai/json-schema';
 
 export interface IFlowValueExtra {
   index?: number;

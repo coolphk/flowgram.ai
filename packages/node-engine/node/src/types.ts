@@ -101,7 +101,9 @@ export interface FormMeta<TValues = any> {
   /**
    * Form data's validation rules. It's a key value map, where the key is a pattern of data's path (or field name), the value is a validate function.
    */
-  validate?: Record<FieldName, Validate>;
+  validate?:
+    | Record<FieldName, Validate>
+    | ((values: TValues, ctx: NodeContext) => Record<FieldName, Validate>);
   /**
    * Form data's effects. It's a key value map, where the key is a pattern of data's path (or field name), the value is an array of effect configuration.
    */
