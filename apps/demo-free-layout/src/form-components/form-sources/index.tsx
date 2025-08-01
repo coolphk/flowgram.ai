@@ -4,17 +4,15 @@
  */
 
 
+import {FC} from 'react';
 
-import { FC } from 'react';
+import {Field, useNodeRender} from '@flowgram.ai/free-layout-editor';
 
-import { Field, useNodeRender } from '@flowgram.ai/free-layout-editor';
-import { TagGroup } from '@douyinfe/semi-ui';
-
-import { TypeTag } from '../type-tag';
-import { FormOutputsContainer } from '../form-outputs/styles';
-import { JsonSchema } from '../../typings';
-import { useIsSidebar, useTagLength } from '../../hooks';
-import { FormSourcesContainer, LabelContainer } from './styles';
+import {TypeTag} from '../type-tag';
+import {FormOutputsContainer} from '../form-outputs/styles';
+import {JsonSchema} from '../../typings';
+import {useIsSidebar} from '../../hooks';
+import {LabelContainer} from './styles';
 
 interface FormSourcesProps {
   name?: string;

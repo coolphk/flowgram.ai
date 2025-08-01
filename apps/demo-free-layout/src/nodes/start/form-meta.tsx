@@ -4,25 +4,17 @@
  */
 
 
-
-import {
-  Field,
-  FieldRenderProps,
-  FormRenderProps,
-  FormMeta,
-  ValidateTrigger,
-} from '@flowgram.ai/free-layout-editor';
+import {Field, FieldRenderProps, FormMeta, FormRenderProps, ValidateTrigger,} from '@flowgram.ai/free-layout-editor';
 import {
   DisplayOutputs,
-  IJsonSchema,
   JsonSchemaEditor,
   provideJsonSchemaOutputs,
   syncVariableTitle,
 } from '@flowgram.ai/form-materials';
 
-import { FlowNodeJSON, JsonSchema } from '../../typings';
-import { useIsSidebar } from '../../hooks';
-import { FormHeader, FormContent } from '../../form-components';
+import {FlowNodeJSON, JsonSchema} from '../../typings';
+import {useIsSidebar} from '../../hooks';
+import {FormContent, FormHeader} from '../../form-components';
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
   const isSidebar = useIsSidebar();

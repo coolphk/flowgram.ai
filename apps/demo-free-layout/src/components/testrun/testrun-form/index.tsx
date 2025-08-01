@@ -3,23 +3,17 @@
  * SPDX-License-Identifier: MIT
  */
 
-
+import { FC } from 'react';
 
 import classNames from 'classnames';
 import { CodeEditor, DisplaySchemaTag } from '@flowgram.ai/form-materials';
-import {Input, Switch, InputNumber, Button} from '@douyinfe/semi-ui';
+import { Input, Switch, InputNumber } from '@douyinfe/semi-ui';
 
 import { useFormMeta } from '../hooks/use-form-meta';
 import { useFields } from '../hooks/use-fields';
 import { useSyncDefault } from '../hooks';
 
-import { useFormMeta } from "../hooks/use-form-meta";
-import { useFields } from "../hooks/use-fields";
-import { useSyncDefault } from "../hooks";
-import { TypeTag } from "../../../form-components";
-
-import styles from "./index.module.less";
-import { IconUpload } from "@douyinfe/semi-icons";
+import styles from './index.module.less';
 
 interface TestRunFormProps {
   values: Record<string, unknown>;
@@ -28,6 +22,7 @@ interface TestRunFormProps {
 
 export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
   const formMeta = useFormMeta();
+
   const fields = useFields({
     formMeta,
     values,
@@ -42,16 +37,13 @@ export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
 
   const renderField = (field: any) => {
     switch (field.type) {
-      case "boolean":
+      case 'boolean':
         return (
           <div className={styles.fieldInput}>
-            <Switch
-              checked={field.value}
-              onChange={(checked) => field.onChange(checked)}
-            />
+            <Switch checked={field.value} onChange={(checked) => field.onChange(checked)} />
           </div>
         );
-      case "integer":
+      case 'integer':
         return (
           <div className={styles.fieldInput}>
             <InputNumber
@@ -62,7 +54,7 @@ export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
             />
           </div>
         );
-      case "number":
+      case 'number':
         return (
           <div className={styles.fieldInput}>
             <InputNumber
@@ -72,11 +64,9 @@ export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
             />
           </div>
         );
-      case "object":
+      case 'object':
         return (
-          <div
-            className={classNames(styles.fieldInput, styles.codeEditorWrapper)}
-          >
+          <div className={classNames(styles.fieldInput, styles.codeEditorWrapper)}>
             <CodeEditor
               languageId="json"
               value={field.value}
@@ -84,44 +74,14 @@ export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
             />
           </div>
         );
-      case "array":
+      case 'array':
         return (
-          <div
-            className={classNames(styles.fieldInput, styles.codeEditorWrapper)}
-          >
+          <div className={classNames(styles.fieldInput, styles.codeEditorWrapper)}>
             <CodeEditor
               languageId="json"
               value={field.value}
               onChange={(value) => field.onChange(value)}
             />
-          </div>
-        );
-      case "file":
-        return (
-          <div className={classNames(styles.fieldInput)}>
-            <Button icon={<IconUpload />} theme="light" onClick={() => field.onChange({id:'111',filename:'testFile'})}>
-              模拟上传
-            </Button>
-            {/*<Upload
-              action="https://api.dt.hitdttest.tech/upload"
-              data={{
-                form: JSON.stringify({
-                  dataSlotId: 123,
-                  outputName: field.name,
-                }),
-              }}
-              fileName="file"
-              limit={1}
-              multiple={false}
-              onSuccess={(res) => {
-                // console.log("upload success", res);
-                field.onChange(res.data);
-              }}
-            >
-              <Button icon={<IconUpload />} theme="light">
-                点击上传
-              </Button>
-            </Upload>*/}
           </div>
         );
       default:
@@ -155,9 +115,7 @@ export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
         <div key={field.name} className={styles.fieldGroup}>
           <label htmlFor={field.name} className={styles.fieldLabel}>
             {field.name}
-            {field.required && (
-              <span className={styles.requiredIndicator}>*</span>
-            )}
+            {field.required && <span className={styles.requiredIndicator}>*</span>}
             <span className={styles.fieldTypeIndicator}>
               <DisplaySchemaTag
                 value={{
