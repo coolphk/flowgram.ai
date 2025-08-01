@@ -9,41 +9,34 @@
  */
 
 /* eslint-disable no-console */
-import { useMemo } from "react";
+import {useMemo} from "react";
 
-import { debounce } from "lodash-es";
-import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
-import { createFreeSnapPlugin } from "@flowgram.ai/free-snap-plugin";
-import { createFreeNodePanelPlugin } from "@flowgram.ai/free-node-panel-plugin";
-import { createFreeLinesPlugin } from "@flowgram.ai/free-lines-plugin";
-import {
-  FreeLayoutProps,
-  WorkflowNodeLinesData,
-} from "@flowgram.ai/free-layout-editor";
-import { createFreeGroupPlugin } from "@flowgram.ai/free-group-plugin";
-import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
+import {debounce} from "lodash-es";
+import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
+import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
+import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
+import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
+import {FreeLayoutProps, WorkflowNodeLinesData,} from "@flowgram.ai/free-layout-editor";
+import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
+import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
-import { onDragLineEnd } from "../utils";
-import { FlowNodeRegistry, FlowDocumentJSON } from "../typings";
-import { shortcuts } from "../shortcuts";
-import { CustomService } from "../services";
-import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
+import {onDragLineEnd} from "../utils";
+import {FlowDocumentJSON, FlowNodeRegistry} from "../typings";
+import {shortcuts} from "../shortcuts";
+import {CustomService} from "../services";
+import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
 import {
-  createRuntimePlugin,
   createContextMenuPlugin,
-  createVariablePanelPlugin,
   createRunHistoryPlugin,
+  createRuntimePlugin,
+  createVariablePanelPlugin,
 } from "../plugins";
-import { defaultFormMeta } from "../nodes/default-form-meta";
-import { WorkflowNodeType } from "../nodes";
-import { SelectorBoxPopover } from "../components/selector-box-popover";
-import {
-  BaseNode,
-  CommentRender,
-  GroupNodeRender,
-  LineAddButton,
-  NodePanel,
-} from "../components";
+import {defaultFormMeta} from "../nodes/default-form-meta";
+import {WorkflowNodeType} from "../nodes";
+import {SelectorBoxPopover} from "../components/selector-box-popover";
+import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
+import {createTypePresetPlugin} from "@flowgram.ai/form-materials";
+import {IconFile} from "@douyinfe/semi-icons";
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
@@ -148,7 +141,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const { dragNodeType, dropNodeType } = params;
+        const {dragNodeType, dropNodeType} = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -242,7 +235,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({ bind }) => {
+      onBind: ({bind}) => {
         bind(CustomService).toSelf().inSingletonScope();
       },
       /**
@@ -363,6 +356,19 @@ export function useEditorProps(
          * 运行历史插件
          */
         createRunHistoryPlugin({}),
+        createTypePresetPlugin({
+          types: [
+            {
+              type: 'file',
+              label: 'File',
+              ConstantRenderer: () => {
+                return (<span>please use the constant input to fill in the file path</span>);
+              },
+              icon: <IconFile/> ,
+              container: false,
+            },
+          ],
+        })
       ],
     }),
     []

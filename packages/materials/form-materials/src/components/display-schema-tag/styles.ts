@@ -13,10 +13,10 @@ export const PopoverContent = styled.div`
 export const StyledTag = styled(Tag)`
   padding: 4px;
 
-  .tag-icon {
+  /*.tag-icon {
     width: 12px;
     height: 12px;
-  }
+  }*/
 `;
 
 export const TitleSpan = styled.span`

@@ -17,13 +17,13 @@ export const initialData: FlowDocumentJSON = {
       type: 'start',
       meta: {
         position: {
-          x: 400,
-          y: 181.75,
+          x: 0,
+          y: 100,
         },
       },
       data: {
         title: 'Start',
-        outputs: {
+/*        outputs: {
           type: 'object',
           properties: {
             POSCAR: {
@@ -42,16 +42,16 @@ export const initialData: FlowDocumentJSON = {
               type: 'file',
             },
           },
-        },
+        },*/
       },
     },
-    /*{
-      id: 'dataSlot_0',
+    {
+      id: 'data-slot_0',
       type: 'data-slot',
       meta: {
         position: {
-          x: 400,
-          y: 381.75,
+          x: 0,
+          y: 300,
         },
       },
       data: {
@@ -61,11 +61,9 @@ export const initialData: FlowDocumentJSON = {
           properties: {
             aa: {
               type: 'file',
-              default: 'Hello Flow.',
             },
             bb: {
               type: 'file',
-              default: '',
             },
             cc: {
               type: 'file',
@@ -101,14 +99,14 @@ export const initialData: FlowDocumentJSON = {
           },
         },
       },
-    },*/
+    },
     {
       id: 'workflow_0',
       type: 'workflow',
       meta: {
         position: {
-          x: 400,
-          y: 381.75,
+          x: 0,
+          y: 500,
         },
       },
       data: {
@@ -140,11 +138,11 @@ export const initialData: FlowDocumentJSON = {
   edges: [
     {
       sourceNodeID: 'start_0',
-      targetNodeID: 'workflow_0',
+      targetNodeID: 'data-slot_0',
     },
     {
-      sourceNodeID: 'workflow_0',
-      targetNodeID: 'end_0',
+      sourceNodeID: 'data-slot_0',
+      targetNodeID: 'workflow_0',
     },
     /*{
      sourceNodeID: 'start_0',

@@ -5,21 +5,45 @@
 
 
 
-import { FormMeta, FormRenderProps, ValidateTrigger } from '@flowgram.ai/free-layout-editor';
-import { provideJsonSchemaOutputs, syncVariableTitle } from '@flowgram.ai/form-materials';
+import {Field, FieldRenderProps, FormMeta, FormRenderProps, ValidateTrigger } from '@flowgram.ai/free-layout-editor';
+import {DisplayOutputs, JsonSchemaEditor, provideJsonSchemaOutputs, syncVariableTitle } from '@flowgram.ai/form-materials';
 
-import { FlowNodeJSON } from '../../typings';
+import {FlowNodeJSON, JsonSchema} from '../../typings';
 import { FormContent, FormHeader } from '../../form-components';
+import {useIsSidebar} from "../../hooks";
 
-export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => (
-  <>
-    <FormHeader primaryColor="var(--coz-mg-hglt-secondary-green)" />
-    <FormContent>
-      {/*<FormSources />*/}
-      {/*<FormOutputs />*/}
-    </FormContent>
-  </>
-);
+export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
+  const isSidebar = useIsSidebar();
+  if (isSidebar) {
+    return (
+      <>
+        <FormHeader />
+        <FormContent>
+          <Field
+            name="outputs"
+            render={({ field: { value, onChange } }: FieldRenderProps<JsonSchema>) => (
+              <>
+                <JsonSchemaEditor
+                  value={value}
+                  onChange={(value) => onChange(value as JsonSchema)}
+                />
+              </>
+            )}
+          />
+        </FormContent>
+      </>
+    );
+  }
+  return (
+    <>
+      <FormHeader />
+      <FormContent>
+        <DisplayOutputs displayFromScope />
+      </FormContent>
+    </>
+  );
+};
+
 export const formMeta: FormMeta<FlowNodeJSON> = {
   render: renderForm,
   validateTrigger: ValidateTrigger.onChange,

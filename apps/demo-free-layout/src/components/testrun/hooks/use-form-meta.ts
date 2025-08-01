@@ -4,19 +4,13 @@
  */
 
 
+import {useMemo} from 'react';
 
-import { useMemo } from 'react';
+import {FlowNodeFormData, FormModelV2, useService, WorkflowDocument,} from '@flowgram.ai/free-layout-editor';
+import {IJsonSchema, JsonSchemaBasicType} from '@flowgram.ai/form-materials';
 
-import {
-  FlowNodeFormData,
-  FormModelV2,
-  useService,
-  WorkflowDocument,
-} from '@flowgram.ai/free-layout-editor';
-import { IJsonSchema, JsonSchemaBasicType } from '@flowgram.ai/form-materials';
-
-import { TestRunFormMetaItem } from '../testrun-form/type';
-import { WorkflowNodeType } from '../../../nodes';
+import {TestRunFormMetaItem} from '../testrun-form/type';
+import {WorkflowNodeType} from '../../../nodes';
 
 const getWorkflowInputsDeclare = (document: WorkflowDocument): IJsonSchema => {
   const defaultDeclare = {
@@ -30,6 +24,7 @@ const getWorkflowInputsDeclare = (document: WorkflowDocument): IJsonSchema => {
   if (!startNode) {
     return defaultDeclare;
   }
+
 
   const startFormModel = startNode.getData(FlowNodeFormData).getFormModel<FormModelV2>();
   const declare = startFormModel.getValueIn<IJsonSchema>('outputs');

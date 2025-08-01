@@ -84,6 +84,12 @@ export const TestRunForm: FC<TestRunFormProps> = ({ values, setValues }) => {
             />
           </div>
         );
+        case 'file':
+          return (
+            <div className={classNames(styles.fieldInput, styles.codeEditorWrapper)}>
+              <input type="file" />
+            </div>
+          );
       default:
         return (
           <div className={styles.fieldInput}>
