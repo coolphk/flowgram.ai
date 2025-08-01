@@ -3,19 +3,18 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Table, Tag, Modal, Tooltip } from "@douyinfe/semi-ui";
-import { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
-import { NodeReport, WorkflowStatus } from "@flowgram.ai/runtime-interface";
-import { IconSpin } from "@douyinfe/semi-icons";
+import {Modal, Table, Tag, Tooltip} from "@douyinfe/semi-ui";
+import {ColumnProps} from "@douyinfe/semi-ui/lib/es/table";
+import {NodeReport, WorkflowStatus} from "@flowgram.ai/runtime-interface";
+import {IconSpin} from "@douyinfe/semi-icons";
 import classnames from "classnames";
-import { RunHistoryService } from "../service";
-import { useCallback, useEffect, useState } from "react";
-import { IconWarningFill } from "../../../assets/icon-warning";
-import { IconSuccessFill } from "../../../assets/icon-success";
+import {RunHistoryService} from "../service";
+import {useCallback, useEffect, useState} from "react";
+import {IconWarningFill} from "../../../assets/icon-warning";
+import {IconSuccessFill} from "../../../assets/icon-success";
 
 import styles from "./run-history-panel.module.less";
-import { NodeStatusRender } from "../../../components/testrun/node-status-bar/render";
-import { NodeStatusGroup } from "../../../components/testrun/node-status-bar/group";
+import {NodeStatusGroup} from "../../../components/testrun/node-status-bar/group";
 
 interface RunHistoryPanelProps {
   service: RunHistoryService;

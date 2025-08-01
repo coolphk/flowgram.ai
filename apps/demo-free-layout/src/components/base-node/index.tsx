@@ -3,17 +3,15 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { useCallback } from "react";
 
+import { FlowNodeEntity, getNodeForm, useNodeRender } from "@flowgram.ai/free-layout-editor";
+import { ConfigProvider } from "@douyinfe/semi-ui";
 
-import { useCallback } from 'react';
-
-import { FlowNodeEntity, useNodeRender } from '@flowgram.ai/free-layout-editor';
-import { ConfigProvider } from '@douyinfe/semi-ui';
-
-import { NodeStatusBar } from '../testrun/node-status-bar';
-import { NodeRenderContext } from '../../context';
-import { ErrorIcon } from './styles';
-import { NodeWrapper } from './node-wrapper';
+import { NodeStatusBar } from "../testrun/node-status-bar";
+import { NodeRenderContext } from "../../context";
+import { ErrorIcon } from "./styles";
+import { NodeWrapper } from "./node-wrapper";
 
 export const BaseNode = ({ node }: { node: FlowNodeEntity }) => {
   /**
@@ -31,14 +29,22 @@ export const BaseNode = ({ node }: { node: FlowNodeEntity }) => {
    * Used to make the Tooltip scale with the node, which can be implemented by itself depending on the UI library
    * 用于让 Tooltip 跟随节点缩放, 这个可以根据不同的 ui 库自己实现
    */
-  const getPopupContainer = useCallback(() => node.renderData.node || document.body, []);
+  const getPopupContainer = useCallback(
+    () => node.renderData.node || document.body,
+    []
+  );
 
   return (
     <ConfigProvider getPopupContainer={getPopupContainer}>
       <NodeRenderContext.Provider value={nodeRender}>
         <NodeWrapper>
-          {form?.state.invalid && <ErrorIcon />}
-          {form?.render()}
+          <div
+            style={{ width: "100%", height: "100%" }}
+            onClick={() => console.log("node", node,getNodeForm(node))}
+          >
+            {form?.state.invalid && <ErrorIcon />}
+            {form?.render()}
+          </div>
         </NodeWrapper>
         <NodeStatusBar />
       </NodeRenderContext.Provider>

@@ -134,9 +134,12 @@ export class RunHistoryService {
       dataIndex: "taskId",
       width: 150,
     });
-
+    const startNode = this.getStartNode();
+    if (!startNode) {
+      return;
+    }
     // 添加其他节点列
-    const linkedNodes = this.getLinkedNodes(this.getStartNode()!);
+    const linkedNodes = this.getLinkedNodes(startNode);
     linkedNodes.map((node) => {
       this.columns.push({
         title: getNodeForm(node)?.values.title,
