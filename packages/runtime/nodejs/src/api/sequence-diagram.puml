@@ -1,0 +1,19 @@
+@startuml
+actor User
+participant "index.ts" as Index
+participant "create-api.ts" as CreateAPI
+participant "@flowgram.ai/runtime-interface" as RuntimeInterface
+participant "@flowgram.ai/runtime-js" as RuntimeJS
+participant "@trpc/server" as TRPC
+
+User -> Index: Request
+Index -> CreateAPI: createAPI(apiName)
+CreateAPI -> RuntimeInterface: Get FlowGramAPIs[apiName]
+CreateAPI <-- RuntimeInterface: Return API definition
+CreateAPI -> RuntimeJS: Get WorkflowRuntimeAPIs[apiName]
+CreateAPI <-- RuntimeJS: Return API caller
+CreateAPI -> CreateAPI: Create procedure
+CreateAPI --> Index: Return APIHandler
+Index -> TRPC: Mount procedure
+TRPC --> User: Handle request
+@enduml
