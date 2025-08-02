@@ -7,20 +7,16 @@
 import React from "react";
 
 import {Field, FieldRenderProps} from "@flowgram.ai/free-layout-editor";
-
-import {FormOutputsContainer, LabelContainer,} from "../../../../form-components/form-outputs/styles";
-import {TypeTag} from "../../../../form-components";
+import {Tag} from "@douyinfe/semi-ui";
 
 export const WFTemplateRender: React.FC = () => (
-  <div>
-    <FormOutputsContainer>
-      <LabelContainer>模版:</LabelContainer>
+  <div style={{display:"flex", alignItems:"baseline"}}>
+      <Tag>模版:</Tag>
       <Field
         name="rawData.name"
-        render={({ field: { value, onChange } }: FieldRenderProps<string>) => (
-          <>{value && <TypeTag key={1} name={value} type={"string"} />}</>
+        render={({ field: { value } }: FieldRenderProps<string>) => (
+          <span style={{marginLeft:8}}>{value}</span>
         )}
       />
-    </FormOutputsContainer>
   </div>
 );

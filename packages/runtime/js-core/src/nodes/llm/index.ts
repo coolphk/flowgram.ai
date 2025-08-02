@@ -30,7 +30,7 @@ export class LLMExecutor implements INodeExecutor {
   public readonly type = FlowGramNode.LLM;
 
   public async execute(context: ExecutionContext): Promise<ExecutionResult> {
-    const inputs = context.inputs as LLMExecutorInputs;
+    /*const inputs = context.inputs as LLMExecutorInputs;
     this.checkInputs(inputs);
 
     const { modelName, temperature, apiKey, apiHost, systemPrompt, prompt } = inputs;
@@ -64,10 +64,10 @@ export class LLMExecutor implements INodeExecutor {
       throw error;
     }
 
-    const result = apiMessage.content;
+    const result = apiMessage.content;*/
     return {
       outputs: {
-        result,
+        result:'hello llm',
       },
     };
   }

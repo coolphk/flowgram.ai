@@ -55,33 +55,12 @@ export const initialData: FlowDocumentJSON = {
         },
       },
       data: {
-        title: 'DataSlot',
-        inputs: {
-          type: 'object',
-          properties: {
-            aa: {
-              type: 'file',
-            },
-            bb: {
-              type: 'file',
-            },
-            cc: {
-              type: 'file',
-            },
-            POTCAR: {
-              type: 'file',
-            },
-            NCORE: {
-              type: 'file',
-            },
-          },
-        },
-        outputs: {
+        title: 'DataSlot'
+/*        outputs: {
           type: 'object',
           properties: {
             POSCAR: {
               type: 'file',
-              default: 'Hello Flow.',
             },
             KPOINTS: {
               type: 'file',
@@ -97,7 +76,7 @@ export const initialData: FlowDocumentJSON = {
               type: 'file',
             },
           },
-        },
+        }*/,
       },
     },
     {

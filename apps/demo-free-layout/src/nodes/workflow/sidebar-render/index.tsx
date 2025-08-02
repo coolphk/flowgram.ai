@@ -66,12 +66,12 @@ export const SidebarRender: React.FC = () => {
       });
 
       workflow.outputs.forEach((item) => {
-        base.data.outputsValues![item.name] = nodeData?.outputsValues?.[
+        /*base.data.outputsValues![item.name] = nodeData?.outputsValues?.[
           item.name
         ] || {
           type: "constant",
           content: "",
-        };
+        };*/
         base.data.outputs!.properties![item.name] = {
           type: "file",
         };

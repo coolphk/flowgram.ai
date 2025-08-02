@@ -362,7 +362,7 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span>please use the constant input to fill in the file path</span>);
+                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
               },
               icon: <IconFile/> ,
               container: false,
