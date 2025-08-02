@@ -5,41 +5,30 @@
 
 
 
-import {Field, FieldRenderProps, FormMeta, FormRenderProps, ValidateTrigger } from '@flowgram.ai/free-layout-editor';
-import {DisplayOutputs, JsonSchemaEditor, provideJsonSchemaOutputs, syncVariableTitle } from '@flowgram.ai/form-materials';
+import { FormMeta, FormRenderProps, ValidateTrigger } from '@flowgram.ai/free-layout-editor';
+import { provideJsonSchemaOutputs, syncVariableTitle } from '@flowgram.ai/form-materials';
 
-import {FlowNodeJSON, JsonSchema} from '../../typings';
-import { FormContent, FormHeader } from '../../form-components';
-import {useIsSidebar} from "../../hooks";
+import { FlowNodeJSON } from '../../typings';
+import { FormHeader } from '../../form-components';
+import { useIsSidebar } from "../../hooks";
+import { SidebarRender } from './side-render';
+import { NodeRender } from './node-render';
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
   const isSidebar = useIsSidebar();
+
   if (isSidebar) {
     return (
       <>
         <FormHeader />
-        <FormContent>
-          <Field
-            name="outputs"
-            render={({ field: { value, onChange } }: FieldRenderProps<JsonSchema>) => (
-              <>
-                <JsonSchemaEditor
-                  value={value}
-                  onChange={(value) => onChange(value as JsonSchema)}
-                />
-              </>
-            )}
-          />
-        </FormContent>
+        <SidebarRender />
       </>
     );
   }
   return (
     <>
       <FormHeader />
-      <FormContent>
-        <DisplayOutputs displayFromScope />
-      </FormContent>
+      <NodeRender />
     </>
   );
 };
