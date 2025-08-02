@@ -1,0 +1,33 @@
+/**
+ * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+ * SPDX-License-Identifier: MIT
+ */
+
+import { Button } from "@douyinfe/semi-ui";
+import { IconPlay } from "@douyinfe/semi-icons";
+import { useEnv } from "../../../../providers/env-provider";
+
+export function WorkflowHeader() {
+  const { isProd } = useEnv();
+
+  const handlePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // TODO: 实现play按钮的功能
+    console.log("Play button clicked for workflow node");
+  };
+
+  return (
+    <>
+      {isProd && (
+        <Button
+          icon={<IconPlay />}
+          onClick={handlePlay}
+          theme="borderless"
+          style={{
+            marginLeft: 4,
+          }}
+        />
+      )}
+    </>
+  );
+}

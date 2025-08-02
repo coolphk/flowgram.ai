@@ -15,20 +15,23 @@ import { initialData } from './initial-data';
 import { useEditorProps } from './hooks';
 import { DemoTools } from './components/tools';
 import { SidebarProvider, SidebarRenderer } from './components/sidebar';
+import { EnvProvider } from './providers';
 
 export const Editor = () => {
   const editorProps = useEditorProps(initialData, nodeRegistries);
   return (
-    <div className="doc-free-feature-overview">
-      <FreeLayoutEditorProvider {...editorProps}>
-        <SidebarProvider>
-          <div className="demo-container">
-            <EditorRenderer className="demo-editor" />
-          </div>
-          <DemoTools />
-          <SidebarRenderer />
-        </SidebarProvider>
-      </FreeLayoutEditorProvider>
-    </div>
+    <EnvProvider>
+      <div className="doc-free-feature-overview">
+        <FreeLayoutEditorProvider {...editorProps}>
+          <SidebarProvider>
+            <div className="demo-container">
+              <EditorRenderer className="demo-editor" />
+            </div>
+            <DemoTools />
+            <SidebarRenderer />
+          </SidebarProvider>
+        </FreeLayoutEditorProvider>
+      </div>
+    </EnvProvider>
   );
 };

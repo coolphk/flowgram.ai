@@ -11,6 +11,8 @@ import { useClientContext, CommandService } from '@flowgram.ai/free-layout-edito
 import { Button } from '@douyinfe/semi-ui';
 import { IconClose, IconSmallTriangleDown, IconSmallTriangleLeft } from '@douyinfe/semi-icons';
 
+
+
 import { FlowCommandId } from '../../shortcuts';
 import { useIsSidebar, useNodeRenderContext } from '../../hooks';
 import { SidebarContext } from '../../context';
@@ -21,15 +23,17 @@ import { Header, Operators } from './styles';
 
 interface FormHeaderProps {
   primaryColor?: string;
+  children?: React.ReactNode;
 }
 
-export function FormHeader({ primaryColor }: FormHeaderProps = {}) {
+export function FormHeader({ primaryColor, children }: FormHeaderProps = {}) {
 
   const { node, expanded, toggleExpand, readonly } = useNodeRenderContext();
   const [titleEdit, updateTitleEdit] = useState<boolean>(false);
   const ctx = useClientContext();
   const { setNodeId } = useContext(SidebarContext);
   const isSidebar = useIsSidebar();
+
   const handleExpand = (e: React.MouseEvent) => {
     toggleExpand();
     e.stopPropagation(); // Disable clicking prevents the sidebar from opening
@@ -40,6 +44,7 @@ export function FormHeader({ primaryColor }: FormHeaderProps = {}) {
   const handleClose = () => {
     setNodeId(undefined);
   };
+
 
   return (
     <Header primaryColor={primaryColor}>
@@ -54,6 +59,7 @@ export function FormHeader({ primaryColor }: FormHeaderProps = {}) {
           onClick={handleExpand}
         />
       )}
+      {children}
       {readonly ? undefined : (
         <Operators>
           <NodeMenu node={node} deleteNode={handleDelete} updateTitleEdit={updateTitleEdit} />
