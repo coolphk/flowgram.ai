@@ -3,16 +3,22 @@
  * SPDX-License-Identifier: MIT
  */
 
+import {
+  FormMeta,
+  FormRenderProps,
+  ValidateTrigger,
+} from "@flowgram.ai/free-layout-editor";
+import {
+  provideJsonSchemaOutputs,
+  syncVariableTitle,
+  createInferInputsPlugin,
+} from "@flowgram.ai/form-materials";
 
-
-import { FormMeta, FormRenderProps, ValidateTrigger } from '@flowgram.ai/free-layout-editor';
-import { provideJsonSchemaOutputs, syncVariableTitle } from '@flowgram.ai/form-materials';
-
-import { FlowNodeJSON } from '../../typings';
-import { FormHeader } from '../../form-components';
+import { FlowNodeJSON } from "../../typings";
+import { FormContent, FormHeader } from "../../form-components";
 import { useIsSidebar } from "../../hooks";
-import { SidebarRender } from './side-render';
-import { NodeRender } from './node-render';
+import { SidebarRender } from "./side-render";
+import { NodeRender } from "./node-render";
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
   const isSidebar = useIsSidebar();
@@ -37,10 +43,17 @@ export const formMeta: FormMeta<FlowNodeJSON> = {
   render: renderForm,
   validateTrigger: ValidateTrigger.onChange,
   validate: {
-    title: ({ value }: { value: string }) => (value ? undefined : 'Title is required'),
+    title: ({ value }: { value: string }) =>
+      value ? undefined : "Title is required",
   },
   effect: {
     title: syncVariableTitle,
     outputs: provideJsonSchemaOutputs,
   },
+  plugins: [
+    createInferInputsPlugin({
+      sourceKey: "inputsValues",
+      targetKey: "inputs",
+    }),
+  ],
 };

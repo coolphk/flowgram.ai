@@ -4,9 +4,9 @@
  */
 
 import React from "react";
-import { DisplayOutputs } from "@flowgram.ai/form-materials";
+import {DisplayOutputs} from "@flowgram.ai/form-materials";
 
-import { FormContent } from "../../../form-components";
+import {FormContent} from "../../../form-components";
 
 export const NodeRender: React.FC = () => {
   return (

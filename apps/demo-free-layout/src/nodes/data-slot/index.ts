@@ -3,32 +3,30 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { nanoid } from "nanoid";
-
-import { formMeta } from "./form-meta";
-import { WorkflowNodeType } from "../constants";
-import { FlowNodeRegistry } from "../../typings";
-import IconDataSlot from "../../assets/icon-data-slot.svg";
+import { FlowNodeRegistry } from '../../typings';
+import iconDataSlot from '../../assets/icon-data-slot.svg';
+import { formMeta } from './form-meta';
+import { WorkflowNodeType } from '../constants';
 
 export const DataSlotNodeRegistry: FlowNodeRegistry = {
   type: WorkflowNodeType.DataSlot,
-  info: {
-    icon: IconDataSlot,
-    description: "数据插槽",
-  },
   meta: {
-    nodePanelVisible: true,
-    defaultPorts: [{ type: "input" }, { type: "output" }],
-    expandable: true,
+    defaultPorts: [
+      {
+        type: 'input',
+      },
+      {
+        type: 'output',
+      },
+    ],
+    size: {
+      width: 360,
+      height: 211,
+    },
+  },
+  info: {
+    icon: iconDataSlot,
+    description: 'Data slot for storing and managing data.',
   },
   formMeta,
-  onAdd() {
-    return {
-      id: `data-slot${nanoid(5)}`,
-      type: "data-slot",
-      data: {
-        title: "DataSlot",
-      },
-    };
-  },
 };

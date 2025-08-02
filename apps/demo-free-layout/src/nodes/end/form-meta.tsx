@@ -3,30 +3,32 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Field, FormMeta } from '@flowgram.ai/free-layout-editor';
+import { Field, FormMeta } from "@flowgram.ai/free-layout-editor";
 import {
   createInferInputsPlugin,
   DisplayInputsValues,
   IFlowValue,
   InputsValues,
-} from '@flowgram.ai/form-materials';
+} from "@flowgram.ai/form-materials";
 
-import { defaultFormMeta } from '../default-form-meta';
-import { useIsSidebar } from '../../hooks';
-import { FormHeader, FormContent } from '../../form-components';
+import { defaultFormMeta } from "../default-form-meta";
+import { useIsSidebar } from "../../hooks";
+import { FormHeader, FormContent } from "../../form-components";
 
 export const renderForm = () => {
   const isSidebar = useIsSidebar();
   if (isSidebar) {
     return (
       <>
-        <FormHeader/>
+        <FormHeader />
         <FormContent>
-          <Field<Record<string, IFlowValue | undefined> | undefined> name="inputsValues">
-            {({field: {value, onChange}}) => (
+          <Field<
+            Record<string, IFlowValue | undefined> | undefined
+          > name="inputsValues">
+            {({ field: { value, onChange } }) => (
               <>
                 {/*<Button onClick={() => console.log(value)}>ss</Button>*/}
-                <InputsValues value={value} onChange={(_v) => onChange(_v)}/>
+                <InputsValues value={value} onChange={(_v) => onChange(_v)} />
               </>
             )}
           </Field>
@@ -36,9 +38,11 @@ export const renderForm = () => {
   }
   return (
     <>
-      <FormHeader/>
+      <FormHeader />
       <FormContent>
-        <Field<Record<string, IFlowValue | undefined> | undefined> name="inputsValues">
+        <Field<
+          Record<string, IFlowValue | undefined> | undefined
+        > name="inputsValues">
           {({ field: { value } }) => (
             <>
               <DisplayInputsValues value={value} />
@@ -55,8 +59,8 @@ export const formMeta: FormMeta = {
   render: renderForm,
   plugins: [
     createInferInputsPlugin({
-      sourceKey: 'inputsValues',
-      targetKey: 'inputs',
+      sourceKey: "inputsValues",
+      targetKey: "inputs",
     }),
   ],
 };
