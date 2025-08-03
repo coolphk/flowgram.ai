@@ -56,6 +56,8 @@ export namespace JsonSchemaUtils {
               meta: {
                 title: _property.title,
                 description: _property.description,
+                required: _property.required,
+                default: _property.default,
               },
             })),
         });
@@ -150,6 +152,12 @@ export namespace JsonSchemaUtils {
                 }
                 if (property.meta?.description && schema) {
                   schema.description = property.meta.description;
+                }
+                if (property.meta?.default && schema) {
+                  schema.default = property.meta.default;
+                }
+                if (property.meta?.required && schema) {
+                  schema.required = property.meta.required;
                 }
 
                 return [property.key, schema!];

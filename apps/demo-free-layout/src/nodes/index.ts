@@ -6,6 +6,7 @@
 
 
 import {FlowNodeRegistry} from '../typings';
+import { VariableNodeRegistry } from './variable';
 import {StartNodeRegistry} from './start';
 import {LoopNodeRegistry} from './loop';
 import {LLMNodeRegistry} from './llm';
@@ -36,6 +37,7 @@ export const nodeRegistries: FlowNodeRegistry[] = [
   CodeNodeRegistry,
   ContinueNodeRegistry,
   BreakNodeRegistry,
+  VariableNodeRegistry,
   WorkflowNodeRegistry,
   DataSlotNodeRegistry,
 ];

@@ -1,0 +1,11 @@
+{
+  "name": "assign-rows",
+  "depMaterials": [
+    "flow-value",
+    "dynamic-value-input",
+    "variable-selector"
+  ],
+  "depPackages": [
+    "@douyinfe/semi-ui"
+  ]
+}

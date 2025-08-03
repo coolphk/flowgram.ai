@@ -9,3 +9,4 @@
 
 export * from './batch-outputs-plugin';
 export * from './infer-inputs-plugin';
+export * from './infer-assign-plugin';

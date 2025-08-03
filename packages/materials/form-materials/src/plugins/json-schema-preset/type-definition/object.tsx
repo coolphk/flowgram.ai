@@ -6,8 +6,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 
+import { CodeEditorMini } from '@/components/code-editor-mini';
+
 import { type JsonSchemaTypeRegistry } from '../manager';
-import { CodeEditorMini } from '../../../components/code-editor-mini';
 
 export const objectRegistry: Partial<JsonSchemaTypeRegistry> = {
   type: 'object',

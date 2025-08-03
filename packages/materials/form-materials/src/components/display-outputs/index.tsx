@@ -51,7 +51,13 @@ export function DisplayOutputs({ value, showIconInTree, displayFromScope }: Prop
   return (
     <DisplayOutputsWrapper>
       {childEntries.map(([key, schema]) => (
-        <DisplaySchemaTag key={key} title={key} value={schema} showIconInTree={showIconInTree} />
+        <DisplaySchemaTag
+          key={key}
+          title={key}
+          value={schema}
+          showIconInTree={showIconInTree}
+          warning={!schema}
+        />
       ))}
     </DisplayOutputsWrapper>
   );

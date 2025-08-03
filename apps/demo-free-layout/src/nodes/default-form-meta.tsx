@@ -3,19 +3,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-
-
-import {
-  FormRenderProps,
-  FormMeta,
-  ValidateTrigger,
-  FeedbackLevel,
-} from '@flowgram.ai/free-layout-editor';
+import { FormRenderProps, FormMeta, ValidateTrigger } from '@flowgram.ai/free-layout-editor';
 import {
   autoRenameRefEffect,
   provideJsonSchemaOutputs,
   syncVariableTitle,
   DisplayOutputs,
+  validateFlowValue,
+  validateWhenVariableSync,
 } from '@flowgram.ai/form-materials';
 import { Divider } from '@douyinfe/semi-ui';
 
@@ -44,18 +39,16 @@ export const defaultFormMeta: FormMeta<FlowNodeJSON> = {
   validate: {
     title: ({ value }) => (value ? undefined : 'Title is required'),
     'inputsValues.*': ({ value, context, formValues, name }) => {
-      const valuePropetyKey = name.replace(/^inputsValues\./, '');
+      const valuePropertyKey = name.replace(/^inputsValues\./, '');
       const required = formValues.inputs?.required || [];
-      if (
-        required.includes(valuePropetyKey) &&
-        (value === '' || value === undefined || value?.content === '')
-      ) {
-        return {
-          message: `${valuePropetyKey} is required`,
-          level: FeedbackLevel.Error, // Error || Warning
-        };
-      }
-      return undefined;
+
+      return validateFlowValue(value, {
+        node: context.node,
+        required: required.includes(valuePropertyKey),
+        errorMessages: {
+          required: `${valuePropertyKey} is required`,
+        },
+      });
     },
   },
   /**
@@ -75,6 +68,6 @@ export const defaultFormMeta: FormMeta<FlowNodeJSON> = {
   effect: {
     title: syncVariableTitle,
     outputs: provideJsonSchemaOutputs,
-    inputsValues: autoRenameRefEffect,
+    inputsValues: [...autoRenameRefEffect, ...validateWhenVariableSync({ scope: 'public' })],
   },
 };

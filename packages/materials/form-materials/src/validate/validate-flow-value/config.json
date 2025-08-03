@@ -1,0 +1,7 @@
+{
+  "name": "validate-flow-value",
+  "depMaterials": [
+    "flow-value"
+  ],
+  "depPackages": []
+}

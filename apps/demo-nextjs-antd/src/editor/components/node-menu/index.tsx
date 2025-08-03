@@ -53,7 +53,7 @@ export const NodeMenu: FC<NodeMenuProps> = ({ node, deleteNode, updateTitleEdit 
       e.stopPropagation();
       const sourceParent = node.parent;
       // move out of container - 移出容器
-      nodeIntoContainerService.moveOutContainer({ node });
+      await nodeIntoContainerService.moveOutContainer({ node });
       // clear invalid lines - 清除非法线条
       await nodeIntoContainerService.clearInvalidLines({
         dragNode: node,

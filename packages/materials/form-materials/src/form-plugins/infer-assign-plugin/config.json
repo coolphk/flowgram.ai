@@ -1,0 +1,7 @@
+{
+  "name": "infer-assign-plugin",
+  "depMaterials": [
+    "flow-value"
+  ],
+  "depPackages": []
+}
