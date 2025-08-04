@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {FlowNodeRegistry} from "../../typings";
+import { FlowNodeRegistry } from "../../typings";
 import iconDataSlot from "../../assets/icon-data-slot.svg";
-import {formMeta} from "./form-meta";
-import {WorkflowNodeType} from "../constants";
-import {nanoid} from "nanoid";
-import {getUniqueId} from "../../api/common";
-import {getNodeForm} from "@flowgram.ai/free-layout-editor";
+import { formMeta } from "./form-meta";
+import { WorkflowNodeType } from "../constants";
+import { nanoid } from "nanoid";
+import { alovaInstance } from "../../api";
+import { getNodeForm } from "@flowgram.ai/free-layout-editor";
 
 export const DataSlotNodeRegistry: FlowNodeRegistry = {
   type: WorkflowNodeType.DataSlot,
@@ -44,11 +44,13 @@ export const DataSlotNodeRegistry: FlowNodeRegistry = {
   onCreate(node, json) {
     console.log("onCreate", node, json);
     // 节点创建后异步获取真正的ID并更新
-    getUniqueId<string>()
-      .send(true)
+    alovaInstance
+      .Get<string>("/id", {
+        cacheFor: 0,
+      })
       .then((response) => {
         const uniqueId = response;
-        // 更新节点的扩展信息，添加服务器ID
+        // 更新节点ID
         const form = getNodeForm(node);
         if (form) {
           form.updateFormValues({
@@ -58,7 +60,7 @@ export const DataSlotNodeRegistry: FlowNodeRegistry = {
         }
       })
       .catch((error) => {
-        console.error("Failed to get unique ID for data-slot node:", error);
+        console.error("Failed to get unique ID for data slot node:", error);
       });
   },
 };

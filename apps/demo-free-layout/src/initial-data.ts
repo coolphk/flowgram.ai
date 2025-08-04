@@ -12,7 +12,7 @@ import { FlowDocumentJSON } from './typings';
 
 export const initialData: FlowDocumentJSON = {
   nodes: [
-    {
+    /*{
       id: 'start_0',
       type: 'start',
       meta: {
@@ -23,7 +23,7 @@ export const initialData: FlowDocumentJSON = {
       },
       data: {
         title: 'Start',
-/*        outputs: {
+/!*        outputs: {
           type: 'object',
           properties: {
             POSCAR: {
@@ -42,9 +42,9 @@ export const initialData: FlowDocumentJSON = {
               type: 'file',
             },
           },
-        },*/
+        },*!/
       },
-    },
+    },*/
     {
       id: 'data-slot_0',
       type: 'data-slot',
@@ -56,27 +56,6 @@ export const initialData: FlowDocumentJSON = {
       },
       data: {
         title: 'DataSlot'
-/*        outputs: {
-          type: 'object',
-          properties: {
-            POSCAR: {
-              type: 'file',
-            },
-            KPOINTS: {
-              type: 'file',
-              default: '',
-            },
-            INCAR: {
-              type: 'file',
-            },
-            POTCAR: {
-              type: 'file',
-            },
-            NCORE: {
-              type: 'file',
-            },
-          },
-        }*/,
       },
     },
     {
@@ -100,7 +79,7 @@ export const initialData: FlowDocumentJSON = {
         },
       },
     },
-    {
+    /*{
       id: 'end_0',
       type: 'end',
       meta: {
@@ -112,17 +91,9 @@ export const initialData: FlowDocumentJSON = {
       data: {
         title: 'End',
       },
-    },
+    },*/
   ],
   edges: [
-    {
-      sourceNodeID: 'start_0',
-      targetNodeID: 'data-slot_0',
-    },
-    {
-      sourceNodeID: 'data-slot_0',
-      targetNodeID: 'workflow_0',
-    },
     /*{
      sourceNodeID: 'start_0',
      targetNodeID: 'condition_0',

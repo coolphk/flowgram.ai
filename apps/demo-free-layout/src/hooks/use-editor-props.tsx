@@ -16,7 +16,7 @@ import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
 import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
 import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
 import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
-import {FreeLayoutProps, WorkflowNodeLinesData,} from "@flowgram.ai/free-layout-editor";
+import {FreeLayoutProps, getNodeForm, WorkflowNodeLinesData,} from "@flowgram.ai/free-layout-editor";
 import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
 import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
@@ -37,6 +37,7 @@ import {SelectorBoxPopover} from "../components/selector-box-popover";
 import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
 import {createTypePresetPlugin} from "@flowgram.ai/form-materials";
 import {IconFile} from "@douyinfe/semi-icons";
+import { Toast } from "@douyinfe/semi-ui";
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
@@ -108,6 +109,21 @@ export function useEditorProps(
        */
       canAddLine(ctx, fromPort, toPort) {
         // Cannot be a self-loop on the same node / 不能是同一节点自循环
+        // 获取当前节点类型
+        console.log("toPort", toPort);
+        const nodeType = fromPort.node.flowNodeType;
+        if (toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
+          if (nodeType === WorkflowNodeType.DataSlot) {
+            const targetNodeData = getNodeForm(toPort.node)
+            if (targetNodeData?.values.rawData) {
+
+            } else {
+              //用semiui中的message提示
+              Toast.error("请先选择工作流的模板类型")
+              return false
+            }
+          }
+        }
         if (fromPort.node === toPort.node) {
           return false;
         }
@@ -221,35 +237,35 @@ export function useEditorProps(
        */
       onContentChange: debounce((ctx, event) => {
         console.log("Auto Save: ", event, ctx.document.toJSON());
-        
+
         // 转换函数：将ctx.document.toJSON()的数据转换为ISaveContent格式
         const convertToSaveContent = (documentData: any) => {
           const dataslots: any[] = [];
           const workflows: any[] = [];
           let raw = '';
-          
+
           // 处理节点数据
           documentData.nodes.forEach((node: any) => {
             if (node.type === 'data-slot') {
               // 获取data-slot节点的serverId
               const serverId = node.data?.serverId || node.id;
-              
+
               // 获取连接信息
               let from = '';
               let to = '';
-              
+
               // 从edges中查找连接信息
               const incomingEdge = documentData.edges.find((edge: any) => edge.targetNodeID === node.id);
               const outgoingEdge = documentData.edges.find((edge: any) => edge.sourceNodeID === node.id);
-              
+
               if (incomingEdge) {
                 from = incomingEdge.sourceNodeID;
               }
-              
+
               if (outgoingEdge) {
                 to = outgoingEdge.targetNodeID;
               }
-              
+
               dataslots.push({
                 id: serverId,
                 type: node.type,
@@ -264,10 +280,10 @@ export function useEditorProps(
             } else if (node.type === 'workflow') {
               // 获取workflow节点的serverId
               const serverId = node.data?.serverId || node.id;
-              
+
               // 获取rawData作为raw
               raw = JSON.stringify(node.data?.rawData || {});
-              
+
               workflows.push({
                 id: serverId,
                 type: node.type,
@@ -276,18 +292,18 @@ export function useEditorProps(
               });
             }
           });
-          
+
           return {
             dataslots,
             workflows,
             raw
           };
         };
-        
+
         // 使用转换函数
         const saveContent = convertToSaveContent(ctx.document.toJSON());
         console.log("Converted save content:", saveContent);
-        
+
         /*{
     "nodes": [
         {
