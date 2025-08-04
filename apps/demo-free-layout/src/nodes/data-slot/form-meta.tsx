@@ -3,22 +3,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {
-  FormMeta,
-  FormRenderProps,
-  ValidateTrigger,
-} from "@flowgram.ai/free-layout-editor";
-import {
-  provideJsonSchemaOutputs,
-  syncVariableTitle,
-  createInferInputsPlugin,
-} from "@flowgram.ai/form-materials";
+import {FormMeta, FormRenderProps, ValidateTrigger,} from "@flowgram.ai/free-layout-editor";
+import {createInferInputsPlugin, provideJsonSchemaOutputs, syncVariableTitle,} from "@flowgram.ai/form-materials";
 
-import { FlowNodeJSON } from "../../typings";
-import { FormContent, FormHeader } from "../../form-components";
-import { useIsSidebar } from "../../hooks";
-import { SidebarRender } from "./side-render";
-import { NodeRender } from "./node-render";
+import {FlowNodeJSON} from "../../typings";
+import {FormHeader} from "../../form-components";
+import {useIsSidebar} from "../../hooks";
+import {SidebarRender} from "./side-render";
+import {NodeRender} from "./node-render";
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
   const isSidebar = useIsSidebar();

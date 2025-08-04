@@ -75,40 +75,49 @@ export const SidebarRender: React.FC = () => {
   return (
     <>
       <Collapse defaultActiveKey={["1", "2", "3"]}>
-        <Collapse.Panel header="输入参数" itemKey="1">
-          <FormContent>
-            <Field<
-                Record<string, IFlowValue | undefined> | undefined
-              > name="inputsValues">
-              {({field: {value, onChange}}) => {
+        {isDev && (
+          <>
+            <Collapse.Panel header="输入参数" itemKey="1">
+              <FormContent>
+                <Field<
+                    Record<string, IFlowValue | undefined> | undefined
+                  > name="inputsValues">
+                  {({field: {value, onChange}}) => {
 
-                return (
-                  <InputsValues
-                    value={inputsValues}
-                    onChange={(v) => onChange(v)}
-                  />
-                );
-              }}
-            </Field>
-          </FormContent>
-        </Collapse.Panel>
-        <Collapse.Panel header="输出参数" itemKey="2">
-          <FormContent>
-            <Field
-              name="outputs"
-              render={({
-                         field: {value, onChange},
-                       }: FieldRenderProps<JsonSchema>) => {
-                return (
-                  <JsonSchemaEditor
-                    value={outputsSchema}
-                    onChange={(value) => onChange(value)}
-                  />
-                );
-              }}
-            />
-          </FormContent>
-        </Collapse.Panel>
+                    return (
+                      <InputsValues
+                        value={inputsValues}
+                        onChange={(v) => onChange(v)}
+                      />
+                    );
+                  }}
+                </Field>
+              </FormContent>
+            </Collapse.Panel>
+            <Collapse.Panel header="输出参数" itemKey="2">
+              <FormContent>
+                <Field
+                  name="outputs"
+                  render={({
+                             field: {value, onChange},
+                           }: FieldRenderProps<JsonSchema>) => {
+                    return (
+                      <JsonSchemaEditor
+                        value={outputsSchema}
+                        onChange={(value) => onChange(value)}
+                      />
+                    );
+                  }}
+                />
+              </FormContent>
+            </Collapse.Panel>
+            <Collapse.Panel header="工具列表" itemKey="4">
+              <div style={{ padding: '12px 0' }}>
+                <p>这里可以添加工具列表相关内容</p>
+              </div>
+            </Collapse.Panel>
+          </>
+        )}
         {isProd && (
           <Collapse.Panel header="文件上传" itemKey="3">
             {renderUploadComponents()}
