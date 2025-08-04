@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { alovaInstance } from "./index";
 
-
-import { alovaInstance } from './index';
-
-export const getUniqueId = () =>
-  alovaInstance.Get('/id', {
+export const getUniqueId = <T>() =>
+  alovaInstance.Get<T>("/id", {
     cacheFor: 0,
-  })
+    shareRequest: false,
+  });
