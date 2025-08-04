@@ -26,6 +26,7 @@ import {
   type WorkflowContentChangeEvent,
   WorkflowContentChangeType,
   type WorkflowEdgeJSON,
+  WorkflowNodeRegistry,
 } from './typings';
 import { WorkflowHoverService, WorkflowSelectService } from './service';
 import { WorkflowNodeLinesData } from './entity-datas/workflow-node-lines-data';
@@ -363,6 +364,14 @@ export class WorkflowLinesManager {
       toPort.portType !== 'input' ||
       toPort.disabled
     ) {
+      return false;
+    }
+    const fromCanAdd = fromPort.node.getNodeRegistry<WorkflowNodeRegistry>().canAddLine;
+    const toCanAdd = toPort.node.getNodeRegistry<WorkflowNodeRegistry>().canAddLine;
+    if (fromCanAdd && !fromCanAdd(fromPort, toPort, this, silent)) {
+      return false;
+    }
+    if (toCanAdd && !toCanAdd(fromPort, toPort, this, silent)) {
       return false;
     }
     if (this.options.canAddLine) {

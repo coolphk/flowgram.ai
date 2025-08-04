@@ -3,11 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-
-
-
-
-import { type IPoint, Rectangle, Emitter } from '@flowgram.ai/utils';
+import { type IPoint, Rectangle, Emitter, Compare } from '@flowgram.ai/utils';
 import { FlowNodeTransformData } from '@flowgram.ai/document';
 import {
   Entity,
@@ -31,11 +27,29 @@ import { type WorkflowLineEntity } from './workflow-line-entity';
 // port 的宽度
 export const PORT_SIZE = 24;
 
+export type WorkflowPortLocation = 'left' | 'top' | 'right' | 'bottom';
+
 export interface WorkflowPort {
   /**
    * 没有代表 默认连接点，默认 input 类型 为最左边中心，output 类型为最右边中心
    */
   portID?: string | number;
+  /**
+   * 输入或者输出点
+   */
+  type: WorkflowPortType;
+  /**
+   * 端口位置
+   */
+  location?: WorkflowPortLocation;
+  /**
+   * 端口热区大小
+   */
+  size?: { width: number; height: number };
+  /**
+   * 相对于 position 的偏移
+   */
+  offset?: IPoint;
   /**
    * 禁用端口
    */
@@ -44,10 +58,6 @@ export interface WorkflowPort {
    * 将点位渲染到该父节点上
    */
   targetElement?: HTMLElement;
-  /**
-   * 输入或者输出点
-   */
-  type: WorkflowPortType;
 }
 
 export type WorkflowPorts = WorkflowPort[];
@@ -67,22 +77,25 @@ export class WorkflowPortEntity extends Entity<WorkflowPortEntityOpts> {
 
   readonly node: WorkflowNodeEntity;
 
-  targetElement?: HTMLElement;
-
   readonly portID: string | number = '';
 
-  readonly _disabled: boolean = false;
+  readonly portType: WorkflowPortType;
+
+  private _disabled?: boolean;
 
   private _hasError = false;
+
+  private _location?: WorkflowPortLocation;
+
+  private _size?: { width: number; height: number };
+
+  private _offset?: IPoint;
 
   protected readonly _onErrorChangedEmitter = new Emitter<void>();
 
   onErrorChanged = this._onErrorChangedEmitter.event;
 
-  /**
-   * port 类型
-   */
-  portType: WorkflowPortType;
+  targetElement?: HTMLElement;
 
   static getPortEntityId(
     node: WorkflowNodeEntity,
@@ -92,12 +105,18 @@ export class WorkflowPortEntity extends Entity<WorkflowPortEntityOpts> {
     return getPortEntityId(node, portType, portID);
   }
 
-  // relativePosition
+  get position(): WorkflowPortLocation | undefined {
+    return this._location;
+  }
+
   constructor(opts: WorkflowPortEntityOpts) {
     super(opts);
     this.portID = opts.portID || '';
     this.portType = opts.type;
-    this._disabled = opts.disabled ?? false;
+    this._disabled = opts.disabled;
+    this._offset = opts.offset;
+    this._location = opts.location;
+    this._size = opts.size;
     this.node = opts.node;
     this.updateTargetElement(opts.targetElement);
     this.toDispose.push(this.node.getData(TransformData)!.onDataChange(() => this.fireChange()));
@@ -148,20 +167,49 @@ export class WorkflowPortEntity extends Entity<WorkflowPortEntityOpts> {
           clientY: pos.y,
         });
     }
-    if (this.portType === 'input') {
-      // 默认为左边重点
-      return bounds.leftCenter;
+    let point = { x: 0, y: 0 };
+    const offset = this._offset || { x: 0, y: 0 };
+    if (this._location) {
+      switch (this._location) {
+        case 'left':
+          point = bounds.leftCenter;
+          break;
+        case 'top':
+          point = bounds.topCenter;
+          break;
+        case 'right':
+          point = bounds.rightCenter;
+          break;
+        case 'bottom':
+          point = bounds.bottomCenter;
+          break;
+      }
+    } else {
+      if (this.portType === 'input') {
+        // 默认为左边重点
+        point = bounds.leftCenter;
+      } else {
+        point = bounds.rightCenter;
+      }
     }
-    return bounds.rightCenter;
+    return {
+      x: point.x + offset.x,
+      y: point.y + offset.y,
+    };
   }
 
   /**
-   * 点的区域
+   * 端口热区
    */
   get bounds(): Rectangle {
     const { point } = this;
-    const halfSize = PORT_SIZE / 2;
-    return new Rectangle(point.x - halfSize, point.y - halfSize, PORT_SIZE, PORT_SIZE);
+    const size = this._size || { width: PORT_SIZE, height: PORT_SIZE };
+    return new Rectangle(
+      point.x - size.width / 2,
+      point.y - size.height / 2,
+      size.width,
+      size.height
+    );
   }
 
   isHovered(x: number, y: number): boolean {
@@ -237,6 +285,33 @@ export class WorkflowPortEntity extends Entity<WorkflowPortEntityOpts> {
       }
     });
     return lines;
+  }
+
+  update(data: Exclude<WorkflowPort, 'portID' | 'type'>) {
+    let changed = false;
+    if (data.targetElement !== this.targetElement) {
+      this.targetElement = data.targetElement;
+      changed = true;
+    }
+    if (data.location !== this._location) {
+      this._location = data.location;
+      changed = true;
+    }
+    if (Compare.isChanged(data.offset, this._offset)) {
+      this._offset = data.offset;
+      changed = true;
+    }
+    if (Compare.isChanged(data.size, this._size)) {
+      this._size = data.size;
+      changed = true;
+    }
+    if (data.disabled !== this._disabled) {
+      this._disabled = data.disabled;
+      changed = true;
+    }
+    if (changed) {
+      this.fireChange();
+    }
   }
 
   dispose(): void {

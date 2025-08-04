@@ -66,16 +66,26 @@ export class WorkflowNodePortsData extends EntityData {
   }
 
   /**
-   * 更新静态的 ports 数据
+   * Update all ports data, includes static ports and dynamic ports
+   * @param ports
    */
-  public updateStaticPorts(ports: WorkflowPorts): void {
+  public updateAllPorts(ports?: WorkflowPorts) {
     const meta = this.entity.getNodeMeta<WorkflowNodeMeta>();
-    this._staticPorts = ports;
+    if (ports) {
+      this._staticPorts = ports;
+    }
     if (meta.useDynamicPort) {
       this.updateDynamicPorts();
     } else {
       this.updatePorts(this._staticPorts);
     }
+  }
+
+  /**
+   * @deprecated use `updateAllPorts` instead
+   */
+  public updateStaticPorts(ports: WorkflowPorts): void {
+    this.updateAllPorts(ports);
   }
 
   /**
@@ -115,7 +125,7 @@ export class WorkflowNodePortsData extends EntityData {
   /**
    * 更新 ports 数据
    */
-  public updatePorts(ports: WorkflowPorts): void {
+  protected updatePorts(ports: WorkflowPorts): void {
     if (!isEqual(this._prePorts, ports)) {
       const portKeys = ports.map((port) => this.getPortId(port.type, port.portID));
       this._portIDSet.forEach((portId) => {
@@ -241,9 +251,7 @@ export class WorkflowNodePortsData extends EntityData {
    */
   protected updatePortEntity(portInfo: WorkflowPort): WorkflowPortEntity {
     const portEntity = this.getOrCreatePortEntity(portInfo);
-    if (portInfo.targetElement) {
-      portEntity.updateTargetElement(portInfo.targetElement);
-    }
+    portEntity.update(portInfo);
     return portEntity;
   }
 }

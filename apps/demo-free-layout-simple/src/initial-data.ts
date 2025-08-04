@@ -81,6 +81,48 @@ export const initialData: WorkflowJSON = {
         content: 'xxxx',
       },
     },
+    {
+      id: 'chain0',
+      type: 'chain',
+      meta: {
+        position: {
+          x: 150,
+          y: 246,
+        },
+      },
+      data: {
+        title: 'Chain',
+        content: 'xxxx',
+      },
+    },
+    {
+      id: '100260',
+      type: 'tool',
+      meta: {
+        position: {
+          x: 55.8,
+          y: 410,
+        },
+      },
+      data: {
+        title: 'New Tool',
+        content: 'xxxx',
+      },
+    },
+    {
+      id: '105108',
+      type: 'tool',
+      meta: {
+        position: {
+          x: 280.5,
+          y: 410,
+        },
+      },
+      data: {
+        title: 'New Tool',
+        content: 'xxxx',
+      },
+    },
   ],
   edges: [
     {
@@ -104,6 +146,16 @@ export const initialData: WorkflowJSON = {
     {
       sourceNodeID: '144150',
       targetNodeID: 'end_0',
+    },
+    {
+      sourceNodeID: 'chain0',
+      targetNodeID: '100260',
+      sourcePortID: 'p4',
+    },
+    {
+      sourceNodeID: 'chain0',
+      targetNodeID: '105108',
+      sourcePortID: 'p5',
     },
   ],
 };
