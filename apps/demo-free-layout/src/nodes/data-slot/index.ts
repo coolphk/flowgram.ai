@@ -3,13 +3,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { FlowNodeRegistry } from "../../typings";
+import {FlowNodeRegistry} from "../../typings";
 import iconDataSlot from "../../assets/icon-data-slot.svg";
-import { formMeta } from "./form-meta";
-import { WorkflowNodeType } from "../constants";
-import { nanoid } from "nanoid";
-import { alovaInstance } from "../../api";
-import { getNodeForm } from "@flowgram.ai/free-layout-editor";
+import {formMeta} from "./form-meta";
+import {WorkflowNodeType} from "../constants";
+import {nanoid} from "nanoid";
+import {alovaInstance} from "../../api";
+import {getNodeForm} from "@flowgram.ai/free-layout-editor";
+import {Toast} from "@douyinfe/semi-ui";
 
 export const DataSlotNodeRegistry: FlowNodeRegistry = {
   type: WorkflowNodeType.DataSlot,
@@ -60,7 +61,9 @@ export const DataSlotNodeRegistry: FlowNodeRegistry = {
         }
       })
       .catch((error) => {
-        console.error("Failed to get unique ID for data slot node:", error);
+        console.error("Failed to get unique ID for data-slot node:", error);
+        Toast.error('无法获取data-slot节点ID,节点创建失败')
+        node.dispose()
       });
   },
 };

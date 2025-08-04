@@ -118,7 +118,7 @@ export function useEditorProps(
       canAddLine(ctx, fromPort, toPort) {
         // Cannot be a self-loop on the same node / 不能是同一节点自循环
         // 获取当前节点类型
-        // console.log("toPort", toPort);
+        console.log("canAddLine", toPort);
         const nodeType = fromPort.node.flowNodeType;
         if (nodeType === WorkflowNodeType.DataSlot) {
           if (toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
@@ -135,6 +135,7 @@ export function useEditorProps(
           }
         }
         if (nodeType === WorkflowNodeType.Workflow) {
+
           if (toPort.node.flowNodeType === WorkflowNodeType.DataSlot) {
             const toNodeForm = getNodeForm(toPort.node)
             if (toNodeForm?.values.rawData) {

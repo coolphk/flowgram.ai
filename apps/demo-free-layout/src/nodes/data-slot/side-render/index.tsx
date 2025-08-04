@@ -3,24 +3,56 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, {useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {Field, FieldRenderProps, useNodeRender,} from "@flowgram.ai/free-layout-editor";
 import {Button, Collapse, Toast, Upload} from "@douyinfe/semi-ui";
 import {IconUpload} from "@douyinfe/semi-icons";
-import {IFlowValue, JsonSchemaEditor,} from "@flowgram.ai/form-materials";
+import {IFlowValue,} from "@flowgram.ai/form-materials";
 
-import {JsonSchema} from "../../../typings";
+import {Input, JsonSchema} from "../../../typings";
 import {uploadAction} from "../../../config";
 import {useEnv} from "../../../providers";
 import {FormContent} from "../../../form-components";
 import {RadioInputsValues} from "../../../materials/radio-inputs-values";
+import {RadioJsonSchemaEditor} from "../../../materials/radio-json-schema-editor";
+import {useRequest} from "alova/client";
+import {getTools} from "../../../api/common";
+
 
 export const SidebarRender: React.FC = () => {
   const {data: nodeData, form, id} = useNodeRender();
   const {isDev, isProd} = useEnv();
   const [inputRadioValue, setInputRadioValue] = useState<string>('');
-  const [inputTools, setInputTools]= useState<Record<string, any>>({});
+  const [outputRadioValue, setOutputRadioValue] = useState<string>('');
+  const [inputTools, setInputTools] = useState<Record<string, any>>({});
+  const {send} = useRequest(getTools, {
+    immediate: false
+  });
+  const handleInputRadioChange = (value: string) => {
+    if (!value) {
+      Toast.error({
+        content: '请选择输入参数',
+      });
+      return
+    }
+    console.log(123, nodeData)
+    setInputRadioValue(value);
+  }
+  const handleOutputRadioChange = useCallback((value: string) => {
+    if (!value) {
+      Toast.error({
+        content: '请选择输入参数',
+      });
+      return
+    }
+    console.log(123, nodeData)
+    const validation = nodeData.rawData.inputs.find((item: Input) => (item.name === value)).validation;
+    send(validation).then((res) => {
+      console.log('tool', res)
+    })
+    setOutputRadioValue(value);
 
+  }, [nodeData])
   // 使用useMemo优化传给InputsValues的value值，避免不必要的重新渲染
   const inputsValues = useMemo(() => {
     return nodeData?.inputsValues || {};
@@ -89,15 +121,7 @@ export const SidebarRender: React.FC = () => {
                     return (
                       <RadioInputsValues value={inputsValues}
                                          inputRadioValue={inputRadioValue}
-                                         onRadioChange={(v) => {
-                                           if (!v || v?.length === 0) {
-                                             Toast.error({
-                                               content: '请先输入参数名称'
-                                             });
-                                             return
-                                           }
-                                           setInputRadioValue(v)
-                                         }}
+                                         onInputRadioChange={handleInputRadioChange}
                                          onChange={(v) => onChange(v)}/>
                     );
                   }}
@@ -112,9 +136,11 @@ export const SidebarRender: React.FC = () => {
                              field: {value, onChange},
                            }: FieldRenderProps<JsonSchema>) => {
                     return (
-                      <JsonSchemaEditor
+                      <RadioJsonSchemaEditor
                         value={outputsSchema}
                         onChange={(value) => onChange(value)}
+                        outputRadioValue={outputRadioValue}
+                        onOutputRadioChange={handleOutputRadioChange}
                       />
                     );
                   }}
@@ -123,7 +149,7 @@ export const SidebarRender: React.FC = () => {
             </Collapse.Panel>
             <Collapse.Panel header="工具列表" itemKey="4">
               <div style={{padding: '12px 0'}}>
-                <p>这里可以添加工具列表相关内容</p>
+
               </div>
               <Button type="primary" onClick={() => console.log(inputRadioValue)}>
                 保存

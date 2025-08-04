@@ -44,15 +44,16 @@ export const UILabel = styled.div`
 `;
 
 export const UIProperties = styled.div<{ $shrink?: boolean }>`
-  display: grid;
-  grid-template-columns: auto 1fr;
+    display: grid;
+    grid-template-columns:1fr;
+    align-items: center;
 
-  ${({ $shrink }) =>
-    $shrink &&
-    css`
-      padding-left: 10px;
-      margin-top: 10px;
-    `}
+    ${({$shrink}) =>
+            $shrink &&
+            css`
+                padding-left: 10px;
+                margin-top: 10px;
+            `}
 `;
 
 export const UIPropertyLeft = styled.div<{

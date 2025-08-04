@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { alovaInstance } from "./index";
+import {alovaInstance} from "./index";
+import {Validation} from "../typings";
 
-export interface ISaveContent {
+export interface ISaveContentParam {
   dataslots: [
     {
       id: string;
@@ -29,12 +30,19 @@ export interface ISaveContent {
   ];
   raw: string;
 }
+
+
 export const getUniqueId = <T>() =>
   alovaInstance.Get<T>("/id", {
     cacheFor: 0,
     shareRequest: false,
   });
-export const saveContent = (content: ISaveContent) =>
+export const saveContent = (content: ISaveContentParam) =>
   alovaInstance.Post<string>("/save", {
     data: content,
+  });
+export const getTools = <T>(param: Validation[]) =>
+  alovaInstance.Post<T>("/tool", {
+    cacheFor: 0,
+    data: param,
   });

@@ -4,13 +4,10 @@
  */
 
 
+import {useMemo, useState} from 'react';
 
-
-
-import React, { useMemo, useState } from 'react';
-
-import { IJsonSchema } from '@flowgram.ai/json-schema';
-import { Button, Checkbox, IconButton } from '@douyinfe/semi-ui';
+import {IJsonSchema} from '@flowgram.ai/json-schema';
+import {Button, Checkbox, IconButton, Radio} from '@douyinfe/semi-ui';
 import {
   IconExpand,
   IconShrink,
@@ -21,7 +18,7 @@ import {
 } from '@douyinfe/semi-icons';
 
 // import { TypeSelector } from '../type-selector';
-import { ConfigType, PropertyValueType } from './types';
+import {ConfigType, PropertyValueType} from './types';
 import {
   IconAddChildren,
   UIActions,
@@ -37,55 +34,62 @@ import {
   UIRequired,
   UIType,
 } from './styles';
-import { UIName } from './styles';
-import { DefaultValueWrapper, UIRow } from './styles';
-import { usePropertiesEdit } from './hooks';
-import { DefaultValue } from './default-value';
-import { BlurInput } from './components/blur-input';
-import { TypeSelector } from '@flowgram.ai/form-materials';
+import {UIName} from './styles';
+import {DefaultValueWrapper, UIRow} from './styles';
+import {usePropertiesEdit} from './hooks';
+import {DefaultValue} from './default-value';
+import {BlurInput} from './components/blur-input';
+import {TypeSelector} from '@flowgram.ai/form-materials';
 
-export function JsonSchemaEditor(props: {
+export function RadioJsonSchemaEditor(props: {
   value?: IJsonSchema;
   onChange?: (value: IJsonSchema) => void;
   config?: ConfigType;
   className?: string;
   readonly?: boolean;
-}) {
-  const { value = { type: 'object' }, config = {}, onChange: onChangeProps, readonly } = props;
-  const { propertyList, onAddProperty, onRemoveProperty, onEditProperty } = usePropertiesEdit(
+} & { outputRadioValue?: string; onOutputRadioChange?: (value: string) => void; }) {
+  const {value = {type: 'object'}, config = {}, onChange: onChangeProps, readonly} = props;
+  const {propertyList, onAddProperty, onRemoveProperty, onEditProperty} = usePropertiesEdit(
     value,
     onChangeProps
   );
 
   return (
-    <UIContainer className={props.className}>
-      <UIProperties>
+    <Radio.Group direction={'vertical'} value={props.outputRadioValue} onChange={(v) => props?.onOutputRadioChange?.(v.target.value)}>
+      <UIContainer className={props.className}>
         {propertyList.map((_property, index) => (
-          <PropertyEdit
-            readonly={readonly}
-            key={_property.key}
-            value={_property}
-            config={config}
-            $index={index}
-            onChange={(_v) => {
-              onEditProperty(_property.key!, _v);
-            }}
-            onRemove={() => {
-              onRemoveProperty(_property.key!);
-            }}
-          />
+          <>
+            <Radio value={_property.name} key={_property.key} >
+              <UIProperties key={`ui_${_property.key}`}>
+                <PropertyEdit
+                  readonly={readonly}
+                  key={_property.key}
+                  value={_property}
+                  config={config}
+                  $index={index}
+                  onChange={(_v) => {
+                    onEditProperty(_property.key!, _v);
+                  }}
+                  onRemove={() => {
+                    onRemoveProperty(_property.key!);
+                  }}
+                />
+              </UIProperties>
+            </Radio>
+          </>
         ))}
-      </UIProperties>
-      <Button
-        disabled={readonly}
-        size="small"
-        style={{ marginTop: 10, marginLeft: 16 }}
-        icon={<IconPlus />}
-        onClick={onAddProperty}
-      >
-        {config?.addButtonText ?? 'Add'}
-      </Button>
-    </UIContainer>
+
+        <Button
+          disabled={readonly}
+          size="small"
+          style={{marginTop: 10, marginLeft: 16}}
+          icon={<IconPlus/>}
+          onClick={onAddProperty}
+        >
+          {config?.addButtonText ?? 'Add'}
+        </Button>
+      </UIContainer>
+    </Radio.Group>
   );
 }
 
@@ -121,11 +125,11 @@ function PropertyEdit(props: {
   const [expand, setExpand] = useState(false);
   const [collapse, setCollapse] = useState(false);
 
-  const { name, type, items, default: defaultValue, description, isPropertyRequired } = value || {};
+  const {name, type, items, default: defaultValue, description, isPropertyRequired} = value || {};
 
-  const typeSelectorValue = useMemo(() => ({ type, items }), [type, items]);
+  const typeSelectorValue = useMemo(() => ({type, items}), [type, items]);
 
-  const { propertyList, isDrilldownObject, onAddProperty, onRemoveProperty, onEditProperty } =
+  const {propertyList, isDrilldownObject, onAddProperty, onRemoveProperty, onEditProperty} =
     usePropertiesEdit(value, onChangeProps);
 
   const onChange = (key: string, _value: any) => {
@@ -151,7 +155,7 @@ function PropertyEdit(props: {
       >
         {showCollapse && (
           <UICollapseTrigger onClick={() => setCollapse((_collapse) => !_collapse)}>
-            {collapse ? <IconChevronDown size="small" /> : <IconChevronRight size="small" />}
+            {collapse ? <IconChevronDown size="small"/> : <IconChevronRight size="small"/>}
           </UICollapseTrigger>
         )}
       </UIPropertyLeft>
@@ -196,7 +200,7 @@ function PropertyEdit(props: {
                 disabled={readonly}
                 size="small"
                 theme="borderless"
-                icon={expand ? <IconShrink size="small" /> : <IconExpand size="small" />}
+                icon={expand ? <IconShrink size="small"/> : <IconExpand size="small"/>}
                 onClick={() => {
                   setExpand((_expand) => !_expand);
                 }}
@@ -206,7 +210,7 @@ function PropertyEdit(props: {
                   disabled={readonly}
                   size="small"
                   theme="borderless"
-                  icon={<IconAddChildren />}
+                  icon={<IconAddChildren/>}
                   onClick={() => {
                     onAddProperty();
                     setCollapse(true);
@@ -217,7 +221,7 @@ function PropertyEdit(props: {
                 disabled={readonly}
                 size="small"
                 theme="borderless"
-                icon={<IconMinus size="small" />}
+                icon={<IconMinus size="small"/>}
                 onClick={onRemove}
               />
             </UIActions>
@@ -234,7 +238,7 @@ function PropertyEdit(props: {
               />
               {$level === 0 && type && type !== 'array' && (
                 <>
-                  <UILabel style={{ marginTop: 10 }}>
+                  <UILabel style={{marginTop: 10}}>
                     {config?.defaultValueTitle ?? 'Default Value'}
                   </UILabel>
                   <DefaultValueWrapper>

@@ -9,7 +9,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { omit } from 'lodash';
+import { omit } from 'lodash-es';
 import { IJsonSchema } from '@flowgram.ai/json-schema';
 
 import { PropertyValueType } from './types';

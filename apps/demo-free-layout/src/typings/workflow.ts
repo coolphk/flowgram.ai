@@ -13,12 +13,16 @@ export interface Workflow {
   name: string;
   outputs: Output[];
 }
-
+export interface Validation {
+  message: string;
+  type: string;
+}
 export interface Input {
   description: string;
   name: string;
   required: boolean;
   type: string;
+  validation: Validation[];
 }
 
 export interface Output {
@@ -26,4 +30,5 @@ export interface Output {
   name: string;
   required: boolean;
   type: string;
+  validation: Validation[];
 }
