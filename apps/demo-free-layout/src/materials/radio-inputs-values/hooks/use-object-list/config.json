@@ -1,0 +1,8 @@
+{
+  "name": "use-object-list",
+  "depMaterials": [],
+  "depPackages": [
+    "lodash",
+    "nanoid"
+  ]
+}

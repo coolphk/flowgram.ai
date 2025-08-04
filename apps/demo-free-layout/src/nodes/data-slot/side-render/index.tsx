@@ -3,20 +3,23 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, {useMemo} from "react";
+import React, {useMemo, useState} from "react";
 import {Field, FieldRenderProps, useNodeRender,} from "@flowgram.ai/free-layout-editor";
-import {Button, Collapse, Upload} from "@douyinfe/semi-ui";
+import {Button, Collapse, Toast, Upload} from "@douyinfe/semi-ui";
 import {IconUpload} from "@douyinfe/semi-icons";
-import {IFlowValue, InputsValues, JsonSchemaEditor,} from "@flowgram.ai/form-materials";
+import {IFlowValue, JsonSchemaEditor,} from "@flowgram.ai/form-materials";
 
 import {JsonSchema} from "../../../typings";
 import {uploadAction} from "../../../config";
 import {useEnv} from "../../../providers";
 import {FormContent} from "../../../form-components";
+import {RadioInputsValues} from "../../../materials/radio-inputs-values";
 
 export const SidebarRender: React.FC = () => {
   const {data: nodeData, form, id} = useNodeRender();
   const {isDev, isProd} = useEnv();
+  const [inputRadioValue, setInputRadioValue] = useState<string>('');
+  const [inputTools, setInputTools]= useState<Record<string, any>>({});
 
   // 使用useMemo优化传给InputsValues的value值，避免不必要的重新渲染
   const inputsValues = useMemo(() => {
@@ -84,13 +87,18 @@ export const SidebarRender: React.FC = () => {
                   > name="inputsValues">
                   {({field: {value, onChange}}) => {
                     return (
-                      <div style={{display:'flex',alignItems:'center'}}>
-                        <div style={{width:100}}>输入参数</div>
-                        <InputsValues
-                          value={inputsValues}
-                          onChange={(v) => onChange(v)}
-                        />
-                      </div>
+                      <RadioInputsValues value={inputsValues}
+                                         inputRadioValue={inputRadioValue}
+                                         onRadioChange={(v) => {
+                                           if (!v || v?.length === 0) {
+                                             Toast.error({
+                                               content: '请先输入参数名称'
+                                             });
+                                             return
+                                           }
+                                           setInputRadioValue(v)
+                                         }}
+                                         onChange={(v) => onChange(v)}/>
                     );
                   }}
                 </Field>
@@ -117,6 +125,9 @@ export const SidebarRender: React.FC = () => {
               <div style={{padding: '12px 0'}}>
                 <p>这里可以添加工具列表相关内容</p>
               </div>
+              <Button type="primary" onClick={() => console.log(inputRadioValue)}>
+                保存
+              </Button>
             </Collapse.Panel>
           </>
         )}
@@ -126,6 +137,7 @@ export const SidebarRender: React.FC = () => {
           </Collapse.Panel>
         )}
       </Collapse>
+
     </>
   );
 };

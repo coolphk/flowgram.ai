@@ -1,5 +1,5 @@
 {
-  "name": "@flowgram.ai/demo-free-layout",
+  "name": "@flowgram.ai/demo-fixed-layout",
   "version": "0.1.0",
   "description": "",
   "keywords": [],
@@ -30,24 +30,16 @@
   "dependencies": {
     "@douyinfe/semi-icons": "^2.80.0",
     "@douyinfe/semi-ui": "^2.80.0",
-    "@flowgram.ai/runtime-interface": "workspace:*",
-    "@flowgram.ai/free-layout-editor": "workspace:*",
-    "@flowgram.ai/free-snap-plugin": "workspace:*",
-    "@flowgram.ai/free-lines-plugin": "workspace:*",
-    "@flowgram.ai/free-node-panel-plugin": "workspace:*",
-    "@flowgram.ai/minimap-plugin": "workspace:*",
-    "@flowgram.ai/free-container-plugin": "workspace:*",
-    "@flowgram.ai/free-group-plugin": "workspace:*",
+    "@flowgram.ai/fixed-layout-editor": "workspace:*",
+    "@flowgram.ai/fixed-semi-materials": "workspace:*",
     "@flowgram.ai/form-materials": "workspace:*",
-    "@flowgram.ai/runtime-js": "workspace:*",
-    "@flowgram.ai/json-schema": "workspace:*",
+    "@flowgram.ai/group-plugin": "workspace:*",
+    "@flowgram.ai/minimap-plugin": "workspace:*",
     "lodash-es": "^4.17.21",
     "nanoid": "^4.0.2",
     "react": "^18",
     "react-dom": "^18",
-    "styled-components": "^5",
-    "classnames": "^2.5.1",
-    "alova": "^3.3.4"
+    "styled-components": "^5"
   },
   "devDependencies": {
     "@flowgram.ai/ts-config": "workspace:*",
@@ -60,7 +52,10 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/styled-components": "^5",
+    "@typescript-eslint/parser": "^6.10.0",
     "eslint": "^8.54.0",
+    "less": "^4.1.2",
+    "less-loader": "^6",
     "cross-env": "~7.0.3"
   },
   "publishConfig": {

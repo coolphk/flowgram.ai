@@ -1,0 +1,13 @@
+{
+  "name": "json-schema-editor",
+  "depMaterials": [
+    "type-selector",
+    "constant-inputs"
+  ],
+  "depPackages": [
+    "@douyinfe/semi-ui",
+    "@douyinfe/semi-icons",
+    "styled-components",
+    "@flowgram.ai/json-schema"
+  ]
+}

@@ -16,7 +16,13 @@ import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
 import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
 import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
 import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
-import {FreeLayoutProps, getNodeForm, WorkflowNodeLinesData,} from "@flowgram.ai/free-layout-editor";
+import {
+  FreeLayoutProps,
+  getNodeForm,
+  WorkflowContentChangeType,
+  WorkflowLineEntity,
+  WorkflowNodeLinesData,
+} from "@flowgram.ai/free-layout-editor";
 import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
 import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
@@ -35,7 +41,7 @@ import {defaultFormMeta} from "../nodes/default-form-meta";
 import {WorkflowNodeType} from "../nodes";
 import {SelectorBoxPopover} from "../components/selector-box-popover";
 import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
-import {createTypePresetPlugin} from "@flowgram.ai/form-materials";
+import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
 import {IconFile} from "@douyinfe/semi-icons";
 import {Toast} from "@douyinfe/semi-ui";
 
@@ -557,7 +563,45 @@ export function useEditorProps(
         ctx.document.fitView(false); // init fit view
 
         console.log("--- Playground rendered ---");
-        ctx.document.linesManager.onAvailableLinesChange(e => {} )
+        ctx.document.linesManager.onAvailableLinesChange(e => {
+          console.log("Available lines change: ", e);
+          if (ctx.document.loading) return
+          if (e.type === WorkflowContentChangeType.ADD_LINE) {
+            const line = e.entity as WorkflowLineEntity;
+            // data slot to workflow
+            if (line.from.flowNodeType === WorkflowNodeType.DataSlot) {
+              if (line.to && line.to.flowNodeType === WorkflowNodeType.Workflow) {
+                const fromForm = getNodeForm(line.from)
+                const toForm = getNodeForm(line.to)
+                fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"))
+                fromForm?.setValueIn("outputs", toForm?.getValueIn("inputs"))
+              }
+            }
+            if (line.from.flowNodeType === WorkflowNodeType.Workflow) {
+              if (line.to && line.to.flowNodeType === WorkflowNodeType.DataSlot) {
+                const fromForm = getNodeForm(line.from)
+                const toForm = getNodeForm(line.to)
+                const fromOutputs = fromForm?.getValueIn("outputs")
+                const inputsValues: Record<string, IFlowValue> = {}
+                toForm?.setValueIn("rawData", fromForm?.getValueIn("rawData"))
+                toForm?.setValueIn("inputs", fromForm?.getValueIn("outputs"))
+                Object.keys(fromOutputs.properties).forEach(key => {
+                  inputsValues[key] = {
+                    "type": "ref",
+                    "content": [
+                      line.from.id,
+                      key
+                    ],
+                    "extra": {
+                      "index": 0
+                    }
+                  }
+                })
+                toForm?.setValueIn("inputsValues", inputsValues)
+              }
+            }
+          }
+        })
       },
       /**
        * Playground dispose

@@ -9,7 +9,6 @@ import {formMeta} from "./form-meta";
 import {WorkflowNodeType} from "../constants";
 import {FlowNodeRegistry} from "../../typings";
 import IconWorkflow from "../../assets/icon-workflow.svg";
-import {alovaInstance} from "../../api";
 import {getNodeForm} from "@flowgram.ai/free-layout-editor";
 import {getUniqueId} from "../../api/common";
 
