@@ -83,12 +83,14 @@ export const SidebarRender: React.FC = () => {
                     Record<string, IFlowValue | undefined> | undefined
                   > name="inputsValues">
                   {({field: {value, onChange}}) => {
-
                     return (
-                      <InputsValues
-                        value={inputsValues}
-                        onChange={(v) => onChange(v)}
-                      />
+                      <div style={{display:'flex',alignItems:'center'}}>
+                        <div style={{width:100}}>输入参数</div>
+                        <InputsValues
+                          value={inputsValues}
+                          onChange={(v) => onChange(v)}
+                        />
+                      </div>
                     );
                   }}
                 </Field>
@@ -112,7 +114,7 @@ export const SidebarRender: React.FC = () => {
               </FormContent>
             </Collapse.Panel>
             <Collapse.Panel header="工具列表" itemKey="4">
-              <div style={{ padding: '12px 0' }}>
+              <div style={{padding: '12px 0'}}>
                 <p>这里可以添加工具列表相关内容</p>
               </div>
             </Collapse.Panel>

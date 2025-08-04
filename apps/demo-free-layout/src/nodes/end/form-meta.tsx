@@ -27,7 +27,6 @@ export const renderForm = () => {
           > name="inputsValues">
             {({ field: { value, onChange } }) => (
               <>
-                {/*<Button onClick={() => console.log(value)}>ss</Button>*/}
                 <InputsValues value={value} onChange={(_v) => onChange(_v)} />
               </>
             )}

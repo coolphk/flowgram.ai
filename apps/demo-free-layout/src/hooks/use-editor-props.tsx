@@ -37,7 +37,9 @@ import {SelectorBoxPopover} from "../components/selector-box-popover";
 import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
 import {createTypePresetPlugin} from "@flowgram.ai/form-materials";
 import {IconFile} from "@douyinfe/semi-icons";
-import { Toast } from "@douyinfe/semi-ui";
+import {Toast} from "@douyinfe/semi-ui";
+
+const id = 'toastid';
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
@@ -110,16 +112,30 @@ export function useEditorProps(
       canAddLine(ctx, fromPort, toPort) {
         // Cannot be a self-loop on the same node / 不能是同一节点自循环
         // 获取当前节点类型
-        console.log("toPort", toPort);
+        // console.log("toPort", toPort);
         const nodeType = fromPort.node.flowNodeType;
-        if (toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
-          if (nodeType === WorkflowNodeType.DataSlot) {
-            const targetNodeData = getNodeForm(toPort.node)
-            if (targetNodeData?.values.rawData) {
+        if (nodeType === WorkflowNodeType.DataSlot) {
+          if (toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
+            const toNodeForm = getNodeForm(toPort.node)
+            const fromNodeForm = getNodeForm(fromPort.node)
+            if (toNodeForm?.values.rawData) {
+              console.log(111, getNodeForm(fromPort.node));
+              fromNodeForm?.setValueIn("validations", toNodeForm.getValueIn("validations"))
+            } else {
+              //用semiui中的message提示
+              Toast.error({content: "请先选择工作流的模板类型", id})
+              return false
+            }
+          }
+        }
+        if (nodeType === WorkflowNodeType.Workflow) {
+          if (toPort.node.flowNodeType === WorkflowNodeType.DataSlot) {
+            const toNodeForm = getNodeForm(toPort.node)
+            if (toNodeForm?.values.rawData) {
 
             } else {
               //用semiui中的message提示
-              Toast.error("请先选择工作流的模板类型")
+              Toast.error({content: "请先选择工作流的模板类型", id})
               return false
             }
           }
@@ -539,7 +555,9 @@ export function useEditorProps(
       onAllLayersRendered(ctx) {
         // ctx.tools.autoLayout(); // init auto layout
         ctx.document.fitView(false); // init fit view
+
         console.log("--- Playground rendered ---");
+        ctx.document.linesManager.onAvailableLinesChange(e => {} )
       },
       /**
        * Playground dispose
@@ -653,7 +671,7 @@ export function useEditorProps(
               ConstantRenderer: () => {
                 return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
               },
-              icon: <IconFile/> ,
+              icon: <IconFile/>,
               container: false,
             },
           ],
