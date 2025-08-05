@@ -32,11 +32,14 @@ export interface ISaveContentParam {
 }
 
 
-export const getUniqueId = <T>() =>
-  alovaInstance.Get<T>("/id", {
+export const getUniqueId = <T>() => {
+  console.log("getUniqueId")
+  return alovaInstance.Get<T>("/id", {
     cacheFor: 0,
     shareRequest: false,
   });
+}
+
 export const saveContent = (content: ISaveContentParam) =>
   alovaInstance.Post<string>("/save", {
     data: content,

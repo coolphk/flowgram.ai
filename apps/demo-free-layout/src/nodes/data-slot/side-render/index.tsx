@@ -28,7 +28,8 @@ export const SidebarRender: React.FC = () => {
   const [outputTools, setOutputTools] = useState<Record<string, ToolResponse[]>>({});
   const [selectedInputTools, setSelectedInputTools] = useState<ToolResponse[]>([]);
   const [selectedOutputTools, setSelectedOutputTools] = useState<ToolResponse[]>([]);
-
+  const [selectedInputMap, setSelectedInputMap] = useState<Record<string, ToolResponse[]>>({});
+  const [selectedOutputMap, setSelectedOutputMap] = useState<Record<string, ToolResponse[]>>({});
   const {send} = useRequest(getTools<ToolResponse[]>, {
     immediate: false
   });
@@ -45,8 +46,12 @@ export const SidebarRender: React.FC = () => {
       setInputTools({
         [value]: res,
       });
-      setSelectedInputTools([])
     })
+    if (form?.getValueIn("inputTools")?.[value]) {
+      setSelectedInputTools(form?.getValueIn("inputTools")[value])
+    } else {
+      setSelectedInputTools([])
+    }
     setInputRadioValue(value);
   }
   const handleOutputRadioChange = (value: string) => {
@@ -56,14 +61,18 @@ export const SidebarRender: React.FC = () => {
       });
       return
     }
-    // console.log(123, nodeData)
+    console.log(123, nodeData)
     const validation = nodeData.rawData.inputs.find((item: Input) => (item.name === value)).validation;
     send(validation).then((res) => {
       setOutputTools({
         [value]: res,
       });
-      setSelectedOutputTools([])
     })
+    if (form?.getValueIn("outputTools")?.[value]) {
+      setSelectedOutputTools(form?.getValueIn("outputTools")[value])
+    } else {
+      setSelectedOutputTools([])
+    }
     setOutputRadioValue(value);
   }
   const saveInputTool = () => {
@@ -80,6 +89,7 @@ export const SidebarRender: React.FC = () => {
       return
     }
     form?.setValueIn("inputTools", {
+      ...form.getValueIn("inputTools"),
       [inputRadioValue]: selectedInputTools
     })
     Toast.success({
@@ -100,6 +110,7 @@ export const SidebarRender: React.FC = () => {
       return
     }
     form?.setValueIn("outputTools", {
+      ...form.getValueIn("outputTools"),
       [outputRadioValue]: selectedOutputTools
     })
     Toast.success({
@@ -133,50 +144,59 @@ export const SidebarRender: React.FC = () => {
             }}
           >
             <div style={{marginBottom: 8, fontWeight: 500}}>{key}</div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}>
-              {nodeData?.[`${status}Tools`]?.[key]?.map((item: ToolResponse) => (
-                item.name === 'Uploader' ? <Upload
-                    action={uploadAction}
-                    data={() => ({
-                      form: JSON.stringify({
-                        dataSlotId: id,
-                        outputName: key,
-                      }),
-                    })}
-                    fileName="file"
-                    limit={1}
-                    multiple={false}
-                    onSuccess={(res) => {
-                      // 这里可以更新节点数据
-                      if (form) {
-                        form.setValueIn(`outputsValues.${key}`, res.data);
-                      }
-                    }}
-                  >
-                    <Button icon={<IconUpload/>} theme="light">
-                      上传文件
-                    </Button>
-                  </Upload> :
-                  <div key={item.id} style={{
-                    height: '32px',
-                    width: '32px',
-                    padding: '8px 12px',
-                    borderRadius: 4,
-                    border: '1px solid #eee',
-                    backgroundColor: '#f0f8ff',
-                  }}>
-                    {item.name}
-                  </div>
-              ))}
-            </div>
+            {renderToolItems(status, key)}
           </div>
 
         );
       }
+    );
+  };
+
+  // 将工具项的渲染逻辑封装成独立函数
+  const renderToolItems = (status: 'input' | 'output', key: string) => {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        gap: 8,
+      }}>
+        {nodeData?.[`${status}Tools`]?.[key]?.map((item: ToolResponse) => (
+          item.name === 'Uploader' ? <Upload
+              action={uploadAction}
+              data={() => ({
+                form: JSON.stringify({
+                  dataSlotId: nodeData.serverId,
+                  outputName: key,
+                }),
+              })}
+              fileName="file"
+              limit={1}
+              multiple={false}
+              onSuccess={(res) => {
+                // 这里可以更新节点数据
+                if (form) {
+                  form.setValueIn(`outputsValues.${key}`, res.data);
+                }
+              }}
+            >
+              <Button icon={<IconUpload/>} theme="light">
+                上传文件
+              </Button>
+            </Upload> :
+            <div key={item.id} style={{
+              height: '32px',
+              width: '32px',
+              padding: '8px 12px',
+              borderRadius: 4,
+              border: '1px solid #eee',
+              backgroundColor: '#f0f8ff',
+              cursor: 'pointer',
+            }}>
+              {item.name}
+            </div>
+        ))}
+      </div>
     );
   };
   return (

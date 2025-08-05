@@ -9,13 +9,13 @@
  */
 
 /* eslint-disable no-console */
-import { useMemo } from "react";
+import {useMemo} from "react";
 
-import { debounce } from "lodash-es";
-import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
-import { createFreeSnapPlugin } from "@flowgram.ai/free-snap-plugin";
-import { createFreeNodePanelPlugin } from "@flowgram.ai/free-node-panel-plugin";
-import { createFreeLinesPlugin } from "@flowgram.ai/free-lines-plugin";
+import {debounce} from "lodash-es";
+import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
+import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
+import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
+import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
 import {
   FreeLayoutProps,
   getNodeForm,
@@ -23,27 +23,27 @@ import {
   WorkflowLineEntity,
   WorkflowNodeLinesData,
 } from "@flowgram.ai/free-layout-editor";
-import { createFreeGroupPlugin } from "@flowgram.ai/free-group-plugin";
-import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
+import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
+import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
-import { onDragLineEnd } from "../utils";
-import { FlowDocumentJSON, FlowNodeRegistry } from "../typings";
-import { shortcuts } from "../shortcuts";
-import { CustomService } from "../services";
-import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
+import {onDragLineEnd} from "../utils";
+import {FlowDocumentJSON, FlowNodeRegistry, Workflow} from "../typings";
+import {shortcuts} from "../shortcuts";
+import {CustomService} from "../services";
+import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
 import {
   createContextMenuPlugin,
   createRunHistoryPlugin,
   createRuntimePlugin,
   createVariablePanelPlugin,
 } from "../plugins";
-import { defaultFormMeta } from "../nodes/default-form-meta";
-import { WorkflowNodeType } from "../nodes";
-import { SelectorBoxPopover } from "../components/selector-box-popover";
-import { BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel, } from "../components";
-import { createTypePresetPlugin, IFlowValue } from "@flowgram.ai/form-materials";
-import { IconFile } from "@douyinfe/semi-icons";
-import { Toast } from "@douyinfe/semi-ui";
+import {defaultFormMeta} from "../nodes/default-form-meta";
+import {WorkflowNodeType} from "../nodes";
+import {SelectorBoxPopover} from "../components/selector-box-popover";
+import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
+import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
+import {IconFile} from "@douyinfe/semi-icons";
+import {Toast} from "@douyinfe/semi-ui";
 
 const id = 'toastid';
 
@@ -124,7 +124,7 @@ export function useEditorProps(
           if (toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
             const toNodeForm = getNodeForm(toPort.node)
             if (!toNodeForm?.values.rawData) {
-              Toast.error({ content: "请先选择工作流的模板类型", id })
+              Toast.error({content: "请先选择工作流的模板类型", id})
               return false
             }
           }
@@ -134,7 +134,7 @@ export function useEditorProps(
             const fromNodeForm = getNodeForm(fromPort.node)
             if (!fromNodeForm?.values.rawData) {
               //用semiui中的message提示
-              Toast.error({ content: "请先选择工作流的模板类型", id })
+              Toast.error({content: "请先选择工作流的模板类型", id})
               return false
             }
           }
@@ -172,7 +172,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const { dragNodeType, dropNodeType } = params;
+        const {dragNodeType, dropNodeType} = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -261,9 +261,10 @@ export function useEditorProps(
 
           // 处理节点数据
           documentData.nodes.forEach((node: any) => {
+            const nodeData = node.data
             if (node.type === 'data-slot') {
               // 获取data-slot节点的serverId
-              const serverId = node.data?.serverId || node.id;
+              const serverId = nodeData?.serverId || node.id;
 
               // 获取连接信息
               let from = '';
@@ -284,7 +285,7 @@ export function useEditorProps(
               dataslots.push({
                 id: serverId,
                 type: node.type,
-                name: node.data?.title || '',
+                name: nodeData.title || '',
                 description: '',
                 validations: [],
                 tools: [],
@@ -539,7 +540,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({ bind }) => {
+      onBind: ({bind}) => {
         bind(CustomService).toSelf().inSingletonScope();
       },
       /**
@@ -566,7 +567,10 @@ export function useEditorProps(
               if (line.to && line.to.flowNodeType === WorkflowNodeType.Workflow) {
                 const fromForm = getNodeForm(line.from)
                 const toForm = getNodeForm(line.to)
-                fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"))
+                if (!fromForm?.getValueIn("rawData")) {
+                  fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"))
+                  fromForm?.setValueIn("from", "inputs")
+                }
                 fromForm?.setValueIn("outputs", toForm?.getValueIn("inputs"))
               }
             }
@@ -577,8 +581,9 @@ export function useEditorProps(
                 const fromOutputs = fromForm?.getValueIn("outputs")
                 const inputsValues: Record<string, IFlowValue> = {}
                 toForm?.setValueIn("rawData", fromForm?.getValueIn("rawData"))
+                toForm?.setValueIn("from", "outputs")
                 toForm?.setValueIn("inputs", fromForm?.getValueIn("outputs"))
-                Object.keys(fromOutputs.properties).forEach(key => {
+                Object.keys(fromOutputs.properties).forEach((key, index) => {
                   inputsValues[key] = {
                     "type": "ref",
                     "content": [
@@ -586,7 +591,7 @@ export function useEditorProps(
                       key
                     ],
                     "extra": {
-                      "index": 0
+                      "index": index
                     }
                   }
                 })
@@ -706,9 +711,9 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span style={{ marginLeft: '8px' }}>请选择输入来源</span>);
+                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
               },
-              icon: <IconFile />,
+              icon: <IconFile/>,
               container: false,
             },
           ],

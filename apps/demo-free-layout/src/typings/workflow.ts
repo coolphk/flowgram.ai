@@ -9,12 +9,14 @@ export interface Workflow {
   inputs: Input[];
   name: string;
   outputs: Output[];
+  serverId?: string;
 }
 
 export interface Validation {
   rule: string;
   description: string;
 }
+
 export interface ToolResponse {
   id: string;
   name: string;
