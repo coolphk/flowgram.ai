@@ -9,13 +9,13 @@
  */
 
 /* eslint-disable no-console */
-import {useMemo} from "react";
+import { useMemo } from "react";
 
-import {debounce} from "lodash-es";
-import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
-import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
-import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
-import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
+import { debounce } from "lodash-es";
+import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
+import { createFreeSnapPlugin } from "@flowgram.ai/free-snap-plugin";
+import { createFreeNodePanelPlugin } from "@flowgram.ai/free-node-panel-plugin";
+import { createFreeLinesPlugin } from "@flowgram.ai/free-lines-plugin";
 import {
   FreeLayoutProps,
   getNodeForm,
@@ -23,27 +23,27 @@ import {
   WorkflowLineEntity,
   WorkflowNodeLinesData,
 } from "@flowgram.ai/free-layout-editor";
-import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
-import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
+import { createFreeGroupPlugin } from "@flowgram.ai/free-group-plugin";
+import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
 
-import {onDragLineEnd} from "../utils";
-import {FlowDocumentJSON, FlowNodeRegistry} from "../typings";
-import {shortcuts} from "../shortcuts";
-import {CustomService} from "../services";
-import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
+import { onDragLineEnd } from "../utils";
+import { FlowDocumentJSON, FlowNodeRegistry } from "../typings";
+import { shortcuts } from "../shortcuts";
+import { CustomService } from "../services";
+import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
 import {
   createContextMenuPlugin,
   createRunHistoryPlugin,
   createRuntimePlugin,
   createVariablePanelPlugin,
 } from "../plugins";
-import {defaultFormMeta} from "../nodes/default-form-meta";
-import {WorkflowNodeType} from "../nodes";
-import {SelectorBoxPopover} from "../components/selector-box-popover";
-import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
-import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
-import {IconFile} from "@douyinfe/semi-icons";
-import {Toast} from "@douyinfe/semi-ui";
+import { defaultFormMeta } from "../nodes/default-form-meta";
+import { WorkflowNodeType } from "../nodes";
+import { SelectorBoxPopover } from "../components/selector-box-popover";
+import { BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel, } from "../components";
+import { createTypePresetPlugin, IFlowValue } from "@flowgram.ai/form-materials";
+import { IconFile } from "@douyinfe/semi-icons";
+import { Toast } from "@douyinfe/semi-ui";
 
 const id = 'toastid';
 
@@ -118,31 +118,23 @@ export function useEditorProps(
       canAddLine(ctx, fromPort, toPort) {
         // Cannot be a self-loop on the same node / 不能是同一节点自循环
         // 获取当前节点类型
-        console.log("canAddLine", toPort);
+        // console.log("canAddLine", toPort);
         const nodeType = fromPort.node.flowNodeType;
         if (nodeType === WorkflowNodeType.DataSlot) {
           if (toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
             const toNodeForm = getNodeForm(toPort.node)
-            const fromNodeForm = getNodeForm(fromPort.node)
-            if (toNodeForm?.values.rawData) {
-              console.log(111, getNodeForm(fromPort.node));
-              fromNodeForm?.setValueIn("validations", toNodeForm.getValueIn("validations"))
-            } else {
-              //用semiui中的message提示
-              Toast.error({content: "请先选择工作流的模板类型", id})
+            if (!toNodeForm?.values.rawData) {
+              Toast.error({ content: "请先选择工作流的模板类型", id })
               return false
             }
           }
         }
         if (nodeType === WorkflowNodeType.Workflow) {
-
           if (toPort.node.flowNodeType === WorkflowNodeType.DataSlot) {
-            const toNodeForm = getNodeForm(toPort.node)
-            if (toNodeForm?.values.rawData) {
-
-            } else {
+            const fromNodeForm = getNodeForm(fromPort.node)
+            if (!fromNodeForm?.values.rawData) {
               //用semiui中的message提示
-              Toast.error({content: "请先选择工作流的模板类型", id})
+              Toast.error({ content: "请先选择工作流的模板类型", id })
               return false
             }
           }
@@ -180,7 +172,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const {dragNodeType, dropNodeType} = params;
+        const { dragNodeType, dropNodeType } = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -547,7 +539,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({bind}) => {
+      onBind: ({ bind }) => {
         bind(CustomService).toSelf().inSingletonScope();
       },
       /**
@@ -714,9 +706,9 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
+                return (<span style={{ marginLeft: '8px' }}>请选择输入来源</span>);
               },
-              icon: <IconFile/>,
+              icon: <IconFile />,
               container: false,
             },
           ],

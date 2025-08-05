@@ -13,6 +13,7 @@ import {useTypeManager} from '../../plugins';
 import {PopoverContent, StyledTag, TitleSpan} from './styles';
 
 import {useNodeRender, useWatchFormValueIn} from "@flowgram.ai/free-layout-editor";
+import {TagColor} from "@douyinfe/semi-ui/lib/es/tag";
 
 interface PropsType {
   title?: JSX.Element | string;
@@ -25,14 +26,13 @@ export function DisplaySchemaTag({value = {}, showIconInTree, title, warning}: P
   const typeManager = useTypeManager();
   const icon =
     typeManager?.getDisplayIcon(value) || typeManager.getDisplayIcon({type: 'unknown'});
+  console.log('title', title)
   const {node} = useNodeRender()
-  const status = useWatchFormValueIn(node, 'rawData.status')
-  const [color, setColor] = useState(status)
+  const values = useWatchFormValueIn(node, `data.${title}`)
+  const [color, setColor] = useState('white')
   useEffect(() => {
-    // if (status === 'red') {
-    setColor(status)
-    // }
-  }, [status]);
+    setColor(values?.color || 'white')
+  }, [values]);
   return (
     <Popover
       content={
@@ -41,7 +41,7 @@ export function DisplaySchemaTag({value = {}, showIconInTree, title, warning}: P
         </PopoverContent>
       }
     >
-      <StyledTag color={color}>
+      <StyledTag color={warning ? 'amber' : color as TagColor}>
         {icon &&
           React.cloneElement(icon, {
             className: 'tag-icon',

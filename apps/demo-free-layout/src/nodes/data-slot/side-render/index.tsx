@@ -26,7 +26,8 @@ export const SidebarRender: React.FC = () => {
   const [outputRadioValue, setOutputRadioValue] = useState<string>('');
   const [inputTools, setInputTools] = useState<Record<string, ToolResponse[]>>({});
   const [outputTools, setOutputTools] = useState<Record<string, ToolResponse[]>>({});
-  const [selectedTools, setSelectedTools] = useState<string[]>([]);
+  const [selectedInputTools, setSelectedInputTools] = useState<ToolResponse[]>([]);
+  const [selectedOutputTools, setSelectedOutputTools] = useState<ToolResponse[]>([]);
 
   const {send} = useRequest(getTools<ToolResponse[]>, {
     immediate: false
@@ -44,6 +45,7 @@ export const SidebarRender: React.FC = () => {
       setInputTools({
         [value]: res,
       });
+      setSelectedInputTools([])
     })
     setInputRadioValue(value);
   }
@@ -57,12 +59,52 @@ export const SidebarRender: React.FC = () => {
     // console.log(123, nodeData)
     const validation = nodeData.rawData.inputs.find((item: Input) => (item.name === value)).validation;
     send(validation).then((res) => {
-      console.log('tool', res)
       setOutputTools({
         [value]: res,
       });
+      setSelectedOutputTools([])
     })
     setOutputRadioValue(value);
+  }
+  const saveInputTool = () => {
+    if (!inputRadioValue) {
+      Toast.error({
+        content: '请选择输入参数',
+      });
+      return
+    }
+    if (selectedInputTools.length === 0) {
+      Toast.error({
+        content: '请选择输入工具',
+      });
+      return
+    }
+    form?.setValueIn("inputTools", {
+      [inputRadioValue]: selectedInputTools
+    })
+    Toast.success({
+      content: '保存成功',
+    })
+  }
+  const saveOutputTool = () => {
+    if (!outputRadioValue) {
+      Toast.error({
+        content: '请选择输出参数',
+      });
+      return
+    }
+    if (selectedOutputTools.length === 0) {
+      Toast.error({
+        content: '请选择输出工具',
+      });
+      return
+    }
+    form?.setValueIn("outputTools", {
+      [outputRadioValue]: selectedOutputTools
+    })
+    Toast.success({
+      content: '保存成功',
+    })
   }
   // 使用useMemo优化传给InputsValues的value值，避免不必要的重新渲染
   const inputsValues = useMemo(() => {
@@ -75,7 +117,7 @@ export const SidebarRender: React.FC = () => {
   }, [nodeData?.outputs]);
 
   // 根据当前节点的inputs动态生成上传组件
-  const renderUploadComponents = () => {
+  const renderTools = (status: 'input' | 'output') => {
     const outputs = nodeData?.outputs;
     if (!outputs || !outputs.properties) {
       return <div>No inputs defined</div>;
@@ -91,36 +133,55 @@ export const SidebarRender: React.FC = () => {
             }}
           >
             <div style={{marginBottom: 8, fontWeight: 500}}>{key}</div>
-            <Upload
-              action={uploadAction}
-              data={() => ({
-                form: JSON.stringify({
-                  dataSlotId: id,
-                  outputName: key,
-                }),
-              })}
-              fileName="file"
-              limit={1}
-              multiple={false}
-              onSuccess={(res) => {
-                // 这里可以更新节点数据
-                if (form) {
-                  form.setValueIn(`outputsValues.${key}`, res.data);
-                }
-              }}
-            >
-              <Button icon={<IconUpload/>} theme="light">
-                上传文件
-              </Button>
-            </Upload>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}>
+              {nodeData?.[`${status}Tools`]?.[key]?.map((item: ToolResponse) => (
+                item.name === 'Uploader' ? <Upload
+                    action={uploadAction}
+                    data={() => ({
+                      form: JSON.stringify({
+                        dataSlotId: id,
+                        outputName: key,
+                      }),
+                    })}
+                    fileName="file"
+                    limit={1}
+                    multiple={false}
+                    onSuccess={(res) => {
+                      // 这里可以更新节点数据
+                      if (form) {
+                        form.setValueIn(`outputsValues.${key}`, res.data);
+                      }
+                    }}
+                  >
+                    <Button icon={<IconUpload/>} theme="light">
+                      上传文件
+                    </Button>
+                  </Upload> :
+                  <div key={item.id} style={{
+                    height: '32px',
+                    width: '32px',
+                    padding: '8px 12px',
+                    borderRadius: 4,
+                    border: '1px solid #eee',
+                    backgroundColor: '#f0f8ff',
+                  }}>
+                    {item.name}
+                  </div>
+              ))}
+            </div>
           </div>
+
         );
       }
     );
   };
   return (
     <>
-      <Collapse defaultActiveKey={["1", "2", "3", "4"]}>
+      <Collapse defaultActiveKey={["1", "2", "3"]}>
         {isDev && (
           <>
             <Collapse.Panel header="输入参数" itemKey="1">
@@ -150,30 +211,33 @@ export const SidebarRender: React.FC = () => {
                     {inputTools[inputRadioValue]?.map((item) => (
                       <Checkbox
                         key={item.id}
-                        value={item.id}
-                        checked={selectedTools.includes(item.id)}
+                        value={item}
+                        checked={selectedInputTools.some(tool => tool.id === item.id)}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setSelectedTools([...selectedTools, item.id]);
+                            setSelectedInputTools([...selectedInputTools, item]);
+                          } else {
+                            setSelectedInputTools(selectedInputTools.filter((tool) => tool.id !== item.id));
                           }
                         }}
                         style={{
                           padding: '6px 12px',
                           borderRadius: 4,
                           border: '1px solid #eee',
-                          backgroundColor: selectedTools.includes(item.id) ? '#f0f8ff' : 'transparent',
+                          backgroundColor: selectedInputTools.some(tool => tool.id === item.id) ? '#f0f8ff' : 'transparent',
                           transition: 'all 0.2s ease'
                         }}
                       >
                         <span style={{
                           fontSize: 14,
-                          color: selectedTools.includes(item.id) ? '#1890ff' : 'inherit'
+                          color: selectedInputTools.some(tool => tool.id === item.id) ? '#1890ff' : 'inherit'
                         }}>
                           {item.name}
                         </span>
                       </Checkbox>
                     ))}
                   </div>
+                  <Button onClick={saveInputTool}>保存</Button>
                 </div>
               </FormContent>
             </Collapse.Panel>
@@ -207,39 +271,44 @@ export const SidebarRender: React.FC = () => {
                     {outputTools[outputRadioValue]?.map((item) => (
                       <Checkbox
                         key={item.id}
-                        value={item.id}
-                        checked={selectedTools.includes(item.id)}
+                        value={item}
+                        checked={selectedOutputTools.some((tool) => tool.id === item.id)}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setSelectedTools([...selectedTools, item.id]);
+                            setSelectedOutputTools([...selectedOutputTools, item]);
+                          } else {
+                            setSelectedOutputTools(selectedOutputTools.filter((tool) => tool.id !== item.id));
                           }
                         }}
                         style={{
                           padding: '6px 12px',
                           borderRadius: 4,
                           border: '1px solid #eee',
-                          backgroundColor: selectedTools.includes(item.id) ? '#f0f8ff' : 'transparent',
+                          backgroundColor: selectedOutputTools.some((tool) => tool.id === item.id) ? '#f0f8ff' : 'transparent',
                           transition: 'all 0.2s ease'
                         }}
                       >
                         <span style={{
                           fontSize: 14,
-                          color: selectedTools.includes(item.id) ? '#1890ff' : 'inherit'
+                          color: selectedOutputTools.some((tool) => tool.id === item.id) ? '#1890ff' : 'inherit'
                         }}>
                           {item.name}
                         </span>
                       </Checkbox>
                     ))}
                   </div>
+                  {
+                    <Button onClick={saveOutputTool}>保存</Button>
+                  }
                 </div>
               </FormContent>
             </Collapse.Panel>
-            <Collapse.Panel header="工具列表" itemKey="4">
+            {/*<Collapse.Panel header="工具列表" itemKey="4">
               <div style={{padding: '12px 0'}}>
                 <div style={{marginBottom: 16}}>
                   <h4 style={{margin: '8px 0'}}>输入工具</h4>
                   <div>
-                    {/*{<inputTools className="map"></inputTools>*/}
+                    {<inputTools className="map"></inputTools>
                   </div>
                 </div>
 
@@ -251,14 +320,21 @@ export const SidebarRender: React.FC = () => {
               >
                 保存
               </Button>
-            </Collapse.Panel>
+            </Collapse.Panel>*/}
           </>
         )}
         {isProd && (
-          <Collapse.Panel header="文件上传" itemKey="3">
-            {renderUploadComponents()}
+          <Collapse.Panel header="输入参数" itemKey="3">
+            {renderTools('input')}
           </Collapse.Panel>
         )}
+        {
+          isProd && (
+            <Collapse.Panel header="输出参数" itemKey="4">
+              {renderTools('output')}
+            </Collapse.Panel>
+          )
+        }
       </Collapse>
 
     </>
