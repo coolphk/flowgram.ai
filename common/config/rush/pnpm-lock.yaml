@@ -2157,6 +2157,12 @@ importers:
       '@flowgram.ai/editor':
         specifier: workspace:*
         version: link:../../client/editor
+      '@flowgram.ai/free-layout-core':
+        specifier: workspace:*
+        version: link:../../canvas-engine/free-layout-core
+      '@flowgram.ai/free-layout-editor':
+        specifier: workspace:*
+        version: link:../../client/free-layout-editor
       '@flowgram.ai/json-schema':
         specifier: workspace:*
         version: link:../../variable-engine/json-schema

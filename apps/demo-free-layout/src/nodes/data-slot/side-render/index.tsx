@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Field, FieldRenderProps, useNodeRender,} from "@flowgram.ai/free-layout-editor";
-import {Button, Collapse, Toast, Upload} from "@douyinfe/semi-ui";
+import {Button, Checkbox, Collapse, Toast, Upload} from "@douyinfe/semi-ui";
 import {IconUpload} from "@douyinfe/semi-icons";
 import {IFlowValue,} from "@flowgram.ai/form-materials";
 
-import {Input, JsonSchema} from "../../../typings";
+import {Input, JsonSchema, ToolResponse} from "../../../typings";
 import {uploadAction} from "../../../config";
 import {useEnv} from "../../../providers";
 import {FormContent} from "../../../form-components";
@@ -24,8 +24,11 @@ export const SidebarRender: React.FC = () => {
   const {isDev, isProd} = useEnv();
   const [inputRadioValue, setInputRadioValue] = useState<string>('');
   const [outputRadioValue, setOutputRadioValue] = useState<string>('');
-  const [inputTools, setInputTools] = useState<Record<string, any>>({});
-  const {send} = useRequest(getTools, {
+  const [inputTools, setInputTools] = useState<Record<string, ToolResponse[]>>({});
+  const [outputTools, setOutputTools] = useState<Record<string, ToolResponse[]>>({});
+  const [selectedTools, setSelectedTools] = useState<string[]>([]);
+
+  const {send} = useRequest(getTools<ToolResponse[]>, {
     immediate: false
   });
   const handleInputRadioChange = (value: string) => {
@@ -35,24 +38,32 @@ export const SidebarRender: React.FC = () => {
       });
       return
     }
-    console.log(123, nodeData)
+    // console.log(123, nodeData)
+    const validation = nodeData.rawData.outputs.find((item: Input) => (item.name === value)).validation;
+    send(validation).then((res) => {
+      setInputTools({
+        [value]: res,
+      });
+    })
     setInputRadioValue(value);
   }
-  const handleOutputRadioChange = useCallback((value: string) => {
+  const handleOutputRadioChange = (value: string) => {
     if (!value) {
       Toast.error({
-        content: '请选择输入参数',
+        content: '请选择输出参数',
       });
       return
     }
-    console.log(123, nodeData)
+    // console.log(123, nodeData)
     const validation = nodeData.rawData.inputs.find((item: Input) => (item.name === value)).validation;
     send(validation).then((res) => {
       console.log('tool', res)
+      setOutputTools({
+        [value]: res,
+      });
     })
     setOutputRadioValue(value);
-
-  }, [nodeData])
+  }
   // 使用useMemo优化传给InputsValues的value值，避免不必要的重新渲染
   const inputsValues = useMemo(() => {
     return nodeData?.inputsValues || {};
@@ -109,7 +120,7 @@ export const SidebarRender: React.FC = () => {
   };
   return (
     <>
-      <Collapse defaultActiveKey={["1", "2", "3"]}>
+      <Collapse defaultActiveKey={["1", "2", "3", "4"]}>
         {isDev && (
           <>
             <Collapse.Panel header="输入参数" itemKey="1">
@@ -126,6 +137,44 @@ export const SidebarRender: React.FC = () => {
                     );
                   }}
                 </Field>
+                <div>
+                  <h4 style={{margin: '8px 0'}}>工具</h4>
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column' as const,
+                    gap: 8,
+                    maxHeight: 300,
+                    overflowY: 'auto',
+                    padding: '8px 0'
+                  }}>
+                    {inputTools[inputRadioValue]?.map((item) => (
+                      <Checkbox
+                        key={item.id}
+                        value={item.id}
+                        checked={selectedTools.includes(item.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedTools([...selectedTools, item.id]);
+                          }
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: 4,
+                          border: '1px solid #eee',
+                          backgroundColor: selectedTools.includes(item.id) ? '#f0f8ff' : 'transparent',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{
+                          fontSize: 14,
+                          color: selectedTools.includes(item.id) ? '#1890ff' : 'inherit'
+                        }}>
+                          {item.name}
+                        </span>
+                      </Checkbox>
+                    ))}
+                  </div>
+                </div>
               </FormContent>
             </Collapse.Panel>
             <Collapse.Panel header="输出参数" itemKey="2">
@@ -145,13 +194,61 @@ export const SidebarRender: React.FC = () => {
                     );
                   }}
                 />
+                <div>
+                  <h4 style={{margin: '8px 0'}}>工具</h4>
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column' as const,
+                    gap: 8,
+                    maxHeight: 300,
+                    overflowY: 'auto',
+                    padding: '8px 0'
+                  }}>
+                    {outputTools[outputRadioValue]?.map((item) => (
+                      <Checkbox
+                        key={item.id}
+                        value={item.id}
+                        checked={selectedTools.includes(item.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedTools([...selectedTools, item.id]);
+                          }
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: 4,
+                          border: '1px solid #eee',
+                          backgroundColor: selectedTools.includes(item.id) ? '#f0f8ff' : 'transparent',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{
+                          fontSize: 14,
+                          color: selectedTools.includes(item.id) ? '#1890ff' : 'inherit'
+                        }}>
+                          {item.name}
+                        </span>
+                      </Checkbox>
+                    ))}
+                  </div>
+                </div>
               </FormContent>
             </Collapse.Panel>
             <Collapse.Panel header="工具列表" itemKey="4">
               <div style={{padding: '12px 0'}}>
+                <div style={{marginBottom: 16}}>
+                  <h4 style={{margin: '8px 0'}}>输入工具</h4>
+                  <div>
+                    {/*{<inputTools className="map"></inputTools>*/}
+                  </div>
+                </div>
 
               </div>
-              <Button type="primary" onClick={() => console.log(inputRadioValue)}>
+              <Button
+                type="primary"
+                onClick={() => console.log(inputRadioValue)}
+                style={{marginTop: 12}}
+              >
                 保存
               </Button>
             </Collapse.Panel>

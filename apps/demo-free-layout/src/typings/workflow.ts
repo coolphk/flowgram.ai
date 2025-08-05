@@ -3,9 +3,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-
-
-
 export interface Workflow {
   description: string;
   id: string;
@@ -13,10 +10,22 @@ export interface Workflow {
   name: string;
   outputs: Output[];
 }
+
 export interface Validation {
-  message: string;
-  type: string;
+  rule: string;
+  description: string;
 }
+export interface ToolResponse {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  inputs: 'singular' | 'plural';
+  outputs: 'singular' | 'plural';
+  inputValidation: Validation[];
+  outputValidation: Validation[];
+}
+
 export interface Input {
   description: string;
   name: string;
