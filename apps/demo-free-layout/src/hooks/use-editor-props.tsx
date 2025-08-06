@@ -3,11 +3,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
-
 /* eslint-disable no-console */
 import {useMemo} from "react";
 
@@ -22,12 +17,13 @@ import {
   WorkflowContentChangeType,
   WorkflowLineEntity,
   WorkflowNodeLinesData,
+  WorkflowPortEntity,
 } from "@flowgram.ai/free-layout-editor";
 import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
 import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
 import {onDragLineEnd} from "../utils";
-import {FlowDocumentJSON, FlowNodeRegistry, Workflow} from "../typings";
+import {FlowDocumentJSON, FlowNodeRegistry} from "../typings";
 import {shortcuts} from "../shortcuts";
 import {CustomService} from "../services";
 import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
@@ -44,13 +40,118 @@ import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} fro
 import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
 import {IconFile} from "@douyinfe/semi-icons";
 import {Toast} from "@douyinfe/semi-ui";
+import {getUniqueId, ISaveContentParam, save} from "../api/common";
 
 const id = 'toastid';
+let dtId = ''
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
   nodeRegistries: FlowNodeRegistry[]
 ): FreeLayoutProps {
+  /**
+   * Check if workflow template type is selected
+   * @param nodeForm The form of the node to check
+   * @returns boolean indicating if the workflow template type is selected
+   */
+  const isWorkflowTemplateSelected = (nodeForm: any): boolean => {
+    if (!nodeForm?.values.rawData) {
+      Toast.error({ content: "请先选择工作流的模板类型", id });
+      return false;
+    }
+    return true;
+  };
+
+  /**
+   * Handle data flow between different node types
+   * @param line The line entity representing connection between nodes
+   */
+  const handleNodeDataFlow = (line: WorkflowLineEntity) => {
+    // Data slot to workflow connection
+    if (line.from.flowNodeType === WorkflowNodeType.DataSlot &&
+      line.to?.flowNodeType === WorkflowNodeType.Workflow) {
+      handleDataSlotToWorkflow(line.from, line.to);
+    }
+    // Workflow to data slot connection
+    else if (line.from.flowNodeType === WorkflowNodeType.Workflow &&
+      line.to?.flowNodeType === WorkflowNodeType.DataSlot) {
+      handleWorkflowToDataSlot(line.from, line.to, line);
+    }
+  };
+
+  /**
+   * Handle data flow from DataSlot to Workflow
+   * @param from DataSlot node
+   * @param to Workflow node
+   */
+  const handleDataSlotToWorkflow = (from: any, to: any) => {
+    const fromForm = getNodeForm(from);
+    const toForm = getNodeForm(to);
+
+    if (!fromForm?.getValueIn("rawData")) {
+      fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"));
+      fromForm?.setValueIn("from", "inputs");
+    }
+    fromForm?.setValueIn("outputs", toForm?.getValueIn("inputs"));
+  };
+
+  /**
+   * Handle data flow from Workflow to DataSlot
+   * @param from Workflow node
+   * @param to DataSlot node
+   * @param line Line entity containing connection info
+   */
+  const handleWorkflowToDataSlot = (from: any, to: any, line: WorkflowLineEntity) => {
+    const fromForm = getNodeForm(from);
+    const toForm = getNodeForm(to);
+    const fromOutputs = fromForm?.getValueIn("outputs");
+    const inputsValues: Record<string, IFlowValue> = {};
+
+    toForm?.setValueIn("rawData", fromForm?.getValueIn("rawData"));
+    toForm?.setValueIn("from", "outputs");
+    toForm?.setValueIn("inputs", fromForm?.getValueIn("outputs"));
+
+    if (fromOutputs?.properties) {
+      Object.keys(fromOutputs.properties).forEach((key, index) => {
+        inputsValues[key] = {
+          "type": "ref",
+          "content": [
+            line.from.id,
+            key
+          ],
+          "extra": {
+            "index": index
+          }
+        };
+      });
+    }
+
+    toForm?.setValueIn("inputsValues", inputsValues);
+  };
+
+  /**
+   * Check if connection between DataSlot and Workflow nodes is valid
+   * @param nodeType The type of the source node
+   * @param fromPort The source port
+   * @param toPort The target port
+   * @returns boolean indicating if the connection is valid
+   */
+  const isValidDataSlotWorkflowConnection = (fromPort: WorkflowPortEntity, toPort: WorkflowPortEntity): boolean => {
+    // DataSlot to Workflow connection
+    if (fromPort.node.flowNodeType === WorkflowNodeType.DataSlot && toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
+      const toNodeForm = getNodeForm(toPort.node);
+      return isWorkflowTemplateSelected(toNodeForm);
+    }
+
+    // Workflow to DataSlot connection
+    if (fromPort.node.flowNodeType === WorkflowNodeType.Workflow && toPort.node.flowNodeType === WorkflowNodeType.DataSlot) {
+      const fromNodeForm = getNodeForm(fromPort.node);
+      return isWorkflowTemplateSelected(fromNodeForm);
+    }
+
+    return true;
+  };
+
   return useMemo<FreeLayoutProps>(
     () => ({
       /**
@@ -119,26 +220,12 @@ export function useEditorProps(
         // Cannot be a self-loop on the same node / 不能是同一节点自循环
         // 获取当前节点类型
         // console.log("canAddLine", toPort);
-        const nodeType = fromPort.node.flowNodeType;
-        if (nodeType === WorkflowNodeType.DataSlot) {
-          if (toPort.node.flowNodeType === WorkflowNodeType.Workflow) {
-            const toNodeForm = getNodeForm(toPort.node)
-            if (!toNodeForm?.values.rawData) {
-              Toast.error({content: "请先选择工作流的模板类型", id})
-              return false
-            }
-          }
+
+        // Check if connection between DataSlot and Workflow nodes is valid
+        if (!isValidDataSlotWorkflowConnection(fromPort, toPort)) {
+          return false;
         }
-        if (nodeType === WorkflowNodeType.Workflow) {
-          if (toPort.node.flowNodeType === WorkflowNodeType.DataSlot) {
-            const fromNodeForm = getNodeForm(fromPort.node)
-            if (!fromNodeForm?.values.rawData) {
-              //用semiui中的message提示
-              Toast.error({content: "请先选择工作流的模板类型", id})
-              return false
-            }
-          }
-        }
+
         if (fromPort.node === toPort.node) {
           return false;
         }
@@ -172,7 +259,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const {dragNodeType, dropNodeType} = params;
+        const { dragNodeType, dropNodeType } = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -250,17 +337,19 @@ export function useEditorProps(
       /**
        * Content change
        */
-      onContentChange: debounce((ctx, event) => {
+      onContentChange: debounce(async (ctx, event) => {
         console.log("Auto Save: ", event, ctx.document.toJSON());
 
         // 转换函数：将ctx.document.toJSON()的数据转换为ISaveContent格式
-        const convertToSaveContent = (documentData: any) => {
+        const convertToSaveContent = async (documentData: any) => {
+
           const dataslots: any[] = [];
           const workflows: any[] = [];
-          let raw = '';
+          let raw = JSON.stringify(documentData);
 
           // 处理节点数据
           documentData.nodes.forEach((node: any) => {
+            // console.log('convertToSaveContent', node)
             const nodeData = node.data
             if (node.type === 'data-slot') {
               // 获取data-slot节点的serverId
@@ -273,21 +362,27 @@ export function useEditorProps(
               // 从edges中查找连接信息
               const incomingEdge = documentData.edges.find((edge: any) => edge.targetNodeID === node.id);
               const outgoingEdge = documentData.edges.find((edge: any) => edge.sourceNodeID === node.id);
+              // console.log('incomingEdge', incomingEdge)
+              // console.log('outgoingEdge', outgoingEdge)
 
               if (incomingEdge) {
-                from = incomingEdge.sourceNodeID;
+                from = documentData.nodes.find((node: any) => node.id === incomingEdge.sourceNodeID)?.data?.serverId || '';
               }
 
               if (outgoingEdge) {
-                to = outgoingEdge.targetNodeID;
+                to = documentData.nodes.find((node: any) => node.id === outgoingEdge.targetNodeID)?.data?.serverId || '';
               }
-
+              const validation: any = {}
+              nodeData?.rawData?.[nodeData.from]?.map((item: any) => {
+                // console.log(item)
+                validation[item.name] = item.validation
+              })
               dataslots.push({
                 id: serverId,
                 type: node.type,
                 name: nodeData.title || '',
                 description: '',
-                validations: [],
+                validations: validation,
                 tools: [],
                 from,
                 to,
@@ -303,13 +398,14 @@ export function useEditorProps(
               workflows.push({
                 id: serverId,
                 type: node.type,
-                inputs: node.data?.inputs || {},
-                outputs: node.data?.outputs || {}
+                inputs: nodeData.rawData?.inputs || [],
+                outputs: nodeData.rawData?.outputs || []
               });
             }
           });
 
           return {
+            id: dtId,
             dataslots,
             workflows,
             raw
@@ -317,8 +413,13 @@ export function useEditorProps(
         };
 
         // 使用转换函数
-        const saveContent = convertToSaveContent(ctx.document.toJSON());
+        const saveContent = await convertToSaveContent(ctx.document.toJSON());
         console.log("Converted save content:", saveContent);
+        save(saveContent as ISaveContentParam).then(response => {
+          console.log("Save success:", response);
+        }).catch(error => {
+          console.error("Save error:", error);
+        })
 
         /*{
     "nodes": [
@@ -540,7 +641,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({bind}) => {
+      onBind: ({ bind }) => {
         bind(CustomService).toSelf().inSingletonScope();
       },
       /**
@@ -548,6 +649,10 @@ export function useEditorProps(
        */
       onInit() {
         console.log("--- Playground init ---");
+        getUniqueId<string>().then(id => {
+          dtId = id
+        })
+
       },
       /**
        * Playground render
@@ -562,42 +667,8 @@ export function useEditorProps(
           if (ctx.document.loading) return
           if (e.type === WorkflowContentChangeType.ADD_LINE) {
             const line = e.entity as WorkflowLineEntity;
-            // data slot to workflow
-            if (line.from.flowNodeType === WorkflowNodeType.DataSlot) {
-              if (line.to && line.to.flowNodeType === WorkflowNodeType.Workflow) {
-                const fromForm = getNodeForm(line.from)
-                const toForm = getNodeForm(line.to)
-                if (!fromForm?.getValueIn("rawData")) {
-                  fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"))
-                  fromForm?.setValueIn("from", "inputs")
-                }
-                fromForm?.setValueIn("outputs", toForm?.getValueIn("inputs"))
-              }
-            }
-            if (line.from.flowNodeType === WorkflowNodeType.Workflow) {
-              if (line.to && line.to.flowNodeType === WorkflowNodeType.DataSlot) {
-                const fromForm = getNodeForm(line.from)
-                const toForm = getNodeForm(line.to)
-                const fromOutputs = fromForm?.getValueIn("outputs")
-                const inputsValues: Record<string, IFlowValue> = {}
-                toForm?.setValueIn("rawData", fromForm?.getValueIn("rawData"))
-                toForm?.setValueIn("from", "outputs")
-                toForm?.setValueIn("inputs", fromForm?.getValueIn("outputs"))
-                Object.keys(fromOutputs.properties).forEach((key, index) => {
-                  inputsValues[key] = {
-                    "type": "ref",
-                    "content": [
-                      line.from.id,
-                      key
-                    ],
-                    "extra": {
-                      "index": index
-                    }
-                  }
-                })
-                toForm?.setValueIn("inputsValues", inputsValues)
-              }
-            }
+            // Handle data flow between nodes
+            handleNodeDataFlow(line);
           }
         })
       },
@@ -711,9 +782,9 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
+                return (<span style={{ marginLeft: '8px' }}>请选择输入来源</span>);
               },
-              icon: <IconFile/>,
+              icon: <IconFile />,
               container: false,
             },
           ],

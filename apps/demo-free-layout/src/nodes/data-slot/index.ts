@@ -8,7 +8,6 @@ import iconDataSlot from "../../assets/icon-data-slot.svg";
 import {formMeta} from "./form-meta";
 import {WorkflowNodeType} from "../constants";
 import {nanoid} from "nanoid";
-import {alovaInstance} from "../../api";
 import {getNodeForm} from "@flowgram.ai/free-layout-editor";
 import {Toast} from "@douyinfe/semi-ui";
 import {getUniqueId} from "../../api/common";
@@ -44,7 +43,7 @@ export const DataSlotNodeRegistry: FlowNodeRegistry = {
     };
   },
   onCreate(node, json) {
-    console.log("onCreate", node, json);
+    // console.log("onCreate", node, json);
     // 节点创建后异步获取真正的ID并更新
     getUniqueId()
       .then((response) => {

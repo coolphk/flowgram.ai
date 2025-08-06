@@ -5,3 +5,4 @@
 - https://flowgram.ai/guide/advanced/free-layout/node.html
 - https://flowgram.ai/guide/advanced/free-layout/line.html
 - https://flowgram.ai/guide/advanced/free-layout/port.html
+3. 如果使用对象的函数需要验证一下这个函数是否存在。不要直接调用。

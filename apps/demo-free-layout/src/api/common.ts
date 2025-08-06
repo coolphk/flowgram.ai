@@ -7,6 +7,7 @@ import {alovaInstance} from "./index";
 import {Validation} from "../typings";
 
 export interface ISaveContentParam {
+  id: string,
   dataslots: [
     {
       id: string;
@@ -19,7 +20,7 @@ export interface ISaveContentParam {
       to: string;
       uploadFiles: string[];
     }
-  ];
+  ],
   workflows: [
     {
       id: string;
@@ -27,23 +28,32 @@ export interface ISaveContentParam {
       inputs: Record<string, any>;
       outputs: Record<string, any>;
     }
-  ];
-  raw: string;
+  ],
+  raw: string
 }
 
 
 export const getUniqueId = <T>() => {
-  console.log("getUniqueId")
+  // console.log("getUniqueId")
   return alovaInstance.Get<T>("/id", {
     cacheFor: 0,
     shareRequest: false,
   });
 }
 
-export const saveContent = (content: ISaveContentParam) =>
-  alovaInstance.Post<string>("/save", {
-    data: content,
-  });
+export const save = async (content: ISaveContentParam) => {
+  console.log('save')
+  try {
+    const response = await alovaInstance.Post<string>("/save",
+      content,
+    );
+    console.log('Save successful:', response);
+    return response;
+  } catch (error) {
+    console.error('Save failed:', error);
+    throw error;
+  }
+}
 export const getTools = <T>(param: Validation[]) =>
   alovaInstance.Post<T>("/tool", {
     cacheFor: 0,

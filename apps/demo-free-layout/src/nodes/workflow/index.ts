@@ -43,7 +43,7 @@ export const WorkflowNodeRegistry: FlowNodeRegistry = {
     };
   },
   onCreate(node, json) {
-    console.log("onCreate workflow node", node, json);
+    // console.log("onCreate workflow node", node, json);
     // 节点创建后异步获取真正的ID并更新
     getUniqueId<string>()
       .send(true)

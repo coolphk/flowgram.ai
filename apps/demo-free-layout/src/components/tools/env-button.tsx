@@ -4,12 +4,12 @@
  */
 
 import React from "react";
-import { Button } from "@douyinfe/semi-ui";
-import { useEnv } from "../../providers/env-provider";
-import { ENV } from "../../constants/env";
+import {Button} from "@douyinfe/semi-ui";
+import {useEnv} from "../../providers";
+import {ENV} from "../../constants";
 
 export const EnvButton: React.FC = () => {
-  const { currentEnv, setCurrentEnv, isDev, isProd } = useEnv();
+  const {setCurrentEnv, isDev} = useEnv();
 
   const handleToggleEnv = () => {
     if (isDev) {

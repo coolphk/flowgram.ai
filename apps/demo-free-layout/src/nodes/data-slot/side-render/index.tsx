@@ -20,7 +20,7 @@ import {getTools} from "../../../api/common";
 
 
 export const SidebarRender: React.FC = () => {
-  const {data: nodeData, form, id} = useNodeRender();
+  const {data: nodeData, form} = useNodeRender();
   const {isDev, isProd} = useEnv();
   const [inputRadioValue, setInputRadioValue] = useState<string>('');
   const [outputRadioValue, setOutputRadioValue] = useState<string>('');
@@ -28,8 +28,6 @@ export const SidebarRender: React.FC = () => {
   const [outputTools, setOutputTools] = useState<Record<string, ToolResponse[]>>({});
   const [selectedInputTools, setSelectedInputTools] = useState<ToolResponse[]>([]);
   const [selectedOutputTools, setSelectedOutputTools] = useState<ToolResponse[]>([]);
-  const [selectedInputMap, setSelectedInputMap] = useState<Record<string, ToolResponse[]>>({});
-  const [selectedOutputMap, setSelectedOutputMap] = useState<Record<string, ToolResponse[]>>({});
   const {send} = useRequest(getTools<ToolResponse[]>, {
     immediate: false
   });
@@ -61,7 +59,7 @@ export const SidebarRender: React.FC = () => {
       });
       return
     }
-    console.log(123, nodeData)
+    // console.log(123, nodeData)
     const validation = nodeData.rawData.inputs.find((item: Input) => (item.name === value)).validation;
     send(validation).then((res) => {
       setOutputTools({
@@ -161,47 +159,53 @@ export const SidebarRender: React.FC = () => {
         justifyContent: 'flex-start',
         gap: 8,
       }}>
-        {nodeData?.[`${status}Tools`]?.[key]?.map((item: ToolResponse) => (
-          item.name === 'Uploader' ? <Upload
-              action={uploadAction}
-              data={() => ({
-                form: JSON.stringify({
-                  dataSlotId: nodeData.serverId,
-                  outputName: key,
-                }),
-              })}
-              fileName="file"
-              limit={1}
-              multiple={false}
-              onSuccess={(res) => {
-                // 这里可以更新节点数据
-                if (form) {
-                  form.setValueIn(`outputsValues.${key}`, res.data);
-                }
-              }}
-            >
-              <Button icon={<IconUpload/>} theme="light">
-                上传文件
-              </Button>
-            </Upload> :
-            <div key={item.id} style={{
-              height: '32px',
-              width: '32px',
-              padding: '8px 12px',
-              borderRadius: 4,
-              border: '1px solid #eee',
-              backgroundColor: '#f0f8ff',
-              cursor: 'pointer',
-            }}>
-              {item.name}
-            </div>
-        ))}
+        {nodeData?.[`${status}Tools`]?.[key]?.map((item: ToolResponse) => {
+            // console.log('item', item)
+            return (item.name === 'Uploader' ? <Upload
+                action={uploadAction}
+                data={() => ({
+                  form: JSON.stringify({
+                    dataSlotId: nodeData.serverId,
+                    outputName: key,
+                  }),
+                })}
+                fileName="file"
+                limit={1}
+                multiple={false}
+                onSuccess={(res) => {
+                  // 这里可以更新节点数据
+                  // todo upload接口不好使，暂时用假数据代替
+                  if (form) {
+                    form.setValueIn(`outputsValues.${key}`, {
+                      id: '999',
+                      filename: 'xxx.png'
+                    });
+                  }
+                }}
+              >
+                <Button icon={<IconUpload/>} theme="light">
+                  上传文件
+                </Button>
+              </Upload> :
+              <div key={item.id} style={{
+                height: '32px',
+                width: '32px',
+                padding: '8px 12px',
+                borderRadius: 4,
+                border: '1px solid #eee',
+                backgroundColor: '#f0f8ff',
+                cursor: 'pointer',
+              }}>
+                {item.name}
+              </div>)
+          }
+        )}
       </div>
     );
   };
   return (
     <>
-      <Collapse defaultActiveKey={["1", "2", "3"]}>
+      <Collapse defaultActiveKey={["1", "2", "3", "4"]}>
         {isDev && (
           <>
             <Collapse.Panel header="输入参数" itemKey="1">
@@ -282,7 +286,7 @@ export const SidebarRender: React.FC = () => {
                   <h4 style={{margin: '8px 0'}}>工具</h4>
                   <div style={{
                     display: 'flex',
-                    flexDirection: 'column' as const,
+                    flexDirection: 'column',
                     gap: 8,
                     maxHeight: 300,
                     overflowY: 'auto',

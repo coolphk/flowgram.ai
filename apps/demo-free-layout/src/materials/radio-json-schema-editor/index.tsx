@@ -82,7 +82,7 @@ export function RadioJsonSchemaEditor(props: {
         <Button
           disabled={readonly}
           size="small"
-          style={{marginTop: 10, marginLeft: 16}}
+          style={{marginTop: 10}}
           icon={<IconPlus/>}
           onClick={onAddProperty}
         >

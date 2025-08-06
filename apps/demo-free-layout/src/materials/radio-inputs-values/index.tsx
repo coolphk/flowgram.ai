@@ -39,7 +39,7 @@ export function RadioInputsValues({
   const handleRadioChange = onInputRadioChange
 
   return (
-    <div>
+    <div style={{display: 'flex', flexDirection: 'column',alignItems:"start"}}>
       <Radio.Group value={selectedValue} onChange={(e) => handleRadioChange?.(e.target.value)}>
         <UIRows style={style}>
           {list.map((item) => (

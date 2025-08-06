@@ -26,7 +26,7 @@ export function DisplaySchemaTag({value = {}, showIconInTree, title, warning}: P
   const typeManager = useTypeManager();
   const icon =
     typeManager?.getDisplayIcon(value) || typeManager.getDisplayIcon({type: 'unknown'});
-  console.log('title', title)
+  // console.log('title', title)
   const {node} = useNodeRender()
   const values = useWatchFormValueIn(node, `data.${title}`)
   const [color, setColor] = useState('white')

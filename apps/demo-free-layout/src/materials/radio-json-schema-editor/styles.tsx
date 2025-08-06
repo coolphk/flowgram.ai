@@ -2,14 +2,7 @@
  * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
  * SPDX-License-Identifier: MIT
  */
-
-
-
-
-
-import React from 'react';
-
-import styled, { css } from 'styled-components';
+import styled, {css} from 'styled-components';
 import Icon from '@douyinfe/semi-icons';
 
 export const UIContainer = styled.div`
@@ -45,8 +38,7 @@ export const UILabel = styled.div`
 
 export const UIProperties = styled.div<{ $shrink?: boolean }>`
     display: grid;
-    grid-template-columns:1fr;
-    align-items: center;
+    grid-template-columns: auto 1fr;    
 
     ${({$shrink}) =>
             $shrink &&
