@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Field, FieldRenderProps, useNodeRender,} from "@flowgram.ai/free-layout-editor";
 import {Button, Checkbox, Collapse, Toast, Upload} from "@douyinfe/semi-ui";
 import {IconUpload} from "@douyinfe/semi-icons";
@@ -20,10 +20,10 @@ import {getTools} from "../../../api/common";
 
 
 export const SidebarRender: React.FC = () => {
-  const {data: nodeData, form} = useNodeRender();
+  const {data: nodeData, form, node} = useNodeRender();
   const {isDev, isProd} = useEnv();
-  const [inputRadioValue, setInputRadioValue] = useState<string>('');
-  const [outputRadioValue, setOutputRadioValue] = useState<string>('');
+  const [inputRadioValue, setInputRadioValue] = useState<string>(form?.getValueIn("inputRadio") || '');
+  const [outputRadioValue, setOutputRadioValue] = useState<string>(form?.getValueIn("outputRadio") || '');
   const [inputTools, setInputTools] = useState<Record<string, ToolResponse[]>>({});
   const [outputTools, setOutputTools] = useState<Record<string, ToolResponse[]>>({});
   const [selectedInputTools, setSelectedInputTools] = useState<ToolResponse[]>([]);
@@ -31,6 +31,38 @@ export const SidebarRender: React.FC = () => {
   const {send} = useRequest(getTools<ToolResponse[]>, {
     immediate: false
   });
+  useEffect(() => {
+    if (!outputRadioValue) {
+      return
+    }
+    const value = outputRadioValue
+    const validation = nodeData.rawData.inputs.find((item: Input) => (item.name === value)).validation;
+    send(validation).then((res) => {
+      setOutputTools({
+        [value]: res,
+      });
+    })
+    if (form?.getValueIn("outputTools")?.[value].tools) {
+      setSelectedOutputTools(form?.getValueIn("outputTools")[value].tools)
+    }
+  }, [outputRadioValue, nodeData?.rawData?.inputs])
+
+  useEffect(() => {
+    if (!inputRadioValue) {
+      return
+    }
+    const value = inputRadioValue
+    const validation = nodeData.rawData.outputs.find((item: Input) => (item.name === value)).validation;
+    send(validation).then((res) => {
+      setInputTools({
+        [value]: res,
+      });
+    })
+    if (form?.getValueIn("inputTools")?.[value].tools) {
+      setSelectedInputTools(form?.getValueIn("inputTools")[value].tools)
+    }
+  }, [inputRadioValue, nodeData?.rawData?.outputs])
+
   const handleInputRadioChange = (value: string) => {
     if (!value) {
       Toast.error({
@@ -39,18 +71,10 @@ export const SidebarRender: React.FC = () => {
       return
     }
     // console.log(123, nodeData)
-    const validation = nodeData.rawData.outputs.find((item: Input) => (item.name === value)).validation;
-    send(validation).then((res) => {
-      setInputTools({
-        [value]: res,
-      });
-    })
-    if (form?.getValueIn("inputTools")?.[value]) {
-      setSelectedInputTools(form?.getValueIn("inputTools")[value])
-    } else {
-      setSelectedInputTools([])
-    }
+
     setInputRadioValue(value);
+    console.log('handleInputRadioChange', node.id, value)
+    // sessionStorage.setItem(node.id,`[${value}]`)
   }
   const handleOutputRadioChange = (value: string) => {
     if (!value) {
@@ -60,18 +84,10 @@ export const SidebarRender: React.FC = () => {
       return
     }
     // console.log(123, nodeData)
-    const validation = nodeData.rawData.inputs.find((item: Input) => (item.name === value)).validation;
-    send(validation).then((res) => {
-      setOutputTools({
-        [value]: res,
-      });
-    })
-    if (form?.getValueIn("outputTools")?.[value]) {
-      setSelectedOutputTools(form?.getValueIn("outputTools")[value])
-    } else {
-      setSelectedOutputTools([])
-    }
+
     setOutputRadioValue(value);
+
+    console.log('handleInputRadioChange', node.id, value)
   }
   const saveInputTool = () => {
     if (!inputRadioValue) {
@@ -88,8 +104,11 @@ export const SidebarRender: React.FC = () => {
     }
     form?.setValueIn("inputTools", {
       ...form.getValueIn("inputTools"),
-      [inputRadioValue]: selectedInputTools
+      [inputRadioValue]: {
+        tools: selectedInputTools
+      }
     })
+    form?.setValueIn("inputRadio", inputRadioValue)
     Toast.success({
       content: '保存成功',
     })
@@ -109,8 +128,11 @@ export const SidebarRender: React.FC = () => {
     }
     form?.setValueIn("outputTools", {
       ...form.getValueIn("outputTools"),
-      [outputRadioValue]: selectedOutputTools
+      [outputRadioValue]: {
+        tools: selectedOutputTools
+      }
     })
+    form?.setValueIn("outputRadio", outputRadioValue)
     Toast.success({
       content: '保存成功',
     })
@@ -126,13 +148,13 @@ export const SidebarRender: React.FC = () => {
   }, [nodeData?.outputs]);
 
   // 根据当前节点的inputs动态生成上传组件
-  const renderTools = (status: 'input' | 'output') => {
-    const outputs = nodeData?.outputs;
-    if (!outputs || !outputs.properties) {
+  const renderTools = (direction: 'inputs' | 'outputs') => {
+    const nodeDatum = nodeData?.[direction];
+    if (!nodeDatum || !nodeDatum.properties) {
       return <div>No inputs defined</div>;
     }
 
-    return Object.entries(outputs.properties).map(
+    return Object.entries(nodeDatum.properties).map(
       ([key, schema]: [string, any]) => {
         return (
           <div
@@ -142,7 +164,7 @@ export const SidebarRender: React.FC = () => {
             }}
           >
             <div style={{marginBottom: 8, fontWeight: 500}}>{key}</div>
-            {renderToolItems(status, key)}
+            {renderToolItems(direction === 'inputs' ? 'input' : 'output', key)}
           </div>
 
         );
@@ -150,16 +172,17 @@ export const SidebarRender: React.FC = () => {
     );
   };
 
-  // 将工具项的渲染逻辑封装成独立函数
+  // 工具项的渲染逻辑
   const renderToolItems = (status: 'input' | 'output', key: string) => {
     return (
-      <div style={{
+      <div key={key} style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
         gap: 8,
+
       }}>
-        {nodeData?.[`${status}Tools`]?.[key]?.map((item: ToolResponse) => {
+        {nodeData?.[`${status}Tools`]?.[key]?.tools?.map((item: ToolResponse) => {
             // console.log('item', item)
             return (item.name === 'Uploader' ? <Upload
                 action={uploadAction}
@@ -176,10 +199,7 @@ export const SidebarRender: React.FC = () => {
                   // 这里可以更新节点数据
                   // todo upload接口不好使，暂时用假数据代替
                   if (form) {
-                    form.setValueIn(`outputsValues.${key}`, {
-                      id: '999',
-                      filename: 'xxx.png'
-                    });
+                    form.setValueIn(`outputsValues.${key}`, res);
                   }
                 }}
               >
@@ -195,7 +215,11 @@ export const SidebarRender: React.FC = () => {
                 border: '1px solid #eee',
                 backgroundColor: '#f0f8ff',
                 cursor: 'pointer',
-              }}>
+              }}
+                   onClick={() => {
+                     console.log()
+                   }}
+              >
                 {item.name}
               </div>)
           }
@@ -349,13 +373,13 @@ export const SidebarRender: React.FC = () => {
         )}
         {isProd && (
           <Collapse.Panel header="输入参数" itemKey="3">
-            {renderTools('input')}
+            {renderTools('inputs')}
           </Collapse.Panel>
         )}
         {
           isProd && (
             <Collapse.Panel header="输出参数" itemKey="4">
-              {renderTools('output')}
+              {renderTools('outputs')}
             </Collapse.Panel>
           )
         }

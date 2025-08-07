@@ -55,7 +55,14 @@ export const save = async (content: ISaveContentParam) => {
   }
 }
 export const getTools = <T>(param: Validation[]) =>
-  alovaInstance.Post<T>("/tool", {
+  alovaInstance.Post<T>("/tool", {Validations: param}, {
     cacheFor: 0,
-    data: param,
+  });
+export const runTool = <T>(param: {
+  dt_id: string;
+  toolId: string;
+  input_assets: string;
+}) =>
+  alovaInstance.Post<T>("/run-tool", param, {
+    cacheFor: 0,
   });

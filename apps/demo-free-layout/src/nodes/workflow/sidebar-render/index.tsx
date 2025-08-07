@@ -26,15 +26,21 @@ export const SidebarRender: React.FC = () => {
   const { data: nodeData, form } = useNodeRender();
 
   const [wfId, setWfId] = useState<string>(nodeData?.rawData?.id || "");
-  // console.log(111, nodeData.rawData.id)
+
   const workflow = useMemo(() => {
     return data.find((item: Workflow) => item.id === wfId);
   }, [wfId, data]);
-  // console.log('wfId1', wfId);
+
+  // 提取 nodeData 中的特定属性以避免依赖整个对象
+  const nodeDataId = nodeData?.id;
+  const nodeDataType = nodeData?.type;
+  const nodeDataInputsValues = nodeData?.inputsValues;
+  const nodeDataOutputsValues = nodeData?.outputsValues;
+
   // 使用 useMemo 优化 flowNodeJSON 计算
   const flowNodeJSON = useMemo(() => {
     const base: FlowNodeJSON = {
-      id: nodeData?.id,
+      id: nodeDataId,
       data: {
         title: "Workflow",
         inputs: {
@@ -49,12 +55,12 @@ export const SidebarRender: React.FC = () => {
         outputsValues: {},
         rawData: workflow,
       },
-      type: nodeData.type,
+      type: nodeDataType,
     };
 
     if (workflow) {
       workflow.inputs.forEach((item) => {
-        base.data.inputsValues![item.name] = nodeData?.inputsValues?.[
+        base.data.inputsValues![item.name] = nodeDataInputsValues?.[
           item.name
         ] || {
           type: "constant",
@@ -66,7 +72,7 @@ export const SidebarRender: React.FC = () => {
       });
 
       workflow.outputs.forEach((item) => {
-        /*base.data.outputsValues![item.name] = nodeData?.outputsValues?.[
+        /*base.data.outputsValues![item.name] = nodeDataOutputsValues?.[
           item.name
         ] || {
           type: "constant",
@@ -79,7 +85,7 @@ export const SidebarRender: React.FC = () => {
     }
 
     return base;
-  }, [wfId]);
+  }, [nodeDataId, nodeDataType, nodeDataInputsValues, workflow]);
 
   // 当 flowNodeJSON 变化时更新节点数据
   useEffect(() => {
@@ -93,7 +99,7 @@ export const SidebarRender: React.FC = () => {
         form?.setValueIn(key, data[key]);
       });
     }
-  }, [flowNodeJSON]);
+  }, [flowNodeJSON, form, workflow]);
 
   if (error) {
     return <div>加载工作流失败</div>;

@@ -3,4 +3,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export { EnvProvider, useEnv } from './env-provider';
+export { EnvProvider, useEnv, updateDtTemplateId } from './env-provider';

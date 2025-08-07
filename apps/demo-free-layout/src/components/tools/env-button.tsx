@@ -9,11 +9,13 @@ import {useEnv} from "../../providers";
 import {ENV} from "../../constants";
 
 export const EnvButton: React.FC = () => {
-  const {setCurrentEnv, isDev} = useEnv();
+  const {setCurrentEnv, isDev, dtTemplateId} = useEnv();
 
   const handleToggleEnv = () => {
+    // dtTemplateId 暂定为切换到运行模式时调用run接口，进行运行
     if (isDev) {
       setCurrentEnv(ENV.PROD);
+      // run()
     } else {
       setCurrentEnv(ENV.DEV);
     }

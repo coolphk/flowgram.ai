@@ -41,9 +41,11 @@ import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
 import {IconFile} from "@douyinfe/semi-icons";
 import {Toast} from "@douyinfe/semi-ui";
 import {getUniqueId, ISaveContentParam, save} from "../api/common";
+import {updateDtTemplateId} from "../providers";
 
 const id = 'toastid';
 let dtId = ''
+
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
@@ -56,7 +58,7 @@ export function useEditorProps(
    */
   const isWorkflowTemplateSelected = (nodeForm: any): boolean => {
     if (!nodeForm?.values.rawData) {
-      Toast.error({ content: "请先选择工作流的模板类型", id });
+      Toast.error({content: "请先选择工作流的模板类型", id});
       return false;
     }
     return true;
@@ -70,7 +72,7 @@ export function useEditorProps(
     // Data slot to workflow connection
     if (line.from.flowNodeType === WorkflowNodeType.DataSlot &&
       line.to?.flowNodeType === WorkflowNodeType.Workflow) {
-      handleDataSlotToWorkflow(line.from, line.to);
+      handleDataSlotToWorkflow(line.from, line.to, line);
     }
     // Workflow to data slot connection
     else if (line.from.flowNodeType === WorkflowNodeType.Workflow &&
@@ -83,16 +85,34 @@ export function useEditorProps(
    * Handle data flow from DataSlot to Workflow
    * @param from DataSlot node
    * @param to Workflow node
+   * @param line
    */
-  const handleDataSlotToWorkflow = (from: any, to: any) => {
+  const handleDataSlotToWorkflow = (from: any, to: any, line: WorkflowLineEntity) => {
     const fromForm = getNodeForm(from);
     const toForm = getNodeForm(to);
-
+    const inputsValues: Record<string, IFlowValue> = {};
     if (!fromForm?.getValueIn("rawData")) {
       fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"));
       fromForm?.setValueIn("from", "inputs");
     }
     fromForm?.setValueIn("outputs", toForm?.getValueIn("inputs"));
+    const fromOutputs = fromForm?.getValueIn("outputs");
+    // console.log("fromOutputs", fromOutputs);
+    if (fromOutputs?.properties) {
+      Object.keys(fromOutputs.properties).forEach((key, index) => {
+        inputsValues[key] = {
+          "type": "ref",
+          "content": [
+            line.from.id,
+            key
+          ],
+          "extra": {
+            "index": index
+          }
+        };
+      });
+    }
+    toForm?.setValueIn("inputsValues", inputsValues);
   };
 
   /**
@@ -151,7 +171,15 @@ export function useEditorProps(
 
     return true;
   };
-
+  /*const setDtTemplateIdToContext = async () => {
+    const dtTemplateId = await getUniqueId<string>()
+    useEnv().setDtTemplateId(dtTemplateId)
+    if (!dtTemplateId) {
+      Toast.error({content: "请先选择工作流的模板类型", id});
+      return "";
+    }
+    return dtTemplateId;
+  }*/
   return useMemo<FreeLayoutProps>(
     () => ({
       /**
@@ -259,7 +287,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const { dragNodeType, dropNodeType } = params;
+        const {dragNodeType, dropNodeType} = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -415,11 +443,11 @@ export function useEditorProps(
         // 使用转换函数
         const saveContent = await convertToSaveContent(ctx.document.toJSON());
         console.log("Converted save content:", saveContent);
-        save(saveContent as ISaveContentParam).then(response => {
+        /*save(saveContent as ISaveContentParam).then(response => {
           console.log("Save success:", response);
         }).catch(error => {
           console.error("Save error:", error);
-        })
+        })*/
 
         /*{
     "nodes": [
@@ -641,7 +669,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({ bind }) => {
+      onBind: ({bind}) => {
         bind(CustomService).toSelf().inSingletonScope();
       },
       /**
@@ -651,6 +679,8 @@ export function useEditorProps(
         console.log("--- Playground init ---");
         getUniqueId<string>().then(id => {
           dtId = id
+          // 使用新的 updateDtTemplateId 方法替代 useEnv Hook
+          updateDtTemplateId(id);
         })
 
       },
@@ -782,9 +812,9 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span style={{ marginLeft: '8px' }}>请选择输入来源</span>);
+                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
               },
-              icon: <IconFile />,
+              icon: <IconFile/>,
               container: false,
             },
           ],
