@@ -139,6 +139,9 @@ export const TerminalLog: React.FC = () => {
   // 当日志可见性变化时处理定时器
   useEffect(() => {
     if (isLogVisible) {
+      // 清空之前的日志
+      setLogs([]);
+      
       // 立即添加一条日志
       addLog();
 
