@@ -18,7 +18,7 @@ import { useIsSidebar } from "../../hooks";
 import { FormContent, FormHeader } from "../../form-components";
 import { SidebarRender } from "./sidebar-render";
 import { WorkflowHeader } from "./node-render/header";
-import {WFTemplateRender} from "./node-render/template";
+import { WFTemplateRender } from "./node-render/template";
 
 // import {WFTemplateRender} from './node-render/template';
 
@@ -40,7 +40,7 @@ export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
       <FormContent>
         {/*<FormOutputs name="inputs" label="输入"/>*/}
         {/*<FormOutputs label="输出"/>*/}
-        <WFTemplateRender/>
+        <WFTemplateRender />
       </FormContent>
     </>
   );

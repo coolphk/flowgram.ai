@@ -12,7 +12,7 @@ import { useLog } from "../../../../context/log-context";
 
 export function WorkflowHeader() {
   const { isProd } = useEnv();
-  const node= useCurrentEntity()
+  const node = useCurrentEntity()
   const [isPlaying, setIsPlaying] = useState(false);
   const { setLogVisible } = useLog();
 

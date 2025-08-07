@@ -43,7 +43,7 @@ export const BaseNode = ({ node }: { node: FlowNodeEntity }) => {
           <NodeWrapper>
             <div
               style={{ width: "100%", height: "100%" }}
-              onClick={() => console.log("node", node,getNodeForm(node))}
+              onClick={() => console.log("node", node, getNodeForm(node))}
             >
               {form?.state.invalid && <ErrorIcon />}
               {form?.render()}

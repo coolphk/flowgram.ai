@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLog } from '../../context/log-context';
 import styled from 'styled-components';
 
@@ -127,102 +127,18 @@ const generateRandomLog = (): LogEntry => {
 export const TerminalLog: React.FC = () => {
   const { isLogVisible } = useLog();
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 10 });
   const logIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const sentinelTopRef = useRef<HTMLDivElement>(null);
-  const sentinelBottomRef = useRef<HTMLDivElement>(null);
-  const startTimeRef = useRef<Date | null>(null);
-  const logCountRef = useRef<number>(0);
-
-  // 每条日志的固定高度（包括 margin）
-  const ITEM_HEIGHT = 20;
-  // 缓冲区大小，在可见区域上下各保留的条目数
-  const BUFFER_SIZE = 5;
 
   // 添加新日志
-  const addLog = useCallback(() => {
-    // 如果是第一次添加日志，记录开始时间（北京时间）
-    if (startTimeRef.current === null) {
-      // const now = new Date();
-      const beijingTime = new Date();
-      startTimeRef.current = beijingTime;
-      logCountRef.current = 0;
-    }
-
-    // 计算模拟时间戳（开始时间 + 日志序号 * 间隔时间）
-    const simulatedTime = new Date(startTimeRef.current.getTime() + logCountRef.current * 800);
-    logCountRef.current++;
-
-    const newLog = {
-      ...generateRandomLog(),
-      timestamp: simulatedTime
-    };
-
-    setLogs(prevLogs => {
-      const newLogs = [...prevLogs, newLog].slice(-500); // 保留最近的500条日志
-      return newLogs;
-    });
-  }, []);
-
-  // IntersectionObserver 回调
-  const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
-    entries.forEach((entry) => {
-      if (entry.target === sentinelTopRef.current && entry.isIntersecting) {
-        // 向上滚动，显示更早的日志
-        setVisibleRange(prev => ({
-          start: Math.max(0, prev.start - BUFFER_SIZE),
-          end: prev.end
-        }));
-      }
-
-      if (entry.target === sentinelBottomRef.current && entry.isIntersecting) {
-        // 向下滚动，显示更新的日志
-        setVisibleRange(prev => ({
-          start: prev.start,
-          end: Math.min(logs.length, prev.end + BUFFER_SIZE)
-        }));
-      }
-    });
-  }, [logs.length]);
-
-  // 设置 IntersectionObserver
-  useEffect(() => {
-    if (!isLogVisible || !containerRef.current) return;
-
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: containerRef.current,
-      rootMargin: '20px', // 提前 20px 开始加载
-      threshold: 0
-    });
-
-    if (sentinelTopRef.current) observer.observe(sentinelTopRef.current);
-    if (sentinelBottomRef.current) observer.observe(sentinelBottomRef.current);
-
-    return () => observer.disconnect();
-  }, [isLogVisible, handleIntersection]);
-
-  // 当日志数量变化时，更新可见范围
-  useEffect(() => {
-    if (logs.length > 0) {
-      const containerHeight = 150; // TerminalContainer 的高度
-      const visibleCount = Math.ceil(containerHeight / ITEM_HEIGHT) + BUFFER_SIZE * 2;
-
-      setVisibleRange(prev => {
-        const newEnd = Math.min(logs.length, Math.max(prev.end, logs.length));
-        const newStart = Math.max(0, newEnd - visibleCount);
-        return { start: newStart, end: newEnd };
-      });
-    }
-  }, [logs.length]);
+  const addLog = () => {
+    const newLog = generateRandomLog();
+    setLogs(prevLogs => [...prevLogs, newLog].slice(-100)); // 只保留最近的100条日志
+  };
 
   // 当日志可见性变化时处理定时器
   useEffect(() => {
     if (isLogVisible) {
-      // 重置时间和计数器
-      startTimeRef.current = null;
-      logCountRef.current = 0;
-
       // 立即添加一条日志
       addLog();
 
@@ -244,39 +160,23 @@ export const TerminalLog: React.FC = () => {
         clearInterval(logIntervalRef.current);
       }
     };
-  }, [isLogVisible, addLog]);
+  }, [isLogVisible]);
 
   // 自动滚动到底部
   useEffect(() => {
-    if (containerRef.current && isLogVisible && logs.length > 0) {
+    if (containerRef.current && isLogVisible) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [logs.length, isLogVisible]);
+  }, [logs, isLogVisible]);
 
   // 如果日志不可见，不渲染组件
   if (!isLogVisible) {
     return null;
   }
 
-  // 计算虚拟化渲染参数
-  const visibleLogs = logs.slice(visibleRange.start, visibleRange.end);
-  const totalHeight = logs.length * ITEM_HEIGHT;
-  const offsetY = visibleRange.start * ITEM_HEIGHT;
-  const remainingHeight = totalHeight - offsetY - (visibleRange.end - visibleRange.start) * ITEM_HEIGHT;
-
   return (
     <TerminalContainer ref={containerRef}>
-      {/* 顶部占位符 */}
-      {offsetY > 0 && <div style={{ height: offsetY }} />}
-
-      {/* 顶部哨兵元素 */}
-      {visibleRange.start > 0 && (
-        <div ref={sentinelTopRef} style={{ height: 1, backgroundColor: 'transparent' }} />
-      )}
-
-      {/* 可见的日志条目 */}
-      {visibleLogs.map((log, index) => {
-        const actualIndex = visibleRange.start + index;
+      {logs.map((log, index) => {
         const timestamp = log.timestamp.toLocaleTimeString();
 
         let ContentComponent;
@@ -295,20 +195,12 @@ export const TerminalLog: React.FC = () => {
         }
 
         return (
-          <LogLine key={actualIndex} style={{ height: ITEM_HEIGHT, minHeight: ITEM_HEIGHT }}>
+          <LogLine key={index}>
             <Prompt>[{timestamp}]$</Prompt>
             <ContentComponent>{log.content}</ContentComponent>
           </LogLine>
         );
       })}
-
-      {/* 底部哨兵元素 */}
-      {visibleRange.end < logs.length && (
-        <div ref={sentinelBottomRef} style={{ height: 1, backgroundColor: 'transparent' }} />
-      )}
-
-      {/* 底部占位符 */}
-      {remainingHeight > 0 && <div style={{ height: remainingHeight }} />}
     </TerminalContainer>
   );
 };
