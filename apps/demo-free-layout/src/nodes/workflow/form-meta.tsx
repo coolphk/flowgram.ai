@@ -19,6 +19,7 @@ import { FormContent, FormHeader } from "../../form-components";
 import { SidebarRender } from "./sidebar-render";
 import { WorkflowHeader } from "./node-render/header";
 import {WFTemplateRender} from "./node-render/template";
+
 // import {WFTemplateRender} from './node-render/template';
 
 export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {

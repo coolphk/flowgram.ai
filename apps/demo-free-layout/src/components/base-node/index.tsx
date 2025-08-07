@@ -12,6 +12,8 @@ import { NodeStatusBar } from "../testrun/node-status-bar";
 import { NodeRenderContext } from "../../context";
 import { ErrorIcon } from "./styles";
 import { NodeWrapper } from "./node-wrapper";
+import { TerminalLog } from "../terminal-log";
+import { LogProvider } from "../../context/log-context";
 
 export const BaseNode = ({ node }: { node: FlowNodeEntity }) => {
   /**
@@ -35,19 +37,22 @@ export const BaseNode = ({ node }: { node: FlowNodeEntity }) => {
   );
 
   return (
-    <ConfigProvider getPopupContainer={getPopupContainer}>
-      <NodeRenderContext.Provider value={nodeRender}>
-        <NodeWrapper>
-          <div
-            style={{ width: "100%", height: "100%" }}
-            onClick={() => console.log("node", node,getNodeForm(node))}
-          >
-            {form?.state.invalid && <ErrorIcon />}
-            {form?.render()}
-          </div>
-        </NodeWrapper>
-        <NodeStatusBar />
-      </NodeRenderContext.Provider>
-    </ConfigProvider>
+    <LogProvider>
+      <ConfigProvider getPopupContainer={getPopupContainer}>
+        <NodeRenderContext.Provider value={nodeRender}>
+          <NodeWrapper>
+            <div
+              style={{ width: "100%", height: "100%" }}
+              onClick={() => console.log("node", node,getNodeForm(node))}
+            >
+              {form?.state.invalid && <ErrorIcon />}
+              {form?.render()}
+            </div>
+          </NodeWrapper>
+          <TerminalLog />
+          <NodeStatusBar />
+        </NodeRenderContext.Provider>
+      </ConfigProvider>
+    </LogProvider>
   );
 };

@@ -26,21 +26,15 @@ export const SidebarRender: React.FC = () => {
   const { data: nodeData, form } = useNodeRender();
 
   const [wfId, setWfId] = useState<string>(nodeData?.rawData?.id || "");
-
+  // console.log(111, nodeData.rawData.id)
   const workflow = useMemo(() => {
     return data.find((item: Workflow) => item.id === wfId);
   }, [wfId, data]);
-
-  // 提取 nodeData 中的特定属性以避免依赖整个对象
-  const nodeDataId = nodeData?.id;
-  const nodeDataType = nodeData?.type;
-  const nodeDataInputsValues = nodeData?.inputsValues;
-  const nodeDataOutputsValues = nodeData?.outputsValues;
-
+  // console.log('wfId1', wfId);
   // 使用 useMemo 优化 flowNodeJSON 计算
   const flowNodeJSON = useMemo(() => {
     const base: FlowNodeJSON = {
-      id: nodeDataId,
+      id: nodeData?.id,
       data: {
         title: "Workflow",
         inputs: {
@@ -55,12 +49,12 @@ export const SidebarRender: React.FC = () => {
         outputsValues: {},
         rawData: workflow,
       },
-      type: nodeDataType,
+      type: nodeData.type,
     };
 
     if (workflow) {
       workflow.inputs.forEach((item) => {
-        base.data.inputsValues![item.name] = nodeDataInputsValues?.[
+        base.data.inputsValues![item.name] = nodeData?.inputsValues?.[
           item.name
         ] || {
           type: "constant",
@@ -72,7 +66,7 @@ export const SidebarRender: React.FC = () => {
       });
 
       workflow.outputs.forEach((item) => {
-        /*base.data.outputsValues![item.name] = nodeDataOutputsValues?.[
+        /*base.data.outputsValues![item.name] = nodeData?.outputsValues?.[
           item.name
         ] || {
           type: "constant",
@@ -85,7 +79,7 @@ export const SidebarRender: React.FC = () => {
     }
 
     return base;
-  }, [nodeDataId, nodeDataType, nodeDataInputsValues, workflow]);
+  }, [wfId]);
 
   // 当 flowNodeJSON 变化时更新节点数据
   useEffect(() => {
@@ -99,7 +93,7 @@ export const SidebarRender: React.FC = () => {
         form?.setValueIn(key, data[key]);
       });
     }
-  }, [flowNodeJSON, form, workflow]);
+  }, [flowNodeJSON]);
 
   if (error) {
     return <div>加载工作流失败</div>;
