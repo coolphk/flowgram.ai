@@ -43,3 +43,9 @@ export interface Output {
   type: string;
   validation: Validation[];
 }
+
+export interface ISaveValidation {
+  id: string;
+  name: string;
+  validations: Validation[]
+}

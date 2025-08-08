@@ -23,7 +23,7 @@ import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
 import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
 import {onDragLineEnd} from "../utils";
-import {FlowDocumentJSON, FlowNodeRegistry} from "../typings";
+import {FlowDocumentJSON, FlowNodeRegistry, ISaveValidation} from "../typings";
 import {shortcuts} from "../shortcuts";
 import {CustomService} from "../services";
 import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
@@ -400,17 +400,23 @@ export function useEditorProps(
               if (outgoingEdge) {
                 to = documentData.nodes.find((node: any) => node.id === outgoingEdge.targetNodeID)?.data?.serverId || '';
               }
-              const validation: any = {}
-              nodeData?.rawData?.[nodeData.from]?.map((item: any) => {
+              const validations: ISaveValidation[] = []
+              nodeData?.rawData?.[nodeData.from]?.map(async (item: any) => {
                 // console.log(item)
-                validation[item.name] = item.validation
+                const validation: ISaveValidation = {
+                  id: await getUniqueId(),
+                  name: item.name,
+                  validations: item.validation
+                }
+                validations.push(validation)
               })
+              /**/
               dataslots.push({
                 id: serverId,
                 type: node.type,
                 name: nodeData.title || '',
                 description: '',
-                validations: validation,
+                validations: validations,
                 tools: [],
                 from,
                 to,
@@ -419,13 +425,10 @@ export function useEditorProps(
             } else if (node.type === 'workflow') {
               // 获取workflow节点的serverId
               const serverId = node.data?.serverId || node.id;
-
-              // 获取rawData作为raw
-              raw = JSON.stringify(node.data?.rawData || {});
-
               workflows.push({
                 id: serverId,
                 type: node.type,
+                original: nodeData.rawData?.id,
                 inputs: nodeData.rawData?.inputs || [],
                 outputs: nodeData.rawData?.outputs || []
               });

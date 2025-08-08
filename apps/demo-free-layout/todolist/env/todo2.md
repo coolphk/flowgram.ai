@@ -1,2 +1,0 @@
-1. 在workflow节点的FormHeader中加入一个play按钮，点击play按钮，只有在prod环境下，按钮才显示.
-2. 当前的FormHeader组件是公共的，所有的节点都有引用这个组件.所以需要在FormHeader组件中加入一个children，用来动态添加play按钮，然后只有在workflow节点的header中才显示play按钮.

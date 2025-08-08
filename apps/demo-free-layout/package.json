@@ -15,7 +15,7 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "exit 0",
+    "build": "rsbuild build",
     "build:fast": "exit 0",
     "build:watch": "exit 0",
     "clean": "rimraf dist",
