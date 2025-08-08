@@ -32,7 +32,7 @@ export const onDragLineEnd = async (ctx: FreeLayoutPluginContext, params: onDrag
 
   // get params from drag event - 从拖拽事件获取参数
   const { fromPort, toPort, mousePos, line, originLine } = params;
-  console.log('onDragLineEnd', params)
+  // console.log('onDragLineEnd', params)
 
   // return if invalid line state - 如果线条状态无效则返回
   if (originLine || !line) {
