@@ -3,32 +3,32 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Field, FieldRenderProps, useNodeRender, } from "@flowgram.ai/free-layout-editor";
-import { Button, Checkbox, Collapse, Toast, Upload } from "@douyinfe/semi-ui";
-import { IconUpload } from "@douyinfe/semi-icons";
-import { IFlowValue, } from "@flowgram.ai/form-materials";
+import React, {useEffect, useMemo, useState} from "react";
+import {Field, FieldRenderProps, useNodeRender,} from "@flowgram.ai/free-layout-editor";
+import {Button, Checkbox, Collapse, Toast, Upload} from "@douyinfe/semi-ui";
+import {IconUpload} from "@douyinfe/semi-icons";
+import {IFlowValue,} from "@flowgram.ai/form-materials";
 
-import { Input, JsonSchema, ToolResponse } from "../../../typings";
-import { uploadAction } from "../../../config";
-import { useEnv } from "../../../providers";
-import { FormContent } from "../../../form-components";
-import { RadioInputsValues } from "../../../materials/radio-inputs-values";
-import { RadioJsonSchemaEditor } from "../../../materials/radio-json-schema-editor";
-import { useRequest } from "alova/client";
-import { getTools } from "../../../api/common";
+import {Input, JsonSchema, ToolResponse} from "../../../typings";
+import {uploadAction} from "../../../config";
+import {useEnv} from "../../../providers";
+import {FormContent} from "../../../form-components";
+import {RadioInputsValues} from "../../../materials/radio-inputs-values";
+import {RadioJsonSchemaEditor} from "../../../materials/radio-json-schema-editor";
+import {useRequest} from "alova/client";
+import {getTools} from "../../../api/common";
 
 
 export const SidebarRender: React.FC = () => {
-  const { data: nodeData, form, node } = useNodeRender();
-  const { isDev, isProd } = useEnv();
+  const {data: nodeData, form, node} = useNodeRender();
+  const {isDev, isProd, dtInstanceId} = useEnv();
   const [inputRadioValue, setInputRadioValue] = useState<string>(form?.getValueIn("inputRadio") || '');
   const [outputRadioValue, setOutputRadioValue] = useState<string>(form?.getValueIn("outputRadio") || '');
   const [inputTools, setInputTools] = useState<Record<string, ToolResponse[]>>({});
   const [outputTools, setOutputTools] = useState<Record<string, ToolResponse[]>>({});
   const [selectedInputTools, setSelectedInputTools] = useState<ToolResponse[]>([]);
   const [selectedOutputTools, setSelectedOutputTools] = useState<ToolResponse[]>([]);
-  const { send } = useRequest(getTools<ToolResponse[]>, {
+  const {send} = useRequest(getTools<ToolResponse[]>, {
     immediate: false
   });
   useEffect(() => {
@@ -42,8 +42,8 @@ export const SidebarRender: React.FC = () => {
         [value]: res,
       });
     })
-    if (form?.getValueIn("outputTools")?.[value].tools) {
-      setSelectedOutputTools(form?.getValueIn("outputTools")[value].tools)
+    if (form?.getValueIn("outputTools")?.[value]?.tools) {
+      setSelectedOutputTools(form?.getValueIn("outputTools")?.[value]?.tools)
     }
   }, [outputRadioValue, nodeData?.rawData?.inputs])
 
@@ -73,6 +73,11 @@ export const SidebarRender: React.FC = () => {
     // console.log(123, nodeData)
 
     setInputRadioValue(value);
+    if (form?.getValueIn("inputTools")?.[value]?.tools) {
+      setSelectedInputTools(form?.getValueIn("inputTools")?.[value]?.tools)
+    } else {
+      setSelectedInputTools([])
+    }
     console.log('handleInputRadioChange', node.id, value)
     // sessionStorage.setItem(node.id,`[${value}]`)
   }
@@ -86,6 +91,11 @@ export const SidebarRender: React.FC = () => {
     // console.log(123, nodeData)
 
     setOutputRadioValue(value);
+    if (form?.getValueIn("outputTools")?.[value]?.tools) {
+      setSelectedOutputTools(form?.getValueIn("outputTools")?.[value]?.tools)
+    } else {
+      setSelectedOutputTools([])
+    }
 
     console.log('handleInputRadioChange', node.id, value)
   }
@@ -144,7 +154,7 @@ export const SidebarRender: React.FC = () => {
 
   // 使用useMemo优化传给JsonSchemaEditor的value值，避免不必要的重新渲染
   const outputsSchema = useMemo(() => {
-    return nodeData?.outputs || { type: 'object', properties: {} };
+    return nodeData?.outputs || {type: 'object', properties: {}};
   }, [nodeData?.outputs]);
 
   // 根据当前节点的inputs动态生成上传组件
@@ -163,7 +173,7 @@ export const SidebarRender: React.FC = () => {
               marginBottom: 16,
             }}
           >
-            <div style={{ marginBottom: 8, fontWeight: 500 }}>{key}</div>
+            <div style={{marginBottom: 8, fontWeight: 500}}>{key}</div>
             {renderToolItems(direction === 'inputs' ? 'input' : 'output', key)}
           </div>
 
@@ -183,46 +193,47 @@ export const SidebarRender: React.FC = () => {
 
       }}>
         {nodeData?.[`${status}Tools`]?.[key]?.tools?.map((item: ToolResponse) => {
-          // console.log('item', item)
-          return (item.name === 'Uploader' ? <Upload
-            action={uploadAction}
-            data={() => ({
-              form: JSON.stringify({
-                dataSlotId: nodeData.serverId,
-                outputName: key,
-              }),
-            })}
-            fileName="file"
-            limit={1}
-            multiple={false}
-            onSuccess={(res) => {
-              // 这里可以更新节点数据
-              // todo upload接口不好使，暂时用假数据代替
-              if (form) {
-                form.setValueIn(`outputsValues.${key}`, res);
-              }
-            }}
-          >
-            <Button icon={<IconUpload />} theme="light">
-              上传文件
-            </Button>
-          </Upload> :
-            <div key={item.id} style={{
-              height: '32px',
-              width: '32px',
-              padding: '8px 12px',
-              borderRadius: 4,
-              border: '1px solid #eee',
-              backgroundColor: '#f0f8ff',
-              cursor: 'pointer',
-            }}
-              onClick={() => {
-                console.log()
+            // console.log('item', item)
+            return (item.name === 'Uploader' ? <Upload
+                action={uploadAction}
+                data={() => ({
+                  form: JSON.stringify({
+                    dataSlotId: nodeData.serverId,
+                    outputName: key,
+                    digitalTwinInstanceId: dtInstanceId
+                  }),
+                })}
+                fileName="file"
+                limit={1}
+                multiple={false}
+                onSuccess={(res) => {
+                  // 这里可以更新节点数据
+                  // todo upload接口不好使，暂时用假数据代替
+                  if (form) {
+                    form.setValueIn(`outputsValues.${key}`, res);
+                  }
+                }}
+              >
+                <Button icon={<IconUpload/>} theme="light">
+                  上传文件
+                </Button>
+              </Upload> :
+              <div key={item.id} style={{
+                height: '32px',
+                width: '32px',
+                padding: '8px 12px',
+                borderRadius: 4,
+                border: '1px solid #eee',
+                backgroundColor: '#f0f8ff',
+                cursor: 'pointer',
               }}
-            >
-              {item.name}
-            </div>)
-        }
+                   onClick={() => {
+                     console.log()
+                   }}
+              >
+                {item.name}
+              </div>)
+          }
         )}
       </div>
     );
@@ -235,19 +246,19 @@ export const SidebarRender: React.FC = () => {
             <Collapse.Panel header="输入参数" itemKey="1">
               <FormContent>
                 <Field<
-                  Record<string, IFlowValue | undefined> | undefined
-                > name="inputsValues">
-                  {({ field: { value, onChange } }) => {
+                    Record<string, IFlowValue | undefined> | undefined
+                  > name="inputsValues">
+                  {({field: {value, onChange}}) => {
                     return (
                       <RadioInputsValues value={inputsValues}
-                        inputRadioValue={inputRadioValue}
-                        onInputRadioChange={handleInputRadioChange}
-                        onChange={(v) => onChange(v)} />
+                                         inputRadioValue={inputRadioValue}
+                                         onInputRadioChange={handleInputRadioChange}
+                                         onChange={(v) => onChange(v)}/>
                     );
                   }}
                 </Field>
                 <div>
-                  <h4 style={{ margin: '8px 0' }}>工具</h4>
+                  <h4 style={{margin: '8px 0'}}>工具</h4>
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column' as const,
@@ -294,8 +305,8 @@ export const SidebarRender: React.FC = () => {
                 <Field
                   name="outputs"
                   render={({
-                    field: { value, onChange },
-                  }: FieldRenderProps<JsonSchema>) => {
+                             field: {value, onChange},
+                           }: FieldRenderProps<JsonSchema>) => {
                     return (
                       <RadioJsonSchemaEditor
                         value={outputsSchema}
@@ -307,7 +318,7 @@ export const SidebarRender: React.FC = () => {
                   }}
                 />
                 <div>
-                  <h4 style={{ margin: '8px 0' }}>工具</h4>
+                  <h4 style={{margin: '8px 0'}}>工具</h4>
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',

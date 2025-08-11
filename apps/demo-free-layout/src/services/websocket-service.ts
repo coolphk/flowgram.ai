@@ -7,22 +7,23 @@ import {Disposable, Emitter, injectable,} from "@flowgram.ai/free-layout-editor"
 
 // 定义WebSocket消息类型
 export interface WebSocketMessage {
-  type: string;
+  /*type: string;
   nodeId?: string;
-  payload: any;
+  payload: any;*/
+  [key: string]: any;
 }
 
 @injectable()
 export class WebSocketService {
 
   private ws: WebSocket | null = null;
-  private url: string = '';
+  private url: string = 'ws://ws.dt.hitwin.tech?dt_id=1';
   private reconnectInterval: number = 5000; // 5秒重连间隔
   private shouldReconnect: boolean = false;
   private messageEmitter = new Emitter<WebSocketMessage>();
   private connectionStateEmitter = new Emitter<boolean>();
   private disposers: Disposable[] = [];
-  
+
   public onMessage = this.messageEmitter.event;
   public onConnectionStateChange = this.connectionStateEmitter.event;
   private currentNodeId: string | null = null;
@@ -33,6 +34,10 @@ export class WebSocketService {
    */
   public setUrl(url: string): void {
     this.url = url;
+  }
+
+  public setDtTemplateId(dtTemplateId: string) {
+    this.url = this.url.replace('dt_id=1', `dt_id=${dtTemplateId}`)
   }
 
   /**
@@ -58,6 +63,7 @@ export class WebSocketService {
 
     this.ws.onmessage = (event) => {
       try {
+        console.log('Received message:', event.data);
         const message: WebSocketMessage = JSON.parse(event.data);
         this.messageEmitter.fire(message);
       } catch (error) {
@@ -114,14 +120,25 @@ export class WebSocketService {
    * @param nodeId 节点ID
    * @param callback 消息回调函数
    */
-  public onNodeMessage(nodeId: string, callback: (message: WebSocketMessage) => void): Disposable {
+  /*public onNodeMessage(nodeId: string, callback: (message: WebSocketMessage) => void): Disposable {
     const disposable = this.messageEmitter.event((message: WebSocketMessage) => {
       // 如果消息指定了nodeId且匹配当前节点ID，或者消息没有指定nodeId（广播消息）
       if ((message.nodeId && message.nodeId === nodeId) || !message.nodeId) {
         callback(message);
       }
     });
-    
+
+    return disposable;
+  }*/
+  public onNodeMessage( callback: (message: WebSocketMessage) => void): Disposable {
+    const disposable = this.messageEmitter.event((message: WebSocketMessage) => {
+      console.log('onNodeMessage', message)
+      // 如果消息指定了nodeId且匹配当前节点ID，或者消息没有指定nodeId（广播消息）
+      // if ((message.nodeId && message.nodeId === nodeId) || !message.nodeId) {
+        callback(message);
+      // }
+    });
+
     return disposable;
   }
 
@@ -145,14 +162,14 @@ export class WebSocketService {
    */
   public dispose(): void {
     this.disconnect();
-    
+
     // 清理所有订阅
     this.disposers.forEach(disposer => {
       if (disposer) {
         disposer.dispose();
       }
     });
-    
+
     this.messageEmitter.dispose();
     this.connectionStateEmitter.dispose();
     this.disposers = [];

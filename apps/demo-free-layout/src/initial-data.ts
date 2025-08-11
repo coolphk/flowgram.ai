@@ -12,7 +12,7 @@ import { FlowDocumentJSON } from './typings';
 
 export const initialData: FlowDocumentJSON = {
   nodes: [
-    {
+/*    {
       id: 'start_0',
       type: 'start',
       meta: {
@@ -23,7 +23,7 @@ export const initialData: FlowDocumentJSON = {
       },
       data: {
         title: 'Start',
-/*        outputs: {
+/!*        outputs: {
           type: 'object',
           properties: {
             POSCAR: {
@@ -42,9 +42,9 @@ export const initialData: FlowDocumentJSON = {
               type: 'file',
             },
           },
-        },*/
+        },*!/
       },
-    },
+    },*/
     {
       id: 'data-slot_0',
       type: 'data-slot',
@@ -207,7 +207,7 @@ export const initialData: FlowDocumentJSON = {
         "serverId": "10"
       },
     },
-    {
+    /*{
       id: 'end_0',
       type: 'end',
       meta: {
@@ -219,7 +219,7 @@ export const initialData: FlowDocumentJSON = {
       data: {
         title: 'End',
       },
-    },
+    },*/
   ],
   edges: [
     /*{

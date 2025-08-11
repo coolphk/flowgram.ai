@@ -66,3 +66,7 @@ export const runTool = <T>(param: {
   alovaInstance.Post<T>("/run-tool", param, {
     cacheFor: 0,
   });
+
+export const runDt = (dtTemplateId: string) => {
+  return alovaInstance.Post<string>("/run?dt_template_id=" + dtTemplateId)
+}

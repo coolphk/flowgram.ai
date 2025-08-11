@@ -13,6 +13,8 @@ interface EnvContextType {
   isProd: boolean;
   dtTemplateId: string;
   setDtTemplateId: (id: string) => void;
+  dtInstanceId: string;
+  setDtInstanceId: (id: string) => void;
 }
 
 const EnvContext = createContext<EnvContextType | undefined>(undefined);
@@ -31,6 +33,8 @@ export const EnvProvider: React.FC<EnvProviderProps> = ({
                                                         }) => {
   const [currentEnv, setCurrentEnv] = useState<EnvType>(defaultEnv);
   const [dtTemplateId, setDtTemplateId] = useState<string>('');
+  const [dtInstanceId, setDtInstanceId] = useState<string>('');
+
   const isDev = currentEnv === ENV.DEV;
   const isProd = currentEnv === ENV.PROD;
 
@@ -41,6 +45,8 @@ export const EnvProvider: React.FC<EnvProviderProps> = ({
     isProd,
     dtTemplateId,
     setDtTemplateId,
+    dtInstanceId,
+    setDtInstanceId,
   };
 
   // 保存引用

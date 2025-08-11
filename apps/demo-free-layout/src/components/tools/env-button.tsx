@@ -7,15 +7,21 @@ import React from "react";
 import {Button} from "@douyinfe/semi-ui";
 import {useEnv} from "../../providers";
 import {ENV} from "../../constants";
+import {runDt} from "../../api/common";
 
 export const EnvButton: React.FC = () => {
-  const {setCurrentEnv, isDev, dtTemplateId} = useEnv();
+  const {setCurrentEnv, isDev, dtTemplateId, setDtInstanceId} = useEnv();
 
   const handleToggleEnv = () => {
     // dtTemplateId 暂定为切换到运行模式时调用run接口，进行运行
+    console.log('handleToggleEnv', dtTemplateId)
+
     if (isDev) {
       setCurrentEnv(ENV.PROD);
-      // run()
+      runDt(dtTemplateId).then(res => {
+        console.log(res)
+        setDtInstanceId(res)
+      })
     } else {
       setCurrentEnv(ENV.DEV);
     }

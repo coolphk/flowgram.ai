@@ -14,6 +14,7 @@ import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
 import {
   FreeLayoutProps,
   getNodeForm,
+  useService,
   WorkflowContentChangeType,
   WorkflowLineEntity,
   WorkflowNodeLinesData,
@@ -41,11 +42,12 @@ import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
 import {IconFile} from "@douyinfe/semi-icons";
 import {Toast} from "@douyinfe/semi-ui";
 import {getUniqueId, ISaveContentParam, save} from "../api/common";
-import {updateDtTemplateId} from "../providers";
+import {updateDtTemplateId, useEnv} from "../providers";
+import {WebSocketService} from "../services/websocket-service";
 
 const id = 'toastid';
 let dtId = ''
-
+let webSocketService: WebSocketService
 
 export function useEditorProps(
   initialData: FlowDocumentJSON,
@@ -377,7 +379,7 @@ export function useEditorProps(
 
           // 处理节点数据
           documentData.nodes.forEach((node: any) => {
-            // console.log('convertToSaveContent', node)
+            console.log('convertToSaveContent', node)
             const nodeData = node.data
             if (node.type === 'data-slot') {
               // 获取data-slot节点的serverId
@@ -446,11 +448,11 @@ export function useEditorProps(
         // 使用转换函数
         const saveContent = await convertToSaveContent(ctx.document.toJSON());
         console.log("Converted save content:", saveContent);
-        /*save(saveContent as ISaveContentParam).then(response => {
+        save(saveContent as ISaveContentParam).then(response => {
           console.log("Save success:", response);
         }).catch(error => {
           console.error("Save error:", error);
-        })*/
+        })
 
         /*{
     "nodes": [
@@ -673,19 +675,21 @@ export function useEditorProps(
        * Bind custom service
        */
       onBind: ({bind}) => {
+        console.log('onBind')
         bind(CustomService).toSelf().inSingletonScope();
+        bind(WebSocketService).toSelf().inSingletonScope();
       },
       /**
        * Playground init
        */
       onInit() {
         console.log("--- Playground init ---");
+        // dtId = useEnv().dtTemplateId
         getUniqueId<string>().then(id => {
           dtId = id
-          // 使用新的 updateDtTemplateId 方法替代 useEnv Hook
-          updateDtTemplateId(id);
+          console.log('setDtTemplateId', id)
+          updateDtTemplateId(id)
         })
-
       },
       /**
        * Playground render
@@ -693,7 +697,11 @@ export function useEditorProps(
       onAllLayersRendered(ctx) {
         // ctx.tools.autoLayout(); // init auto layout
         ctx.document.fitView(false); // init fit view
-
+        /*webSocketService = ctx.get<WebSocketService>(WebSocketService)
+        webSocketService.connect()
+        const wsDisposable = webSocketService.onNodeMessage((message) => {
+          console.log("Received message:", message);
+        })*/
         console.log("--- Playground rendered ---");
         ctx.document.linesManager.onAvailableLinesChange(e => {
           console.log("Available lines change: ", e);
@@ -704,12 +712,14 @@ export function useEditorProps(
             handleNodeDataFlow(line);
           }
         })
+
       },
       /**
        * Playground dispose
        */
       onDispose() {
         console.log("---- Playground Dispose ----");
+        // webSocketService.disconnect()
       },
       i18n: {
         locale: navigator.language,
