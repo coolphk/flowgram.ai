@@ -4,24 +4,42 @@
  */
 
 import React from "react";
-import {Button} from "@douyinfe/semi-ui";
-import {useEnv} from "../../providers";
-import {ENV} from "../../constants";
-import {runDt} from "../../api/common";
+import { Button } from "@douyinfe/semi-ui";
+import { useEnv } from "../../providers";
+import { ENV } from "../../constants";
+import {runDt, save} from "../../api/common";
+import { useService } from "@flowgram.ai/free-layout-editor";
+import { WebSocketService } from "../../services/websocket-service";
 
 export const EnvButton: React.FC = () => {
-  const {setCurrentEnv, isDev, dtTemplateId, setDtInstanceId} = useEnv();
-
+  const { setCurrentEnv, isDev, dtTemplateId, setDtInstanceId,saveContent } = useEnv();
+  const wsService = useService(WebSocketService);
   const handleToggleEnv = () => {
     // dtTemplateId 暂定为切换到运行模式时调用run接口，进行运行
     console.log('handleToggleEnv', dtTemplateId)
 
     if (isDev) {
-      setCurrentEnv(ENV.PROD);
-      runDt(dtTemplateId).then(res => {
-        console.log(res)
-        setDtInstanceId(res)
+      if (!saveContent) {
+        return;
+      }
+      save(saveContent).then(res => {
+        // console.log('save res', res)
+        runDt(dtTemplateId).then(res => {
+          console.log('dtInstanceId', res)
+
+          setDtInstanceId(res)
+          wsService.setDtInstanceId(res)
+
+          wsService.connect()
+          wsService.onConnectionStateChange((state) => {
+            console.log('wsService connection state change', state)
+          })
+          wsService.onNodeMessage((msg) => {
+            console.log('wsService onNodeMessage', msg)
+          })
+        })
       })
+      setCurrentEnv(ENV.PROD);
     } else {
       setCurrentEnv(ENV.DEV);
     }

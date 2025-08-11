@@ -4,34 +4,7 @@
  */
 
 import {alovaInstance} from "./index";
-import {Validation} from "../typings";
-
-export interface ISaveContentParam {
-  id: string,
-  dataslots: [
-    {
-      id: string;
-      type: string;
-      name: string;
-      description: string;
-      validations: string[];
-      tools: string[];
-      from: string;
-      to: string;
-      uploadFiles: string[];
-    }
-  ],
-  workflows: [
-    {
-      id: string;
-      type: string;
-      inputs: Record<string, any>;
-      outputs: Record<string, any>;
-    }
-  ],
-  raw: string
-}
-
+import {ISaveContent, Validation} from "../typings";
 
 export const getUniqueId = <T>() => {
   // console.log("getUniqueId")
@@ -41,7 +14,7 @@ export const getUniqueId = <T>() => {
   });
 }
 
-export const save = async (content: ISaveContentParam) => {
+export const save = async (content: ISaveContent) => {
   console.log('save')
   try {
     const response = await alovaInstance.Post<string>("/save",

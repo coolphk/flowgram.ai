@@ -9,7 +9,7 @@ import {Button, Checkbox, Collapse, Toast, Upload} from "@douyinfe/semi-ui";
 import {IconUpload} from "@douyinfe/semi-icons";
 import {IFlowValue,} from "@flowgram.ai/form-materials";
 
-import {Input, JsonSchema, ToolResponse} from "../../../typings";
+import {DataSlot, Input, JsonSchema, ToolResponse, ValidationsDataSlot} from "../../../typings";
 import {uploadAction} from "../../../config";
 import {useEnv} from "../../../providers";
 import {FormContent} from "../../../form-components";
@@ -21,7 +21,7 @@ import {getTools} from "../../../api/common";
 
 export const SidebarRender: React.FC = () => {
   const {data: nodeData, form, node} = useNodeRender();
-  const {isDev, isProd, dtInstanceId} = useEnv();
+  const {isDev, isProd, dtInstanceId, saveContent} = useEnv();
   const [inputRadioValue, setInputRadioValue] = useState<string>(form?.getValueIn("inputRadio") || '');
   const [outputRadioValue, setOutputRadioValue] = useState<string>(form?.getValueIn("outputRadio") || '');
   const [inputTools, setInputTools] = useState<Record<string, ToolResponse[]>>({});
@@ -193,17 +193,23 @@ export const SidebarRender: React.FC = () => {
 
       }}>
         {nodeData?.[`${status}Tools`]?.[key]?.tools?.map((item: ToolResponse) => {
-            // console.log('item', item)
+            // console.log('item', nodeData, item)
             return (item.name === 'Uploader' ? <Upload
                 action={uploadAction}
-                data={() => ({
-                  form: JSON.stringify({
-                    dataSlotId: nodeData.serverId,
-                    outputName: key,
-                    digitalTwinInstanceId: dtInstanceId
-                  }),
-                })}
+                data={() => {
+                  const dataSlot: DataSlot = saveContent?.dataslots.find((item: DataSlot) => item.validations.find((item: ValidationsDataSlot) => item.name === key))
+                  const validationSlot = dataSlot.validations.find(item => item.name === key)
+                  console.log('dataSlot saveContent', saveContent)
+                  return {
+                    form: JSON.stringify({
+                      dataSlotId: validationSlot?.id,
+                      outputName: key,
+                      digitalTwinInstanceId: dtInstanceId
+                    }),
+                  }
+                }}
                 fileName="file"
+                key={key}
                 limit={1}
                 multiple={false}
                 onSuccess={(res) => {

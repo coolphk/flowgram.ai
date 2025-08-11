@@ -4,7 +4,7 @@
  */
 
 
-
 export * from './node';
 export * from './json-schema';
 export * from './workflow';
+export * from './data-slot';

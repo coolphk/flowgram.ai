@@ -14,7 +14,6 @@ import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
 import {
   FreeLayoutProps,
   getNodeForm,
-  useService,
   WorkflowContentChangeType,
   WorkflowLineEntity,
   WorkflowNodeLinesData,
@@ -41,8 +40,8 @@ import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} fro
 import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
 import {IconFile} from "@douyinfe/semi-icons";
 import {Toast} from "@douyinfe/semi-ui";
-import {getUniqueId, ISaveContentParam, save} from "../api/common";
-import {updateDtTemplateId, useEnv} from "../providers";
+import {getUniqueId,  save} from "../api/common";
+import {updateDtTemplateId} from "../providers";
 import {WebSocketService} from "../services/websocket-service";
 
 const id = 'toastid';
@@ -379,7 +378,7 @@ export function useEditorProps(
 
           // 处理节点数据
           documentData.nodes.forEach((node: any) => {
-            console.log('convertToSaveContent', node)
+
             const nodeData = node.data
             if (node.type === 'data-slot') {
               // 获取data-slot节点的serverId
@@ -404,7 +403,7 @@ export function useEditorProps(
               }
               const validations: ISaveValidation[] = []
               nodeData?.rawData?.[nodeData.from]?.map(async (item: any) => {
-                // console.log(item)
+                console.log('forEach', item)
                 const validation: ISaveValidation = {
                   id: await getUniqueId(),
                   name: item.name,
@@ -448,7 +447,7 @@ export function useEditorProps(
         // 使用转换函数
         const saveContent = await convertToSaveContent(ctx.document.toJSON());
         console.log("Converted save content:", saveContent);
-        save(saveContent as ISaveContentParam).then(response => {
+        save(saveContent).then(response => {
           console.log("Save success:", response);
         }).catch(error => {
           console.error("Save error:", error);

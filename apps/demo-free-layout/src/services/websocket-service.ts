@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {Disposable, Emitter, injectable,} from "@flowgram.ai/free-layout-editor";
+import { Disposable, Emitter, injectable, } from "@flowgram.ai/free-layout-editor";
 
 // 定义WebSocket消息类型
 export interface WebSocketMessage {
@@ -17,7 +17,7 @@ export interface WebSocketMessage {
 export class WebSocketService {
 
   private ws: WebSocket | null = null;
-  private url: string = 'ws://ws.dt.hitwin.tech?dt_id=1';
+  private url: string = 'wss://ws.dt.hitwin.tech?dt_id=1';
   private reconnectInterval: number = 5000; // 5秒重连间隔
   private shouldReconnect: boolean = false;
   private messageEmitter = new Emitter<WebSocketMessage>();
@@ -36,8 +36,8 @@ export class WebSocketService {
     this.url = url;
   }
 
-  public setDtTemplateId(dtTemplateId: string) {
-    this.url = this.url.replace('dt_id=1', `dt_id=${dtTemplateId}`)
+  public setDtInstanceId(dtInstanceId: string) {
+    this.url = this.url.replace('dt_id=1', `dt_id=${dtInstanceId}`)
   }
 
   /**
@@ -53,7 +53,7 @@ export class WebSocketService {
       return;
     }
 
-    this.shouldReconnect = true;
+    // this.shouldReconnect = true;
     this.ws = new WebSocket(this.url);
 
     this.ws.onopen = () => {
@@ -130,12 +130,12 @@ export class WebSocketService {
 
     return disposable;
   }*/
-  public onNodeMessage( callback: (message: WebSocketMessage) => void): Disposable {
+  public onNodeMessage(callback: (message: WebSocketMessage) => void): Disposable {
     const disposable = this.messageEmitter.event((message: WebSocketMessage) => {
       console.log('onNodeMessage', message)
       // 如果消息指定了nodeId且匹配当前节点ID，或者消息没有指定nodeId（广播消息）
       // if ((message.nodeId && message.nodeId === nodeId) || !message.nodeId) {
-        callback(message);
+      callback(message);
       // }
     });
 

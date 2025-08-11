@@ -5,6 +5,7 @@
 
 import React, {createContext, useContext, useState, ReactNode} from 'react';
 import {ENV, EnvType} from '../constants/env';
+import {ISaveContent} from "../typings";
 
 interface EnvContextType {
   currentEnv: EnvType;
@@ -15,6 +16,8 @@ interface EnvContextType {
   setDtTemplateId: (id: string) => void;
   dtInstanceId: string;
   setDtInstanceId: (id: string) => void;
+  saveContent: ISaveContent | undefined;
+  setSaveContent: (content: ISaveContent) => void;
 }
 
 const EnvContext = createContext<EnvContextType | undefined>(undefined);
@@ -34,7 +37,7 @@ export const EnvProvider: React.FC<EnvProviderProps> = ({
   const [currentEnv, setCurrentEnv] = useState<EnvType>(defaultEnv);
   const [dtTemplateId, setDtTemplateId] = useState<string>('');
   const [dtInstanceId, setDtInstanceId] = useState<string>('');
-
+  const [saveContent, setSaveContent] = useState<ISaveContent | undefined>();
   const isDev = currentEnv === ENV.DEV;
   const isProd = currentEnv === ENV.PROD;
 
@@ -47,6 +50,8 @@ export const EnvProvider: React.FC<EnvProviderProps> = ({
     setDtTemplateId,
     dtInstanceId,
     setDtInstanceId,
+    saveContent,
+    setSaveContent
   };
 
   // 保存引用
@@ -72,4 +77,16 @@ export const updateDtTemplateId = (id: string): void => {
   if (envContextRef) {
     envContextRef.setDtTemplateId(id);
   }
+};
+
+export const updateSaveContent = (content: ISaveContent): void => {
+  if (envContextRef) {
+    envContextRef.setSaveContent(content);
+  }
+};
+export const getEnv = (): EnvContextType => {
+  if (envContextRef) {
+    return envContextRef;
+  }
+  throw new Error('getEnv must be used within an EnvProvider');
 };

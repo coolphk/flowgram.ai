@@ -15,3 +15,5 @@ export const getWorkflows = <T>() =>
       expire: 60 * 10 * 1000,
     },
   });
+export const runWorkFlow = (dtTemplateId: string) =>
+  alovaInstance.Post<{ dtInstanceId: string }>(`/workflow/${dtTemplateId}/run`);
