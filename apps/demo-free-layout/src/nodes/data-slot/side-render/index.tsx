@@ -197,8 +197,9 @@ export const SidebarRender: React.FC = () => {
             return (item.name === 'Uploader' ? <Upload
                 action={uploadAction}
                 data={() => {
-                  const dataSlot: DataSlot = saveContent?.dataslots.find((item: DataSlot) => item.validations.find((item: ValidationsDataSlot) => item.name === key))
-                  const validationSlot = dataSlot.validations.find(item => item.name === key)
+                  const validationSlot = saveContent?.dataslots
+                    .flatMap((dataSlot: DataSlot) => dataSlot.validations)
+                    .find((validation: ValidationsDataSlot) => validation.name === key);
                   console.log('dataSlot saveContent', saveContent)
                   return {
                     form: JSON.stringify({

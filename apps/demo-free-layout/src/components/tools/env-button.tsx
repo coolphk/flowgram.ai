@@ -41,6 +41,7 @@ export const EnvButton: React.FC = () => {
       })
       setCurrentEnv(ENV.PROD);
     } else {
+      wsService.dispose()
       setCurrentEnv(ENV.DEV);
     }
   };
