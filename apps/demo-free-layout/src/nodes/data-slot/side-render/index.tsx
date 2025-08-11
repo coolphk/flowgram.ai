@@ -52,7 +52,7 @@ export const SidebarRender: React.FC = () => {
       return
     }
     const value = inputRadioValue
-    const validation = nodeData.rawData.outputs.find((item: Input) => (item.name === value)).validation;
+    const validation = nodeData.rawData?.outputs?.find((item: Input) => (item.name === value)).validation;
     send(validation).then((res) => {
       setInputTools({
         [value]: res,

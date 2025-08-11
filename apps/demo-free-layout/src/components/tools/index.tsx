@@ -10,7 +10,7 @@ import { useClientContext } from "@flowgram.ai/free-layout-editor";
 import { Tooltip, IconButton, Divider } from "@douyinfe/semi-ui";
 import { IconUndo, IconRedo } from "@douyinfe/semi-icons";
 
-import { TestRunButton } from "../testrun/testrun-button";
+// import { TestRunButton } from "../testrun/testrun-button";
 import { AddNode } from "../add-node";
 import { ZoomSelect } from "./zoom-select";
 import { SwitchLine } from "./switch-line";
@@ -22,7 +22,7 @@ import { Interactive } from "./interactive";
 import { FitView } from "./fit-view";
 import { Comment } from "./comment";
 import { AutoLayout } from "./auto-layout";
-import { RunHistory } from "./run-history";
+// import { RunHistory } from "./run-history";
 import { RunHistorySwitch } from "./run-history-switch";
 import { EnvButton } from "./env-button";
 
@@ -85,13 +85,13 @@ export const DemoTools = () => {
           runHistoryVisible={runHistoryVisible}
           setRunHistoryVisible={setRunHistoryVisible}
         />
-        <RunHistory visible={runHistoryVisible} />
+        {/*<RunHistory visible={runHistoryVisible} />*/}
         <Divider layout="vertical" style={{ height: "16px" }} margin={3} />
         <AddNode disabled={playground.config.readonly} />
         <Divider layout="vertical" style={{ height: "16px" }} margin={3} />
         <EnvButton />
         <Divider layout="vertical" style={{ height: "16px" }} margin={3} />
-        <TestRunButton disabled={playground.config.readonly} />
+        {/*<TestRunButton disabled={playground.config.readonly} />*/}
       </ToolSection>
     </ToolContainer>
   );
