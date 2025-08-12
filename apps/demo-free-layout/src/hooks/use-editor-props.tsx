@@ -4,13 +4,13 @@
  */
 
 /* eslint-disable no-console */
-import { useMemo } from "react";
+import {useMemo} from "react";
 
-import { debounce } from "lodash-es";
-import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
-import { createFreeSnapPlugin } from "@flowgram.ai/free-snap-plugin";
-import { createFreeNodePanelPlugin } from "@flowgram.ai/free-node-panel-plugin";
-import { createFreeLinesPlugin } from "@flowgram.ai/free-lines-plugin";
+import {debounce} from "lodash-es";
+import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
+import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
+import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
+import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
 import {
   FreeLayoutProps,
   getNodeForm,
@@ -19,35 +19,36 @@ import {
   WorkflowNodeLinesData,
   WorkflowPortEntity,
 } from "@flowgram.ai/free-layout-editor";
-import { createFreeGroupPlugin } from "@flowgram.ai/free-group-plugin";
-import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
+import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
+import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
-import { onDragLineEnd } from "../utils";
-import { FlowDocumentJSON, FlowNodeRegistry, SaveRequest } from "../typings";
-import { shortcuts } from "../shortcuts";
-import { CustomService } from "../services";
-import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
+import {onDragLineEnd} from "../utils";
+import {FlowDocumentJSON, FlowNodeRegistry, SaveRequest} from "../typings";
+import {shortcuts} from "../shortcuts";
+import {CustomService} from "../services";
+import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
 import {
   createContextMenuPlugin,
   createRunHistoryPlugin,
   createRuntimePlugin,
   createVariablePanelPlugin,
 } from "../plugins";
-import { defaultFormMeta } from "../nodes/default-form-meta";
-import { WorkflowNodeType } from "../nodes";
-import { SelectorBoxPopover } from "../components/selector-box-popover";
-import { BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel, } from "../components";
-import { createTypePresetPlugin, IFlowValue } from "@flowgram.ai/form-materials";
-import { IconFile } from "@douyinfe/semi-icons";
-import { Toast } from "@douyinfe/semi-ui";
-import { getUniqueId, save } from "../api/common";
-import { getEnv, updateDtTemplateId } from "../providers";
-import { WebSocketService } from "../services/websocket-service";
-import { updateSaveContent } from "../providers/env-provider";
-import { convertToSaveContent } from "../utils/convert-to-save-content";
+import {defaultFormMeta} from "../nodes/default-form-meta";
+import {WorkflowNodeType} from "../nodes";
+import {SelectorBoxPopover} from "../components/selector-box-popover";
+import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
+import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
+import {IconFile} from "@douyinfe/semi-icons";
+import {Toast} from "@douyinfe/semi-ui";
+import {getUniqueId, save} from "../api/common";
+import {getEnv, updateDtTemplateId} from "../providers";
+import {WebSocketService} from "../services/websocket-service";
+import {updateSaveContent} from "../providers/env-provider";
+import {convertToSaveContent} from "../utils/convert-to-save-content";
 
 const id = 'toastid';
 let dtId = ''
+
 // let webSocketService: WebSocketService
 
 export function useEditorProps(
@@ -61,7 +62,7 @@ export function useEditorProps(
    */
   const isWorkflowTemplateSelected = (nodeForm: any): boolean => {
     if (!nodeForm?.values.rawData) {
-      Toast.error({ content: "请先选择工作流的模板类型", id });
+      Toast.error({content: "请先选择工作流的模板类型", id});
       return false;
     }
     return true;
@@ -95,6 +96,16 @@ export function useEditorProps(
     const toForm = getNodeForm(to);
     const inputsValues: Record<string, IFlowValue> = {};
     if (!fromForm?.getValueIn("rawData")) {
+      //todo
+      /*const toFormRawData: Workflow = toForm?.getValueIn("rawData");
+      const toValidations = {
+
+      }
+      toFormRawData.inputs.map((input) => {
+        input.validation.map(validation=>{
+          toValidations
+        })
+      })*/
       fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"));
       fromForm?.setValueIn("from", "inputs");
     }
@@ -290,7 +301,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const { dragNodeType, dropNodeType } = params;
+        const {dragNodeType, dropNodeType} = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -605,7 +616,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({ bind }) => {
+      onBind: ({bind}) => {
         console.log('onBind')
         bind(CustomService).toSelf().inSingletonScope();
         bind(WebSocketService).toSelf().inSingletonScope();
@@ -756,9 +767,9 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span style={{ marginLeft: '8px' }}>请选择输入来源</span>);
+                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
               },
-              icon: <IconFile />,
+              icon: <IconFile/>,
               container: false,
             },
           ],

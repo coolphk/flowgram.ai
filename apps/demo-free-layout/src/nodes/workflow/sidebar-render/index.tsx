@@ -19,6 +19,7 @@ import { FormHeader, FormInputs } from "../../../form-components";
 import { getWorkflows } from "../../../api/workflow";
 
 export const SidebarRender: React.FC = () => {
+
   const { data, error } = useRequest(getWorkflows<Workflow[]>, {
     initialData: [],
     immediate: true,

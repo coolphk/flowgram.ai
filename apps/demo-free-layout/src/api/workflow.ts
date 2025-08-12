@@ -3,17 +3,12 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { alovaInstance } from "./index";
+import {alovaInstance} from "./index";
+import {RunWorkFlowRequest} from "../typings";
 
 export const getWorkflows = <T>() =>
   alovaInstance.Get<T>("/workflow", {
-    cacheFor: {
-      mode: "memory",
-
-      // 单位为毫秒
-      // 当设置为`Infinity`，表示数据永不过期，设置为0或负数时表示不缓存
-      expire: 60 * 10 * 1000,
-    },
+    cacheFor: 0
   });
-export const runWorkFlow = (dtTemplateId: string) =>
-  alovaInstance.Post<{ dtInstanceId: string }>(`/workflow/${dtTemplateId}/run`);
+export const runWorkFlow = (params: RunWorkFlowRequest) =>
+  alovaInstance.Post<{ dtInstanceId: string }>(`/workflow/run`, params);
