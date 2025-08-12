@@ -1,6 +1,7 @@
 export enum WSMessageType {
   NodeMessage = 'nodeMessage',
   FileMessage = 'fileMessage',
+  RunToolMessage = 'runtoolMessage',
 }
 
 export interface WSNodePayload {
@@ -8,32 +9,24 @@ export interface WSNodePayload {
   inputsValues: WSNodeMessage[],
 }
 
-export interface WSFilePayload {
-  asset_id: string,
-  dataslot_id: string,
-  status: string,
-  task_id: string
-  object_path: string,
-  filename: string,
-  dt_id: string,
-}
-
 export interface WSNodeMessage {
-  id: string,
-  name: string,
-  status: string,
+  id: string, //生成文件id
+  name: string, //生成文件名称(POSCAR,KPOINTS等)
+  status: string, //文件状态(success,failed等)
+}
+export interface WSFilePayload extends WSNodeMessage {
 }
 interface WSMessageBase {
   type: WSMessageType;
   timestamp: number;
   payload: WSNodePayload | WSFilePayload;
 }
-interface WSNodeMessageWrapper extends WSMessageBase{
+interface WSNodeMessageWrapper extends WSMessageBase {
   type: WSMessageType.NodeMessage;
   payload: WSNodePayload;
 }
 
-interface WSFileMessageWrapper extends WSMessageBase{
+interface WSFileMessageWrapper extends WSMessageBase {
   type: WSMessageType.FileMessage;
   payload: WSFilePayload;
 }

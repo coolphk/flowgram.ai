@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, {createContext, useContext, useState, ReactNode} from 'react';
-import {ENV, EnvType} from '../constants/env';
-import {ISaveContent} from "../typings";
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { ENV, EnvType } from '../constants/env';
+import { SaveRequest } from "../typings";
 
 interface EnvContextType {
   currentEnv: EnvType;
@@ -16,8 +16,8 @@ interface EnvContextType {
   setDtTemplateId: (id: string) => void;
   dtInstanceId: string;
   setDtInstanceId: (id: string) => void;
-  saveContent: ISaveContent | undefined;
-  setSaveContent: (content: ISaveContent) => void;
+  saveContent: SaveRequest | undefined;
+  setSaveContent: (content: SaveRequest) => void;
 }
 
 const EnvContext = createContext<EnvContextType | undefined>(undefined);
@@ -31,13 +31,13 @@ interface EnvProviderProps {
 }
 
 export const EnvProvider: React.FC<EnvProviderProps> = ({
-                                                          children,
-                                                          defaultEnv = ENV.DEV
-                                                        }) => {
+  children,
+  defaultEnv = ENV.DEV
+}) => {
   const [currentEnv, setCurrentEnv] = useState<EnvType>(defaultEnv);
   const [dtTemplateId, setDtTemplateId] = useState<string>('');
   const [dtInstanceId, setDtInstanceId] = useState<string>('');
-  const [saveContent, setSaveContent] = useState<ISaveContent | undefined>();
+  const [saveContent, setSaveContent] = useState<SaveRequest | undefined>();
   const isDev = currentEnv === ENV.DEV;
   const isProd = currentEnv === ENV.PROD;
 
@@ -79,7 +79,7 @@ export const updateDtTemplateId = (id: string): void => {
   }
 };
 
-export const updateSaveContent = (content: ISaveContent): void => {
+export const updateSaveContent = (content: SaveRequest): void => {
   if (envContextRef) {
     envContextRef.setSaveContent(content);
   }

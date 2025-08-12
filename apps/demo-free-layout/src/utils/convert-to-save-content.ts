@@ -1,9 +1,9 @@
 // 转换函数：将ctx.document.toJSON()的数据转换为ISaveContent格式
-import {getUniqueId} from "../api/common";
-import {DataSlot, ISaveContent, ISaveValidation, Workflow} from "../typings";
-import {WorkflowNodeType} from "../nodes";
+import { getUniqueId } from "../api/common";
+import { DataSlot, SaveRequest, ISaveValidation, Workflow } from "../typings";
+import { WorkflowNodeType } from "../nodes";
 
-export const convertToSaveContent = async (dtId: string, documentData: any): Promise<ISaveContent> => {
+export const convertToSaveContent = async (dtId: string, documentData: any): Promise<SaveRequest> => {
 
   const dataslots: DataSlot[] = [];
   const workflows: Workflow[] = [];

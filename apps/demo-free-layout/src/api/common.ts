@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {alovaInstance} from "./index";
-import {ISaveContent, Validation} from "../typings";
+import { alovaInstance } from "./index";
+import { SaveRequest, Validation } from "../typings";
+import { RunToolRequest } from "../typings/api";
 
 export const getUniqueId = <T>() => {
   // console.log("getUniqueId")
@@ -14,7 +15,7 @@ export const getUniqueId = <T>() => {
   });
 }
 
-export const save = async (content: ISaveContent) => {
+export const save = async (content: SaveRequest) => {
   console.log('save')
   try {
     const response = await alovaInstance.Post<string>("/save",
@@ -28,14 +29,11 @@ export const save = async (content: ISaveContent) => {
   }
 }
 export const getTools = <T>(param: Validation[]) =>
-  alovaInstance.Post<T>("/tool", {Validations: param}, {
+  alovaInstance.Post<T>("/tool", { Validations: param }, {
     cacheFor: 0,
   });
-export const runTool = <T>(param: {
-  dt_id: string;
-  toolId: string;
-  input_assets: string;
-}) =>
+
+export const runTool = <T>(param: RunToolRequest) =>
   alovaInstance.Post<T>("/run-tool", param, {
     cacheFor: 0,
   });
