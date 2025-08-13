@@ -238,23 +238,23 @@ export const SidebarRender: React.FC = () => {
             }}
               onClick={() => {
                 console.log('tool nodeData', nodeData)
-                /*if (!nodeData?.[`${status}UploadResponse`]?.[key]?.asset_id) {
+                if (!nodeData?.[`${status}UploadResponse`]?.[key]?.asset_id) {
                   Toast.error({
                     content: '请先上传文件',
                   });
                   return
-                }*/
-                // if (!nodeData?.[`${status}Tools`]?.[key]?.tools?.find(tool => tool.name === key)?.id) {
-                //   Toast.error({
-                //     content: '请先配置工具',
-                //   });
-                //   return
-                // }
-                /*const runToolParam: RunToolRequest = {
+                }
+                if (!nodeData?.[`${status}Tools`]?.[key]?.tools?.find(tool => tool.name === key)?.id) {
+                  Toast.error({
+                    content: '请先配置工具',
+                  });
+                  return
+                }
+                const runToolParam: RunToolRequest = {
                   dt_instance_id: dtInstanceId,
                   tool_id: item.id,
                   input_assets: [nodeData?.[`${status}UploadResponse`]?.[key]?.asset_id!],
-                }*/
+                }
                 const url = "https://p1.xpra.hitwin.tech";
                 window.open(url, "_blank", "noopener,noreferrer");                // window.open("https//:pl.xpra.hitwin.tech","_blank")
                 /*runTool(runToolParam).then(res => {

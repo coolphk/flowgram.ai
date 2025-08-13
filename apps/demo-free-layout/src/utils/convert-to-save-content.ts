@@ -1,6 +1,5 @@
 // 转换函数：将ctx.document.toJSON()的数据转换为ISaveContent格式
-import { getUniqueId } from "../api/common";
-import { DataSlot, SaveRequest, ISaveValidation, Workflow } from "../typings";
+import { DataSlot, SaveRequest, ISaveValidation, Workflow, DataSlotNodeData } from "../typings";
 import { WorkflowNodeType } from "../nodes";
 
 export const convertToSaveContent = async (dtId: string, documentData: any): Promise<SaveRequest> => {
@@ -14,6 +13,7 @@ export const convertToSaveContent = async (dtId: string, documentData: any): Pro
     const nodeData = node.data;
 
     if (node.type === WorkflowNodeType.DataSlot) {
+      const typedNodeData = nodeData as DataSlotNodeData;
       // 获取data-slot节点的serverId
       const serverId = nodeData?.serverId || node.id;
 
@@ -36,21 +36,15 @@ export const convertToSaveContent = async (dtId: string, documentData: any): Pro
       }
 
       // 收集所有需要处理的验证项
-      const validationItems = nodeData?.rawData?.[nodeData.from] || [];
+      const validationItems = typedNodeData?.rawData?.[typedNodeData.from!] || [];
 
-      // 为每个验证项创建获取唯一ID的Promise
-      const validationPromises = validationItems.map(async (item: any) => {
+      const validations: ISaveValidation[] = validationItems.map((item: any) => {
         return {
-          id: await getUniqueId(),
+          id: item.id,
           name: item.name,
           validations: item.validation
         };
       });
-
-      // 等待所有验证项处理完成
-      const resolvedValidations = await Promise.all(validationPromises);
-      const validations: ISaveValidation[] = [];
-      validations.push(...resolvedValidations);
 
       return {
         type: 'dataslot',

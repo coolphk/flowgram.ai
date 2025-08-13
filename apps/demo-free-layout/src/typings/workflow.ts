@@ -20,6 +20,7 @@ export interface Validation {
 
 
 export interface Input {
+    id?: string;
     description: string;
     name: string;
     required: boolean;
@@ -28,6 +29,7 @@ export interface Input {
 }
 
 export interface Output {
+    id?: string;
     description: string;
     name: string;
     required: boolean;
@@ -47,7 +49,6 @@ export interface SaveRequest {
     dataslots: DataSlot[];
     workflows: Workflow[];
 }
-
 
 
 /*export interface RunWorkflowResponse {

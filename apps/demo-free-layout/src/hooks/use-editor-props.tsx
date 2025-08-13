@@ -4,13 +4,13 @@
  */
 
 /* eslint-disable no-console */
-import {useMemo} from "react";
+import { useMemo } from "react";
 
-import {debounce} from "lodash-es";
-import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
-import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
-import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
-import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
+import { debounce } from "lodash-es";
+import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
+import { createFreeSnapPlugin } from "@flowgram.ai/free-snap-plugin";
+import { createFreeNodePanelPlugin } from "@flowgram.ai/free-node-panel-plugin";
+import { createFreeLinesPlugin } from "@flowgram.ai/free-lines-plugin";
 import {
   FreeLayoutProps,
   getNodeForm,
@@ -19,32 +19,32 @@ import {
   WorkflowNodeLinesData,
   WorkflowPortEntity,
 } from "@flowgram.ai/free-layout-editor";
-import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
-import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
+import { createFreeGroupPlugin } from "@flowgram.ai/free-group-plugin";
+import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
 
-import {onDragLineEnd} from "../utils";
-import {FlowDocumentJSON, FlowNodeRegistry, SaveRequest} from "../typings";
-import {shortcuts} from "../shortcuts";
-import {CustomService} from "../services";
-import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
+import { onDragLineEnd } from "../utils";
+import { FlowDocumentJSON, FlowNodeRegistry, SaveRequest, Workflow } from "../typings";
+import { shortcuts } from "../shortcuts";
+import { CustomService } from "../services";
+import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
 import {
   createContextMenuPlugin,
   createRunHistoryPlugin,
   createRuntimePlugin,
   createVariablePanelPlugin,
 } from "../plugins";
-import {defaultFormMeta} from "../nodes/default-form-meta";
-import {WorkflowNodeType} from "../nodes";
-import {SelectorBoxPopover} from "../components/selector-box-popover";
-import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
-import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
-import {IconFile} from "@douyinfe/semi-icons";
-import {Toast} from "@douyinfe/semi-ui";
-import {getUniqueId, save} from "../api/common";
-import {getEnv, updateDtTemplateId} from "../providers";
-import {WebSocketService} from "../services/websocket-service";
-import {updateSaveContent} from "../providers/env-provider";
-import {convertToSaveContent} from "../utils/convert-to-save-content";
+import { defaultFormMeta } from "../nodes/default-form-meta";
+import { WorkflowNodeType } from "../nodes";
+import { SelectorBoxPopover } from "../components/selector-box-popover";
+import { BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel, } from "../components";
+import { createTypePresetPlugin, IFlowValue } from "@flowgram.ai/form-materials";
+import { IconFile } from "@douyinfe/semi-icons";
+import { Toast } from "@douyinfe/semi-ui";
+import { getUniqueId, save } from "../api/common";
+import { getEnv, updateDtTemplateId } from "../providers";
+import { WebSocketService } from "../services/websocket-service";
+import { updateSaveContent } from "../providers/env-provider";
+import { convertToSaveContent } from "../utils/convert-to-save-content";
 
 const id = 'toastid';
 let dtId = ''
@@ -62,7 +62,7 @@ export function useEditorProps(
    */
   const isWorkflowTemplateSelected = (nodeForm: any): boolean => {
     if (!nodeForm?.values.rawData) {
-      Toast.error({content: "请先选择工作流的模板类型", id});
+      Toast.error({ content: "请先选择工作流的模板类型", id });
       return false;
     }
     return true;
@@ -91,22 +91,18 @@ export function useEditorProps(
    * @param to Workflow node
    * @param line
    */
-  const handleDataSlotToWorkflow = (from: any, to: any, line: WorkflowLineEntity) => {
-    const fromForm = getNodeForm(from);
-    const toForm = getNodeForm(to);
+  const handleDataSlotToWorkflow = async (from: any, to: any, line: WorkflowLineEntity) => {
+    const fromForm = getNodeForm(from); // DataSlotForm
+    const toForm = getNodeForm(to); // WorkflowForm
     const inputsValues: Record<string, IFlowValue> = {};
     if (!fromForm?.getValueIn("rawData")) {
       //todo
-      /*const toFormRawData: Workflow = toForm?.getValueIn("rawData");
-      const toValidations = {
-
-      }
-      toFormRawData.inputs.map((input) => {
-        input.validation.map(validation=>{
-          toValidations
-        })
-      })*/
-      fromForm?.setValueIn("rawData", toForm?.getValueIn("rawData"));
+      const toFormRawData: Workflow = toForm?.getValueIn("rawData")!;
+      const promiseGetIds = toFormRawData.inputs.map(async (input) => {
+        input.id = await getUniqueId();
+      })
+      await Promise.all(promiseGetIds);
+      fromForm?.setValueIn("rawData", toFormRawData);
       fromForm?.setValueIn("from", "inputs");
     }
     fromForm?.setValueIn("outputs", toForm?.getValueIn("inputs"));
@@ -135,13 +131,23 @@ export function useEditorProps(
    * @param to DataSlot node
    * @param line Line entity containing connection info
    */
-  const handleWorkflowToDataSlot = (from: any, to: any, line: WorkflowLineEntity) => {
-    const fromForm = getNodeForm(from);
-    const toForm = getNodeForm(to);
+  const handleWorkflowToDataSlot = async (from: any, to: any, line: WorkflowLineEntity) => {
+    const fromForm = getNodeForm(from); //workflow
+    const toForm = getNodeForm(to); //dataslot
     const fromOutputs = fromForm?.getValueIn("outputs");
     const inputsValues: Record<string, IFlowValue> = {};
 
-    toForm?.setValueIn("rawData", fromForm?.getValueIn("rawData"));
+    // 获取原始数据并设置ID
+    const rawData = fromForm?.getValueIn("rawData");
+    if (rawData?.outputs) {
+      // 为每个output分配唯一ID
+      const promiseGetIds = rawData.outputs.map(async (input: any) => {
+        input.id = await getUniqueId();
+      });
+      await Promise.all(promiseGetIds);
+    }
+
+    toForm?.setValueIn("rawData", rawData);
     toForm?.setValueIn("from", "outputs");
     toForm?.setValueIn("inputs", fromForm?.getValueIn("outputs"));
 
@@ -301,7 +307,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const {dragNodeType, dropNodeType} = params;
+        const { dragNodeType, dropNodeType } = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -396,212 +402,7 @@ export function useEditorProps(
             console.error("Save error:", error);
           })
         }
-        /*{
-    "nodes": [
-        {
-            "id": "start_0",
-            "type": "start",
-            "meta": {
-                "position": {
-                    "x": 0,
-                    "y": 100
-                }
-            },
-            "data": {
-                "title": "Start"
-            }
-        },
-        {
-            "id": "data-slot_0",
-            "type": "data-slot",
-            "meta": {
-                "position": {
-                    "x": 0,
-                    "y": 300
-                }
-            },
-            "data": {
-                "title": "DataSlot",
-                "serverId": "105"
-            }
-        },
-        {
-            "id": "workflow_0",
-            "type": "workflow",
-            "meta": {
-                "position": {
-                    "x": 0,
-                    "y": 500
-                }
-            },
-            "data": {
-                "title": "Workflow",
-                "inputs": {
-                    "type": "object",
-                    "properties": {
-                        "POSCAR": {
-                            "type": "file"
-                        },
-                        "KPOINTS": {
-                            "type": "file"
-                        },
-                        "INCAR": {
-                            "type": "file"
-                        },
-                        "POTCAR": {
-                            "type": "file"
-                        }
-                    }
-                },
-                "outputs": {
-                    "type": "object",
-                    "properties": {
-                        "CONTCAR": {
-                            "type": "file"
-                        }
-                    }
-                },
-                "serverId": "106",
-                "inputsValues": {
-                    "POSCAR": {
-                        "type": "constant",
-                        "content": ""
-                    },
-                    "KPOINTS": {
-                        "type": "constant",
-                        "content": ""
-                    },
-                    "INCAR": {
-                        "type": "constant",
-                        "content": ""
-                    },
-                    "POTCAR": {
-                        "type": "constant",
-                        "content": ""
-                    }
-                },
-                "outputsValues": {},
-                "rawData": {
-                    "id": "d8613d7c-b789-48b0-8e4a-cf8b7aac127f",
-                    "name": "vasp_relax",
-                    "description": "使用VASP进行结构弛豫",
-                    "tags": [
-                        "vasp",
-                        "弛豫"
-                    ],
-                    "version": "1.0.0",
-                    "inputs": [
-                        {
-                            "name": "POSCAR",
-                            "type": "string",
-                            "description": "POSCAR文件的MinIO URL (e.g., 'bucket-name/path/to/POSCAR')",
-                            "validation": [
-                                {
-                                    "rule": "FILE_URL",
-                                    "description": "有效的文件路径"
-                                },
-                                {
-                                    "rule": "POSCAR_FILE",
-                                    "description": "POSCAR格式的结构文件"
-                                }
-                            ],
-                            "required": true
-                        },
-                        {
-                            "name": "KPOINTS",
-                            "type": "string",
-                            "description": "KPOINTS文件的MinIO URL",
-                            "validation": [
-                                {
-                                    "rule": "FILE_URL",
-                                    "description": "有效的文件路径"
-                                },
-                                {
-                                    "rule": "KPOINTS_FILE",
-                                    "description": "KPOINTS格式的结构文件"
-                                }
-                            ],
-                            "required": true
-                        },
-                        {
-                            "name": "INCAR",
-                            "type": "string",
-                            "description": "INCAR文件的MinIO URL",
-                            "validation": [
-                                {
-                                    "rule": "FILE_URL",
-                                    "description": "有效的文件路径"
-                                },
-                                {
-                                    "rule": "INCAR_FILE",
-                                    "description": "INCAR格式的结构文件"
-                                }
-                            ],
-                            "required": true
-                        },
-                        {
-                            "name": "POTCAR",
-                            "type": "string",
-                            "description": "POTCAR文件的MinIO URL",
-                            "validation": [
-                                {
-                                    "rule": "FILE_URL",
-                                    "description": "有效的文件路径"
-                                },
-                                {
-                                    "rule": "POTCAR_FILE",
-                                    "description": "POTCAR格式的结构文件"
-                                }
-                            ],
-                            "required": true
-                        }
-                    ],
-                    "outputs": [
-                        {
-                            "name": "CONTCAR",
-                            "type": "file",
-                            "description": "CONTCAR文件",
-                            "validation": [
-                                {
-                                    "rule": "FILE_URL",
-                                    "description": "有效的文件路径"
-                                },
-                                {
-                                    "rule": "POSCAR_FILE",
-                                    "description": "POSCAR格式的结构文件"
-                                }
-                            ],
-                            "required": false
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": "end_0",
-            "type": "end",
-            "meta": {
-                "position": {
-                    "x": 400,
-                    "y": 681.75
-                }
-            },
-            "data": {
-                "title": "End"
-            }
-        }
-    ],
-    "edges": [
-        {
-            "sourceNodeID": "start_0",
-            "targetNodeID": "data-slot_0"
-        },
-        {
-            "sourceNodeID": "data-slot_0",
-            "targetNodeID": "workflow_0"
-        }
-    ]
-}*/
+
       }, 1000),
       /**
        * Running line
@@ -616,7 +417,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({bind}) => {
+      onBind: ({ bind }) => {
         console.log('onBind')
         bind(CustomService).toSelf().inSingletonScope();
         bind(WebSocketService).toSelf().inSingletonScope();
@@ -767,9 +568,9 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
+                return (<span style={{ marginLeft: '8px' }}>请选择输入来源</span>);
               },
-              icon: <IconFile/>,
+              icon: <IconFile />,
               container: false,
             },
           ],

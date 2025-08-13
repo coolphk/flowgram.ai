@@ -1,9 +1,9 @@
-import {WorkflowNodeType} from "../nodes";
-import {IOTools} from "./io-tools";
-import {JsonSchema} from "./json-schema";
-import {Validation, Workflow} from "./workflow";
-import {IFlowValue} from "@flowgram.ai/form-materials";
-import {UploadResponse} from "./api";
+import { WorkflowNodeType } from "../nodes";
+import { IOTools } from "./io-tools";
+import { JsonSchema } from "./json-schema";
+import { Validation, Workflow } from "./workflow";
+import { IFlowValue } from "@flowgram.ai/form-materials";
+import { UploadResponse } from "./api";
 
 export interface DataSlot {
   description: string
@@ -21,12 +21,13 @@ export interface ValidationsDataSlot {
   id: string;
   name: string;
   validations: Validation[]
+  originalId: string
 }
 export interface DataSlotNodeData {
   title?: string,
   serverId?: string,
   rawData?: Workflow,
-  from?: string,
+  from?: "inputs" | "outputs",
   inputs?: JsonSchema,
   inputTools?: IOTools,
   inputRadio?: string,
