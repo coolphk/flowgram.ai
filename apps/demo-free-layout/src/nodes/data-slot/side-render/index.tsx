@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Field, FieldRenderProps, useNodeRender, } from "@flowgram.ai/free-layout-editor";
+import { Field, FieldRenderProps, useNodeRender, useService, } from "@flowgram.ai/free-layout-editor";
 import { Button, Checkbox, Collapse, Toast, Upload } from "@douyinfe/semi-ui";
 import { IconUpload } from "@douyinfe/semi-icons";
 import { IFlowValue, } from "@flowgram.ai/form-materials";
@@ -19,6 +19,7 @@ import { useRequest } from "alova/client";
 import { getTools, runTool } from "../../../api/common";
 import { IOTool } from "../../../typings/io-tools";
 import { RunToolRequest } from "../../../typings/api";
+import { WebSocketService } from "../../../plugins/websoket-plugin/websokect-service/websocket-service";
 
 
 export const SidebarRender: React.FC = () => {
@@ -35,6 +36,19 @@ export const SidebarRender: React.FC = () => {
   const { send } = useRequest(getTools<IOTool[]>, {
     immediate: false
   });
+  const webSocketService = useService(WebSocketService) satisfies WebSocketService;
+
+  useEffect(() => {
+    const webSocketDisposable = webSocketService.onNodeMessage((message) => {
+      console.log('onNodeMessage', message)
+    })
+    return () => {
+      console.log('onNodeMessage dispose')
+
+      webSocketDisposable.dispose()
+    }
+  }, [])
+
   useEffect(() => {
     if (!outputRadioValue) {
       return
@@ -244,7 +258,7 @@ export const SidebarRender: React.FC = () => {
                   });
                   return
                 }
-                if (!nodeData?.[`${status}Tools`]?.[key]?.tools?.find(tool => tool.name === key)?.id) {
+                if (!nodeData?.[`${status}Tools`]?.[key]?.tools?.find(tool => tool.name === item.name)?.id) {
                   Toast.error({
                     content: '请先配置工具',
                   });
@@ -255,11 +269,14 @@ export const SidebarRender: React.FC = () => {
                   tool_id: item.id,
                   input_assets: [nodeData?.[`${status}UploadResponse`]?.[key]?.asset_id!],
                 }
-                const url = "https://p1.xpra.hitwin.tech";
-                window.open(url, "_blank", "noopener,noreferrer");                // window.open("https//:pl.xpra.hitwin.tech","_blank")
+                // const url = "https://p1.xpra.hitwin.tech";
+                // window.open(url, "_blank", "noopener,noreferrer");                // window.open("https//:pl.xpra.hitwin.tech","_blank")
                 /*runTool(runToolParam).then(res => {
                   console.log('runTool res', res)
                 })*/
+                runTool(runToolParam).then(res => {
+                  console.log('runTool res', res)
+                })
               }}
             >
               {item.name}

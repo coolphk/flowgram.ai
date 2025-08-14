@@ -42,7 +42,7 @@ import { IconFile } from "@douyinfe/semi-icons";
 import { Toast } from "@douyinfe/semi-ui";
 import { getUniqueId, save } from "../api/common";
 import { getEnv, updateDtTemplateId } from "../providers";
-import { WebSocketService } from "../services/websocket-service";
+import { WebSocketService } from "../plugins/websoket-plugin/websokect-service/websocket-service";
 import { updateSaveContent } from "../providers/env-provider";
 import { convertToSaveContent } from "../utils/convert-to-save-content";
 

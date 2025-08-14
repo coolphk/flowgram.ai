@@ -7,12 +7,12 @@ import React from "react";
 import { Button } from "@douyinfe/semi-ui";
 import { useEnv } from "../../providers";
 import { ENV } from "../../constants";
-import {runDt, save} from "../../api/common";
+import { runDt, save } from "../../api/common";
 import { useService } from "@flowgram.ai/free-layout-editor";
-import { WebSocketService } from "../../services/websocket-service";
+import { WebSocketService } from "../../plugins/websoket-plugin/websokect-service/websocket-service";
 
 export const EnvButton: React.FC = () => {
-  const { setCurrentEnv, isDev, dtTemplateId, setDtInstanceId,saveContent } = useEnv();
+  const { setCurrentEnv, isDev, dtTemplateId, setDtInstanceId, saveContent } = useEnv();
   const wsService = useService(WebSocketService);
   const handleToggleEnv = () => {
     // dtTemplateId 暂定为切换到运行模式时调用run接口，进行运行
