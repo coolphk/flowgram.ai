@@ -9,7 +9,7 @@ import { useEnv } from "../../providers";
 import { ENV } from "../../constants";
 import { runDt, save } from "../../api/common";
 import { useService } from "@flowgram.ai/free-layout-editor";
-import { WebSocketService } from "../../plugins/websoket-plugin/websokect-service/websocket-service";
+import { WebSocketService } from "../../services";
 
 export const EnvButton: React.FC = () => {
   const { setCurrentEnv, isDev, dtTemplateId, setDtInstanceId, saveContent } = useEnv();
@@ -26,17 +26,15 @@ export const EnvButton: React.FC = () => {
         // console.log('save res', res)
         runDt(dtTemplateId).then(res => {
           console.log('dtInstanceId', res)
-
           setDtInstanceId(res)
           wsService.setDtInstanceId(res)
-
           wsService.connect()
-          wsService.onConnectionStateChange((state) => {
-            console.log('wsService connection state change', state)
-          })
-          wsService.onNodeMessage((msg) => {
-            console.log('wsService onNodeMessage', msg)
-          })
+          // wsService.onConnectionStateChange((state) => {
+          //   console.log('wsService connection state change', state)
+          // })
+          // wsService.onNodeMessage((msg) => {
+          //   console.log('wsService onNodeMessage', msg)
+          // })
         })
       })
       setCurrentEnv(ENV.PROD);

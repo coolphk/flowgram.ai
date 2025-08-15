@@ -4,30 +4,25 @@
  */
 
 import { Disposable, Emitter, injectable, } from "@flowgram.ai/free-layout-editor";
+import {WSMessage} from "../typings";
 
-// 定义WebSocket消息类型
-export interface WebSocketMessage {
-  /*type: string;
-  nodeId?: string;
-  payload: any;*/
-  [key: string]: any;
-}
 
 @injectable()
 export class WebSocketService {
 
   private ws: WebSocket | null = null;
-  private url: string = 'wss://ws.dt.hitwin.tech?dt_id=1';
+  private url: string = 'wss://ws.dt.hitwin.tech';
   private reconnectInterval: number = 5000; // 5秒重连间隔
   private shouldReconnect: boolean = false;
-  private messageEmitter = new Emitter<WebSocketMessage>();
+  private messageEmitter = new Emitter<WSMessage>();
   private connectionStateEmitter = new Emitter<boolean>();
-  private disposers: Disposable[] = [];
+
+
+  // private disposers: Disposable[] = [];
 
   public onMessage = this.messageEmitter.event;
   public onConnectionStateChange = this.connectionStateEmitter.event;
   private currentNodeId: string | null = null;
-
   /**
    * 设置WebSocket连接URL
    * @param url WebSocket服务器地址
@@ -37,7 +32,10 @@ export class WebSocketService {
   }
 
   public setDtInstanceId(dtInstanceId: string) {
-    this.url = this.url.replace('dt_id=1', `dt_id=${dtInstanceId}`)
+    // 使用正则表达式匹配并替换dt_id参数，支持多次调用
+    const urlObj = new URL(this.url);
+    urlObj.searchParams.set('dt_id', dtInstanceId);
+    this.url = urlObj.toString();
   }
 
   /**
@@ -64,7 +62,7 @@ export class WebSocketService {
     this.ws.onmessage = (event) => {
       try {
         console.log('Received message:', event.data);
-        const message: WebSocketMessage = JSON.parse(event.data);
+        const message: WSMessage = JSON.parse(event.data);
         this.messageEmitter.fire(message);
       } catch (error) {
         console.error('解析WebSocket消息失败:', error);
@@ -90,9 +88,9 @@ export class WebSocketService {
    * 发送消息到WebSocket服务器
    * @param message 消息内容
    */
-  public send(message: WebSocketMessage): void {
+  public send(message:string): void {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify(message));
+      this.ws.send(message);
     } else {
       console.warn('WebSocket未连接，无法发送消息');
     }
@@ -130,9 +128,9 @@ export class WebSocketService {
 
     return disposable;
   }*/
-  public onNodeMessage(callback: (message: WebSocketMessage) => void): Disposable {
-    const disposable = this.messageEmitter.event((message: WebSocketMessage) => {
-      console.log('onNodeMessage', message)
+  public onNodeMessage(callback: (message: WSMessage) => void): Disposable {
+    const disposable = this.messageEmitter.event((message: WSMessage) => {
+      // console.log('onNodeMessage', message)
       // 如果消息指定了nodeId且匹配当前节点ID，或者消息没有指定nodeId（广播消息）
       // if ((message.nodeId && message.nodeId === nodeId) || !message.nodeId) {
       callback(message);
@@ -163,16 +161,16 @@ export class WebSocketService {
   public dispose(): void {
     this.disconnect();
 
-    // 清理所有订阅
-    this.disposers.forEach(disposer => {
-      if (disposer) {
-        disposer.dispose();
-      }
-    });
+    /*    // 清理所有订阅
+        this.disposers.forEach(disposer => {
+          if (disposer) {
+            disposer.dispose();
+          }
+        });*/
 
     this.messageEmitter.dispose();
     this.connectionStateEmitter.dispose();
-    this.disposers = [];
+    // this.disposers = [];
     this.currentNodeId = null;
   }
 }

@@ -1,47 +1,57 @@
+import { WorkflowNodeType } from "../nodes"
+
 export enum WSMessageType {
-  NodeMessage = 'nodeMessage',
-  FileMessage = 'fileMessage',
-  RunToolMessage = 'runtoolMessage',
+  // NodeMessage = 'nodeMessage',
+  FileMessage = 'UPLOAD_FILE',
+  RunToolMessage = 'RUN_TOOL',
+  RunWorkFlowMessage = 'RUN_WORKFLOW',
 }
 
-export interface WSNodePayload {
-  nodeId: string,
-  inputsValues: WSNodeMessage[],
+export interface WSFilePayload {
+  description: string
+  assetsId: string
+  status: string
 }
 
-export interface WSNodeMessage {
-  id: string, //生成文件id
-  name: string, //生成文件名称(POSCAR,KPOINTS等)
-  status: string, //文件状态(success,failed等)
+export interface WSRunToolPayload {
+  status: string,
+  assetsId: string[],
+  toolId: string,
+  url: string,
 }
-export interface WSFilePayload extends WSNodeMessage {
+interface WSRunWorkflowNextNode {
+  id: string,
+  type: WorkflowNodeType,
+  assets: [{
+    id: string,
+    name: string,
+    status: string,
+  }],
 }
-interface WSMessageBase {
+export interface WSRunWorkflowPayload {
+  status: string,
+  nextNodes: WSRunWorkflowNextNode[]
+}
+interface WSBaseMessage {
+  nodeId: string;
   type: WSMessageType;
   timestamp: number;
-  payload: WSNodePayload | WSFilePayload;
+  payload: WSFilePayload | WSRunToolPayload | WSRunWorkflowPayload;
 }
-interface WSNodeMessageWrapper extends WSMessageBase {
-  type: WSMessageType.NodeMessage;
-  payload: WSNodePayload;
-}
-
-interface WSFileMessageWrapper extends WSMessageBase {
+export interface WSFileMessage extends WSBaseMessage {
   type: WSMessageType.FileMessage;
   payload: WSFilePayload;
 }
 
-export type WSMessage = WSNodeMessageWrapper | WSFileMessageWrapper;
+export interface WSRunToolMessage extends WSBaseMessage {
+  type: WSMessageType.RunToolMessage;
+  payload: WSRunToolPayload;
+}
 
-/*const a: WSMessage = {
-  type:'nodeMessage',
-  payload: {
-    nodeId: 'data-slot-1',
-    inputsValues: [{
-      id:'生成文件id',
-      name:'生成文件名称(POSCAR,KPOINTS等)',
-      status:'success',
-    }]
-  },
-  timestamp: 1694560000000,
-}*/
+interface WSRunWorkFlowMessage extends WSBaseMessage {
+  type: WSMessageType.RunWorkFlowMessage;
+  payload: WSRunWorkflowPayload;
+}
+
+export type WSMessage = WSFileMessage | WSRunToolMessage | WSRunWorkFlowMessage;
+

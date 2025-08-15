@@ -4,5 +4,5 @@
  */
 
 
-
-export { CustomService } from './custom-service';
+export {CustomService} from './custom-service';
+export {WebSocketService} from './web-socket-service';
