@@ -54,20 +54,26 @@ export const SidebarRender: React.FC = () => {
     };
 
     if (workflow) {
-      workflow.inputs.forEach((item) => {
+      workflow.inputs.forEach((item,index) => {
         base.data.inputsValues![item.name] = nodeData?.inputsValues?.[
           item.name
         ] || {
           type: "constant",
           content: "",
         };
-        base.data.inputs!.properties![item.name] = {
+        /*base.data.inputs!.properties![item.name] = {
           type: "array",
           items:{
             type:"file"
           },
           extra:{
-            index:1
+            index
+          }
+        };*/
+        base.data.inputs!.properties![item.name] = {
+          type: "file",
+          extra:{
+            index
           }
         };
       });
