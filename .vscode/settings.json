@@ -138,5 +138,6 @@
   },
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
-  }
+  },
+  "kiroAgent.configureMCP": "Enabled"
 }
