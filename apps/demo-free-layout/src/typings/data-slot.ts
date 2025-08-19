@@ -21,7 +21,6 @@ export interface ValidationsDataSlot {
   id: string;
   name: string;
   validations: Validation[]
-  originalId: string
 }
 export interface DataSlotNodeData {
   title?: string,

@@ -4,34 +4,34 @@
  */
 
 
-
-import React, { FC } from 'react';
+import React, {FC} from 'react';
 
 import styled from 'styled-components';
-import { NodePanelRenderProps } from '@flowgram.ai/free-node-panel-plugin';
-import { useClientContext, WorkflowNodeEntity } from '@flowgram.ai/free-layout-editor';
+import {NodePanelRenderProps} from '@flowgram.ai/free-node-panel-plugin';
+import {useClientContext, WorkflowNodeEntity, WorkflowPortEntity} from '@flowgram.ai/free-layout-editor';
 
-import { FlowNodeRegistry } from '../../typings';
-import { nodeRegistries } from '../../nodes';
+import {FlowNodeRegistry} from '../../typings';
+import {nodeRegistries, WorkflowNodeType} from '../../nodes';
 
 const NodeWrap = styled.div`
-  width: 100%;
-  height: 32px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 19px;
-  padding: 0 15px;
-  &:hover {
-    background-color: hsl(252deg 62% 55% / 9%);
-    color: hsl(252 62% 54.9%);
-  }
+    width: 100%;
+    height: 32px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 19px;
+    padding: 0 15px;
+
+    &:hover {
+        background-color: hsl(252deg 62% 55% / 9%);
+        color: hsl(252 62% 54.9%);
+    }
 `;
 
 const NodeLabel = styled.div`
-  font-size: 12px;
-  margin-left: 10px;
+    font-size: 12px;
+    margin-left: 10px;
 `;
 
 interface NodeProps {
@@ -46,29 +46,31 @@ function Node(props: NodeProps) {
     <NodeWrap
       data-testid={`demo-free-node-list-${props.label}`}
       onClick={props.disabled ? undefined : props.onClick}
-      style={props.disabled ? { opacity: 0.3 } : {}}
+      style={props.disabled ? {opacity: 0.3} : {}}
     >
-      <div style={{ fontSize: 14 }}>{props.icon}</div>
+      <div style={{fontSize: 14}}>{props.icon}</div>
       <NodeLabel>{props.label}</NodeLabel>
     </NodeWrap>
   );
 }
 
 const NodesWrap = styled.div`
-  max-height: 500px;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+    max-height: 500px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 interface NodeListProps {
   onSelect: NodePanelRenderProps['onSelect'];
   containerNode?: WorkflowNodeEntity;
+  fromPort?: WorkflowPortEntity;
 }
 
 export const NodeList: FC<NodeListProps> = (props) => {
-  const { onSelect, containerNode } = props;
+  const {onSelect, containerNode, fromPort} = props;
   const context = useClientContext();
   const handleClick = (e: React.MouseEvent, registry: FlowNodeRegistry) => {
     const json = registry.onAdd?.(context);
@@ -79,8 +81,16 @@ export const NodeList: FC<NodeListProps> = (props) => {
     });
   };
   return (
-    <NodesWrap style={{ width: 80 * 2 + 20 }}>
+    //workflow节点只能添加 data-slot,data-slot节点只能添加workflow
+    <NodesWrap style={{width: 80 * 2 + 20}}>
       {nodeRegistries
+        .filter((register) => {
+          if (fromPort?.node.flowNodeType === WorkflowNodeType.Workflow) {
+            return register.type === WorkflowNodeType.DataSlot;
+          } else if (fromPort?.node.flowNodeType === WorkflowNodeType.DataSlot || !fromPort) {
+            return register.type === WorkflowNodeType.Workflow;
+          }
+        })
         .filter((register) => register.meta.nodePanelVisible !== false)
         .filter((register) => {
           if (register.meta.onlyInContainer) {
@@ -88,17 +98,18 @@ export const NodeList: FC<NodeListProps> = (props) => {
           }
           return true;
         })
-        .map((registry) => (
-          <Node
-            key={registry.type}
-            disabled={!(registry.canAdd?.(context) ?? true)}
-            icon={
-              <img style={{ width: 10, height: 10, borderRadius: 4 }} src={registry.info?.icon} />
-            }
-            label={registry.type as string}
-            onClick={(e) => handleClick(e, registry)}
-          />
-        ))}
+        .map((registry) => {
+          return (
+            <Node
+              key={registry.type}
+              disabled={!(registry.canAdd?.(context) ?? true)}
+              icon={
+                <img style={{width: 10, height: 10, borderRadius: 4}} src={registry.info?.icon}/>
+              }
+              label={registry.type as string}
+              onClick={(e) => handleClick(e, registry)}
+            />)
+        })}
     </NodesWrap>
   );
 };

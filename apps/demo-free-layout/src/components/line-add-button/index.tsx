@@ -26,6 +26,7 @@ import {
 import './index.less';
 import { useVisible } from './use-visible';
 import { IconPlusCircle } from './button';
+import { TriggerContextUtils } from '../../utils/trigger-context';
 
 export const LineAddButton = (props: LineRenderProps) => {
   const { line, selected, hovered, color } = props;
@@ -54,6 +55,13 @@ export const LineAddButton = (props: LineRenderProps) => {
       containerNode,
       panelProps: {
         enableScrollClose: true,
+        triggerContext: TriggerContextUtils.createLineButtonTrigger(
+          fromPort.node,
+          position,
+          line.id,
+          fromPort.id,
+          toPort.id
+        )
       },
     });
     if (!result) {

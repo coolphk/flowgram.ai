@@ -20,6 +20,7 @@ import {
   WorkflowDragService,
 } from '@flowgram.ai/free-layout-editor';
 import { ContainerUtils } from '@flowgram.ai/free-container-plugin';
+import { TriggerContextUtils } from '../../utils/trigger-context';
 
 @injectable()
 export class ContextMenuLayer extends Layer {
@@ -50,7 +51,13 @@ export class ContextMenuLayer extends Layer {
     this.nodePanelService.callNodePanel({
       position: mousePos,
       containerNode,
-      panelProps: {},
+      panelProps: {
+        triggerContext: TriggerContextUtils.createContextMenuTrigger(
+          containerNode,
+          mousePos,
+          e
+        )
+      },
       // handle node selection from panel - 处理从面板中选择节点
       onSelect: async (panelParams?: NodePanelResult) => {
         if (!panelParams) {
@@ -69,7 +76,7 @@ export class ContextMenuLayer extends Layer {
         this.selectService.select(node);
       },
       // handle panel close - 处理面板关闭
-      onClose: () => {},
+      onClose: () => { },
     });
   }
 

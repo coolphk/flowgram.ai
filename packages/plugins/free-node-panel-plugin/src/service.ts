@@ -4,24 +4,21 @@
  */
 
 
-
-
-
-import { inject, injectable } from 'inversify';
-import { DisposableCollection } from '@flowgram.ai/utils';
-import type { PositionSchema } from '@flowgram.ai/utils';
+import {inject, injectable} from 'inversify';
+import {DisposableCollection} from '@flowgram.ai/utils';
+import type {PositionSchema} from '@flowgram.ai/utils';
 import {
   WorkflowDocument,
   WorkflowDragService,
   WorkflowLinesManager,
   WorkflowNodeEntity,
 } from '@flowgram.ai/free-layout-core';
-import { WorkflowSelectService } from '@flowgram.ai/free-layout-core';
-import { WorkflowNodeJSON } from '@flowgram.ai/free-layout-core';
-import { HistoryService } from '@flowgram.ai/free-history-plugin';
-import { PlaygroundConfigEntity } from '@flowgram.ai/core';
+import {WorkflowSelectService} from '@flowgram.ai/free-layout-core';
+import {WorkflowNodeJSON} from '@flowgram.ai/free-layout-core';
+import {HistoryService} from '@flowgram.ai/free-history-plugin';
+import {PlaygroundConfigEntity} from '@flowgram.ai/core';
 
-import { WorkflowNodePanelUtils } from './utils';
+import {WorkflowNodePanelUtils} from './utils';
 import type {
   CallNodePanel,
   CallNodePanelParams,
@@ -69,7 +66,6 @@ export class WorkflowNodePanelService {
   ): Promise<WorkflowNodeEntity | WorkflowNodeEntity[] | undefined> {
     const {
       panelPosition,
-      fromPort,
       enableMultiAdd = false,
       panelProps = {},
       containerNode,
@@ -86,9 +82,10 @@ export class WorkflowNodePanelService {
       this.callNodePanel({
         position: panelPosition,
         enableMultiAdd,
-        panelProps,
+        panelProps: {
+          ...panelProps,
+        },
         containerNode: WorkflowNodePanelUtils.getContainerNode({
-          fromPort,
           containerNode,
         }),
         onSelect: async (panelParams?: NodePanelResult) => {
@@ -151,7 +148,7 @@ export class WorkflowNodePanelService {
       return;
     }
 
-    const { nodeType, selectEvent, nodeJSON } = panelParams;
+    const {nodeType, selectEvent, nodeJSON} = panelParams;
 
     const containerNode = WorkflowNodePanelUtils.getContainerNode({
       fromPort,
@@ -160,7 +157,7 @@ export class WorkflowNodePanelService {
 
     // 判断是否可以添加节点
     if (canAddNode) {
-      const canAdd = canAddNode({ nodeType, containerNode });
+      const canAdd = canAddNode({nodeType, containerNode});
       if (!canAdd) {
         return;
       }
@@ -171,16 +168,16 @@ export class WorkflowNodePanelService {
 
     // 自定义坐标
     const nodePosition: PositionSchema = callParams.customPosition
-      ? callParams.customPosition({ nodeType, selectPosition })
+      ? callParams.customPosition({nodeType, selectPosition})
       : WorkflowNodePanelUtils.adjustNodePosition({
-          nodeType,
-          position: enableSelectPosition ? selectPosition : panelPosition,
-          fromPort,
-          toPort,
-          containerNode,
-          document: this.document,
-          dragService: this.dragService,
-        });
+        nodeType,
+        position: enableSelectPosition ? selectPosition : panelPosition,
+        fromPort,
+        toPort,
+        containerNode,
+        document: this.document,
+        dragService: this.dragService,
+      });
 
     // 创建节点
     const node: WorkflowNodeEntity = this.document.createWorkflowNodeByType(

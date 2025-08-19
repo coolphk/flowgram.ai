@@ -4,8 +4,7 @@
  */
 
 
-
-import { useCallback } from 'react';
+import {useCallback} from 'react';
 
 import {
   WorkflowNodePanelService,
@@ -37,12 +36,14 @@ export const usePortClick = () => {
   const onPortClick = useCallback(async (e: React.MouseEvent, port: WorkflowPortEntity) => {
     const mousePos = playground.config.getPosFromMouseEvent(e);
     const containerNode = port.node.parent;
+    console.log('port.node', port.node)
     // open node selection panel - 打开节点选择面板
     const result = await nodePanelService.singleSelectNodePanel({
       position: mousePos,
       containerNode,
       panelProps: {
         enableScrollClose: true,
+        fromPort: port,
       },
     });
 
@@ -52,7 +53,7 @@ export const usePortClick = () => {
     }
 
     // get selected node type and data - 获取选择的节点类型和数据
-    const { nodeType, nodeJSON } = result;
+    const {nodeType, nodeJSON} = result;
 
     // calculate position for the new node - 计算新节点的位置
     const nodePosition = WorkflowNodePanelUtils.adjustNodePosition({

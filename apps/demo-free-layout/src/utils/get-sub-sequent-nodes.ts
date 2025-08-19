@@ -16,6 +16,7 @@ export const getSubsequentNodes: IGetSubsequentNodes = (params) => {
   const linkedBrothers = new Set();
   const linesMap = new Map<string, string[]>();
   const result: WorkflowNodeEntity[] = [];
+
   linesManager.getAllLines().forEach((line) => {
     if (!linesMap.has(line.from.id)) {
       linesMap.set(line.from.id, []);

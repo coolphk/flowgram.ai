@@ -6,8 +6,11 @@
 import {alovaInstance} from "./index";
 import {RunWorkFlowRequest} from "../typings";
 
-export const getWorkflows = <T>() =>
+export const getWorkflows = <T>(dataSlotId?: string) =>
   alovaInstance.Get<T>("/workflow", {
+    params: {
+      id: dataSlotId,
+    },
     cacheFor: 0
   });
 export const runWorkFlow = (params: RunWorkFlowRequest) =>
