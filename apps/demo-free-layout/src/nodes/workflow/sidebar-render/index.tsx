@@ -4,8 +4,8 @@
  */
 
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useMemo, useState } from "react";
-import { useRequest } from "alova/client";
+import React, {useEffect, useMemo, useState} from "react";
+import {useRequest} from "alova/client";
 import {
   Field,
   FieldRenderProps,
@@ -13,18 +13,19 @@ import {
   useNodeRender,
   WorkflowNodeLinesData,
 } from "@flowgram.ai/free-layout-editor";
-import { Collapse, Divider, Select } from "@douyinfe/semi-ui";
+import {Collapse, Divider, Select} from "@douyinfe/semi-ui";
 
-import { FlowNodeJSON, JsonSchema, ValidationsDataSlot, Workflow } from "../../../typings";
-import { JsonSchemaEditor } from "@flowgram.ai/form-materials";
-import { FormHeader, FormInputs } from "../../../form-components";
-import { getWorkflows } from "../../../api/workflow";
-import { WorkflowNodeType } from "../../constants";
+import {FlowNodeJSON, JsonSchema, ValidationsDataSlot, Workflow} from "../../../typings";
+import {JsonSchemaEditor} from "@flowgram.ai/form-materials";
+import {FormHeader, FormInputs} from "../../../form-components";
+import {getWorkflows} from "../../../api/workflow";
+import {WorkflowNodeType} from "../../constants";
 
 export const SidebarRender: React.FC = () => {
-  const { data: nodeData, form, node } = useNodeRender();
+  const {data: nodeData, form, node} = useNodeRender();
   const preNode = node?.getData(WorkflowNodeLinesData).inputNodes[0]
-  const preNodeForm = getNodeForm?.(preNode)
+  const preNodeForm = preNode && getNodeForm?.(preNode)
+  console.log('preNodeForm', preNodeForm)
   const preNodeRawDataOutputs: ValidationsDataSlot[] = preNodeForm?.getValueIn("rawData")?.outputs || []
   const preDataSlotId = form?.getValueIn("preDataSlotId") || ""
   //如果前一个节点是数据插槽，并且是outputs
@@ -40,14 +41,14 @@ export const SidebarRender: React.FC = () => {
 
   const [wfId, setWfId] = useState<string>(nodeData?.rawData?.id || "");
   // const [dataSlotId, setDataSlotId] = useState<string>(preNodeRawDataOutputs?.[0].id || "")
-
+  console.log('preDataSlotId', preDataSlotId)
   const {
     data,
     error,
     send
   } = useRequest(preDataSlotId ? getWorkflows<Workflow[]>(preDataSlotId) : getWorkflows<Workflow[]>, {
     initialData: [],
-    immediate: true,
+    immediate: !preDataSlotId,
   });
 
   // 当 dataSlotId 变化时，使用 refresh 方法重新请求
@@ -94,7 +95,7 @@ export const SidebarRender: React.FC = () => {
       workflow.inputs.forEach((item, index) => {
         base.data.inputsValues![item.name] = nodeData?.inputsValues?.[
           item.name
-        ] || {
+          ] || {
           type: "constant",
           content: "",
         };
@@ -156,16 +157,16 @@ export const SidebarRender: React.FC = () => {
 
   return (
     <>
-      <FormHeader />
-      <Divider />
+      <FormHeader/>
+      <Divider/>
       <Collapse defaultActiveKey={["1", "2", "3"]}>
         <Collapse.Panel header="工作流" itemKey="1">
           <>
             {preNodeIsDataSlotOutputs && (
               <Field<string> name="preDataSlotId">
-                {({ field: { value, onChange } }: FieldRenderProps<string>) => (
+                {({field: {value, onChange}}: FieldRenderProps<string>) => (
                   <Select
-                    style={{ width: "100%", marginBottom: '8px' }}
+                    style={{width: "100%", marginBottom: '8px'}}
                     placeholder="请选择数据插槽"
                     value={value} // 绑定 value 到 preDataSlotId 状态
                     onChange={(value) => {
@@ -185,7 +186,7 @@ export const SidebarRender: React.FC = () => {
               </Field>
             )}
             <Select
-              style={{ width: "100%" }}
+              style={{width: "100%"}}
               placeholder="请选择工作流"
               value={wfId} // 绑定 value 到 wfId 状态
               onChange={(value) => {
@@ -201,14 +202,14 @@ export const SidebarRender: React.FC = () => {
           </>
         </Collapse.Panel>
         <Collapse.Panel header="输入参数" itemKey="2">
-          <FormInputs />
+          <FormInputs/>
         </Collapse.Panel>
         <Collapse.Panel header="输出参数" itemKey="3">
           <Field
             name="outputs"
             render={({
-              field: { value, onChange },
-            }: FieldRenderProps<JsonSchema>) => (
+                       field: {value, onChange},
+                     }: FieldRenderProps<JsonSchema>) => (
               <>
                 <JsonSchemaEditor
                   value={value}

@@ -22,18 +22,30 @@ interface PropsType {
   warning?: boolean;
 }
 
+/*interface Asset {
+  "asset_id": string,
+  "dataslot_id": string,
+  "status": WSAssetStatus,
+  "task_id": string,
+  "object_path": string,
+  "filename": string,
+  "dt_id": string,
+}*/
 export function DisplaySchemaTag({value = {}, showIconInTree, title, warning}: PropsType) {
   const typeManager = useTypeManager();
   const icon =
     typeManager?.getDisplayIcon(value) || typeManager.getDisplayIcon({type: 'unknown'});
-  console.log('title', title)
+  console.log('DisplaySchemaTag title', title)
   const {node} = useNodeRender()
-  const values = useWatchFormValueIn(node, `outputUploadResponse`)
-  console.log('values', values)
+  const outputSlot = useWatchFormValueIn(node, `outputSlot`)
+  const inputSlot = useWatchFormValueIn(node, `inputSlot`)
+
+  console.log('DisplaySchemaTag outputSlot', outputSlot)
+  console.log('DisplaySchemaTag inputSlot', inputSlot)
   const [color, setColor] = useState('white')
   useEffect(() => {
-    setColor(values?.color || 'white')
-  }, [values]);
+    setColor(inputSlot?.color || 'white')
+  }, [outputSlot, inputSlot]);
   return (
     <Popover
       content={

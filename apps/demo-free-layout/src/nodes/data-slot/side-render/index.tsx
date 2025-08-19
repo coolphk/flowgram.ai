@@ -218,7 +218,10 @@ export const SidebarRender: React.FC = () => {
                 onSuccess={(res) => {
                   // 这里可以更新节点数据
                   if (form) {
-                    form.setValueIn(`${status}UploadResponse.${key}`, res.data);
+                    form.setValueIn(`${status}Slot`, {
+                      ...form.getValueIn(`${status}Slot`),
+                      [key]: res.data
+                    });
                   }
                 }}
               >
@@ -237,7 +240,7 @@ export const SidebarRender: React.FC = () => {
               }}
                    onClick={() => {
                      console.log('tool nodeData', nodeData)
-                     if (!nodeData?.[`${status}UploadResponse`]?.[key]?.asset_id) {
+                     if (!nodeData?.[`${status}Slot`]?.[key]?.asset_id) {
                        Toast.error({
                          content: '请先上传文件',
                        });
@@ -252,7 +255,7 @@ export const SidebarRender: React.FC = () => {
                      const runToolParam: RunToolRequest = {
                        dt_instance_id: dtInstanceId,
                        tool_id: item.id,
-                       input_assets: [nodeData?.[`${status}UploadResponse`]?.[key]?.asset_id!],
+                       input_assets: [nodeData?.[`${status}Slot`]?.[key]?.asset_id!],
                        node_id: node.id
                      }
                      console.log('runToolParam', runToolParam);

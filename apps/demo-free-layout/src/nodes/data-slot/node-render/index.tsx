@@ -4,31 +4,32 @@
  */
 
 import React from "react";
-import {DisplayInputsValues, DisplayOutputs, IFlowValue} from "@flowgram.ai/form-materials";
+import { DisplayInputsValues, DisplayOutputs, IFlowValue } from "@flowgram.ai/form-materials";
 
-import {FormContent} from "../../../form-components";
-import {Field} from "@flowgram.ai/free-layout-editor";
-import {Tag} from "@douyinfe/semi-ui";
+import { FormContent } from "../../../form-components";
+import { Field } from "@flowgram.ai/free-layout-editor";
+// import { Tag } from "@douyinfe/semi-ui";
 
 export const NodeRender: React.FC = () => {
   return (
     <FormContent>
-      <div style={{display: "flex",gap:"8px"}}>
-        <Tag>输入：</Tag> <Field<
+      <div style={{ display: "flex", gap: "8px" }}>
+        {/* <Tag>输入：</Tag>  */}
+        <Field<
           Record<string, IFlowValue | undefined> | undefined
         > name="inputsValues">
-        {({field: {value}}) => (
-          <>
-            <DisplayInputsValues value={value}/>
-          </>
-        )}
-      </Field>
+          {({ field: { value } }) => (
+            <>
+              <DisplayInputsValues value={value} />
+            </>
+          )}
+        </Field>
       </div>
-      <div style={{display: "flex",gap:"8px"}}>
-        <Tag>
+      <div style={{ display: "flex", gap: "8px" }}>
+        {/* <Tag>
           输出：
-        </Tag>
-        <DisplayOutputs displayFromScope/>
+        </Tag> */}
+        <DisplayOutputs displayFromScope />
       </div>
 
     </FormContent>

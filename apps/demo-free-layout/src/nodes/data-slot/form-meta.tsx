@@ -30,8 +30,9 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
     const websocketServiceDispose = websocketService.onNodeMessage((message) => {
       if (message.nodeId != node.id) {
         return
+      } else {
+        console.log('')
       }
-
     })
     return () => {
       websocketServiceDispose.dispose()
@@ -40,14 +41,14 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
   if (isSidebar) {
     return (
       <>
-        <FormHeader/>
+        <FormHeader primaryColor='#ECFBE5' />
         <SidebarRender/>
       </>
     );
   }
   return (
     <>
-      <FormHeader/>
+      <FormHeader primaryColor='#ECFBE5'/>
       <NodeRender/>
     </>
   );

@@ -42,17 +42,18 @@ export function WorkflowHeader() {
         dt_instance_id: dtInstanceId,
         workflow_id: nodeData.serverId!,
         input_assets: [],//上游节点中上传的文件Id
-        output_slot_id: [] //从下游节点的rawData.outputs中获取
+        output_slot_id: [], //从下游节点的rawData.outputs中获取
+        node_id: node.id
       }
       if (!preNodeFormData || !nextNodeFormData) {
         return
       } else {
         if (preNodeFormData.from === 'inputs') {
-          if (isEmpty(preNodeFormData.outputUploadResponse)) {
+          if (isEmpty(preNodeFormData.outputAsset)) {
             Toast.error("请先上传文件")
             return
           } else {
-            runWorkFlowParam.input_assets = Object.values(preNodeFormData.outputUploadResponse!).map((item) => item.asset_id)
+            runWorkFlowParam.input_assets = Object.values(preNodeFormData.outputAsset!).map((item) => item.asset_id)
           }
         }
         if (nextNodeFormData.from === 'outputs') {

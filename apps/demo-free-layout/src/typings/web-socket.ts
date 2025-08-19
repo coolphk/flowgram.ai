@@ -1,10 +1,18 @@
-import { WorkflowNodeType } from "../nodes"
+import {WorkflowNodeType} from "../nodes"
 
 export enum WSMessageType {
   // NodeMessage = 'nodeMessage',
   FileMessage = 'UPLOAD_FILE',
   RunToolMessage = 'RUN_TOOL',
-  RunWorkFlowMessage = 'RUN_WORKFLOW',
+  // RunWorkFlowMessage = 'RUN_WORKFLOW',
+  RunWorkFlowMessage = 'WORKFLOW_STATUS',
+  AssetMessage = 'ASSET_STATUS',
+}
+
+export enum WSAssetStatus {
+  Success = 'success',
+  Failed = 'failed',
+  NotYet = 'notyet',
 }
 
 export interface WSFilePayload {
@@ -19,6 +27,13 @@ export interface WSRunToolPayload {
   toolId: string,
   url: string,
 }
+
+// cx定义的结构
+export interface WSAssetPayload {
+  status: string,
+  assetsId: string,
+}
+
 interface WSRunWorkflowNextNode {
   id: string,
   type: WorkflowNodeType,
@@ -28,29 +43,47 @@ interface WSRunWorkflowNextNode {
     status: string,
   }],
 }
+
+// 我定义的结构
 export interface WSRunWorkflowPayload {
   status: string,
   nextNodes: WSRunWorkflowNextNode[]
 }
+
+export interface WSAssetPayload {
+  status: string,
+  assetsId: string,
+}
+
 interface WSBaseMessage {
   nodeId: string;
   type: WSMessageType;
   timestamp: number;
-  payload: WSFilePayload | WSRunToolPayload | WSRunWorkflowPayload;
 }
+
+// 上传文件后回执
 export interface WSFileMessage extends WSBaseMessage {
   type: WSMessageType.FileMessage;
   payload: WSFilePayload;
 }
 
+// 运行工具后回执
 export interface WSRunToolMessage extends WSBaseMessage {
   type: WSMessageType.RunToolMessage;
   payload: WSRunToolPayload;
 }
 
-interface WSRunWorkFlowMessage extends WSBaseMessage {
+// 运行工作流后回执
+export interface WSRunWorkFlowMessage extends WSBaseMessage {
   type: WSMessageType.RunWorkFlowMessage;
-  payload: WSRunWorkflowPayload;
+  // payload: WSRunWorkflowPayload;
+  payload: WSAssetPayload;
+}
+
+// 资产状态变更回执
+export interface WSAssetMessage extends WSBaseMessage {
+  type: WSMessageType.AssetMessage;
+  payload: WSAssetPayload;
 }
 
 export type WSMessage = WSFileMessage | WSRunToolMessage | WSRunWorkFlowMessage;

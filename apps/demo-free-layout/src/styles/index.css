@@ -13,6 +13,10 @@
   --g-workflow-port-color-secondary: #9197f1;
   --g-workflow-port-color-error: #ff0000;
   --g-workflow-port-color-background: #ffffff;
+  /*--g-workflow-node-color-primary: #62ef21;*/
+  /*--g-workflow-node-color-secondary: #9197f1;*/
+  /*--g-workflow-node-color-error: #ff0000;*/
+  /*--g-workflow-node-color-background: #ffffff;*/
 
   /* Line colors */
   --g-workflow-line-color-hidden: transparent;

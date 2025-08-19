@@ -3,7 +3,7 @@ import { IOTools } from "./io-tools";
 import { JsonSchema } from "./json-schema";
 import { Validation, Workflow } from "./workflow";
 import { IFlowValue } from "@flowgram.ai/form-materials";
-import { UploadResponse } from "./api";
+import { WSAssetStatus } from "./web-socket";
 
 export interface DataSlot {
   description: string
@@ -22,6 +22,24 @@ export interface ValidationsDataSlot {
   name: string;
   validations: Validation[]
 }
+export interface Asset {
+  "asset_id": string,
+  "dataslot_id": string,
+  "status": WSAssetStatus,
+  "task_id": string,
+  "object_path": string,
+  "filename": string,
+  "dt_id": string,
+}
+// 资产状态对应的颜色配置
+export const DEFAULT_ASSET_STATUS_COLORS: Record<WSAssetStatus, string> = {
+  [WSAssetStatus.Success]: '#52c41a',  // 绿色
+  [WSAssetStatus.Failed]: '#ff4d4f',   // 红色
+  [WSAssetStatus.NotYet]: '#d9d9d9',   // 灰色
+} as const;
+
+export type AssetStatusColors = typeof DEFAULT_ASSET_STATUS_COLORS;
+
 export interface DataSlotNodeData {
   title?: string,
   serverId?: string,
@@ -31,9 +49,9 @@ export interface DataSlotNodeData {
   inputTools?: IOTools,
   inputRadio?: string,
   inputsValues?: Record<string, IFlowValue>,
-  inputUploadResponse?: Record<string, UploadResponse>,
+  inputSlot?: Record<string, Asset>, //如果需要改成多文件上传，这里可以改成Asset[]
   outputs?: JsonSchema,
   outputTools?: IOTools,
   outputRadio?: string,
-  outputUploadResponse?: Record<string, UploadResponse>,
+  outputSlot?: Record<string, Asset>,
 }

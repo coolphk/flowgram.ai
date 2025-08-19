@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import {alovaInstance} from "./index";
-import {RunWorkFlowRequest} from "../typings";
+import { alovaInstance } from "./index";
+import { RunWorkFlowRequest } from "../typings";
 
 export const getWorkflows = <T>(dataSlotId?: string) =>
   alovaInstance.Get<T>("/workflow", {
@@ -14,4 +14,4 @@ export const getWorkflows = <T>(dataSlotId?: string) =>
     cacheFor: 0
   });
 export const runWorkFlow = (params: RunWorkFlowRequest) =>
-  alovaInstance.Post<{ dtInstanceId: string }>(`/workflow/run`, params);
+  alovaInstance.Post<{ dtInstanceId: string }>(`/run-workflow`, params);

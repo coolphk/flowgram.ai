@@ -81,10 +81,10 @@ export const DemoTools = () => {
             onClick={() => history.redo()}
           />
         </Tooltip>
-        <RunHistorySwitch
+        {/* <RunHistorySwitch
           runHistoryVisible={runHistoryVisible}
           setRunHistoryVisible={setRunHistoryVisible}
-        />
+        /> */}
         {/*<RunHistory visible={runHistoryVisible} />*/}
         <Divider layout="vertical" style={{ height: "16px" }} margin={3} />
         <AddNode disabled={playground.config.readonly} />
