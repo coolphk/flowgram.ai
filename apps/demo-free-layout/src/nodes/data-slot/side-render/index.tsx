@@ -160,7 +160,10 @@ export const SidebarRender: React.FC = () => {
   const outputsSchema = useMemo(() => {
     return nodeData?.outputs || { type: 'object', properties: {} };
   }, [nodeData?.outputs]);
+  const renderNotification = () => {
 
+  }
+  // 获取已经上传的文件列表
   const getFileList = (key: string, direction: 'input' | 'output') => {
     // nodeData?.[`${status}Slot`]?.[key]
     const nodeDatum = nodeData?.[`${direction}Slot`];
@@ -282,7 +285,7 @@ export const SidebarRender: React.FC = () => {
                 // const url = "https://p1.xpra.hitwin.tech";
                 // window.open(url, "_blank", "noopener,noreferrer");                // window.open("https//:pl.xpra.hitwin.tech","_blank")
                 runTool(runToolParam).then(res => {
-                  Notification.info({ content: '工具启动中' })
+                  Notification.info({ content: '工具启动中', duration: 0 })
                   // console.log('runTool res', res)
                 })
                 /*runTool(runToolParam).then(res => {

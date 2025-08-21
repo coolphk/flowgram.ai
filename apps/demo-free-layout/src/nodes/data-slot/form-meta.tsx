@@ -51,6 +51,9 @@ export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
           }
         }
       }
+      if (message.type === WSMessageType.RunToolMessage) {
+        console.log('RunToolMessage', message.payload)
+      }
     })
     return () => {
       websocketServiceDispose.dispose()
