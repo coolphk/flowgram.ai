@@ -1,4 +1,4 @@
-import {WorkflowNodeType} from "../nodes"
+import { WorkflowNodeType } from "../nodes"
 
 export enum WSMessageType {
   // NodeMessage = 'nodeMessage',
@@ -7,6 +7,7 @@ export enum WSMessageType {
   // RunWorkFlowMessage = 'RUN_WORKFLOW',
   RunWorkFlowMessage = 'WORKFLOW_STATUS',
   AssetMessage = 'ASSET_STATUS',
+  HightLightMessage = 'HIGHLIGHT_ASSET',
 }
 
 export enum WSAssetStatus {
@@ -28,11 +29,6 @@ export interface WSRunToolPayload {
   url: string,
 }
 
-// cx定义的结构
-export interface WSAssetPayload {
-  status: string,
-  assetsId: string,
-}
 
 interface WSRunWorkflowNextNode {
   id: string,
@@ -50,9 +46,18 @@ export interface WSRunWorkflowPayload {
   nextNodes: WSRunWorkflowNextNode[]
 }
 
+//资产状态
 export interface WSAssetPayload {
   status: string,
   assetsId: string,
+}
+
+//高亮
+export interface WSHightLightPayload {
+  nodeId: string,
+  dataSlotId: string,
+  name: string,
+  assetIds: string[]
 }
 
 interface WSBaseMessage {
@@ -60,6 +65,7 @@ interface WSBaseMessage {
   type: WSMessageType;
   timestamp: number;
 }
+
 
 // 上传文件后回执
 export interface WSFileMessage extends WSBaseMessage {
@@ -86,5 +92,6 @@ export interface WSAssetMessage extends WSBaseMessage {
   payload: WSAssetPayload;
 }
 
-export type WSMessage = WSFileMessage | WSRunToolMessage | WSRunWorkFlowMessage;
+
+export type WSMessage = WSFileMessage | WSRunToolMessage | WSRunWorkFlowMessage | WSAssetMessage;
 

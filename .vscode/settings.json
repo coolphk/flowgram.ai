@@ -139,5 +139,8 @@
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
   },
-  "kiroAgent.configureMCP": "Enabled"
+  "kiroAgent.configureMCP": "Enabled",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

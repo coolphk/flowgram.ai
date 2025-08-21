@@ -4,21 +4,21 @@
  */
 
 
-import {inject, injectable} from 'inversify';
-import {DisposableCollection} from '@flowgram.ai/utils';
-import type {PositionSchema} from '@flowgram.ai/utils';
+import { inject, injectable } from 'inversify';
+import { DisposableCollection } from '@flowgram.ai/utils';
+import type { PositionSchema } from '@flowgram.ai/utils';
 import {
   WorkflowDocument,
   WorkflowDragService,
   WorkflowLinesManager,
   WorkflowNodeEntity,
 } from '@flowgram.ai/free-layout-core';
-import {WorkflowSelectService} from '@flowgram.ai/free-layout-core';
-import {WorkflowNodeJSON} from '@flowgram.ai/free-layout-core';
-import {HistoryService} from '@flowgram.ai/free-history-plugin';
-import {PlaygroundConfigEntity} from '@flowgram.ai/core';
+import { WorkflowSelectService } from '@flowgram.ai/free-layout-core';
+import { WorkflowNodeJSON } from '@flowgram.ai/free-layout-core';
+import { HistoryService } from '@flowgram.ai/free-history-plugin';
+import { PlaygroundConfigEntity } from '@flowgram.ai/core';
 
-import {WorkflowNodePanelUtils} from './utils';
+import { WorkflowNodePanelUtils } from './utils';
 import type {
   CallNodePanel,
   CallNodePanelParams,
@@ -110,9 +110,13 @@ export class WorkflowNodePanelService {
   public async singleSelectNodePanel(
     params: Omit<CallNodePanelParams, 'onSelect' | 'onClose' | 'enableMultiAdd'>
   ): Promise<NodePanelResult | undefined> {
+    console.log('singleSelectNodePanel', params)
     return new Promise((resolve) => {
       this.callNodePanel({
         ...params,
+        panelProps: {
+          ...params.panelProps,
+        },
         enableMultiAdd: false,
         onSelect: async (panelParams?: NodePanelResult) => {
           resolve(panelParams);
@@ -148,7 +152,7 @@ export class WorkflowNodePanelService {
       return;
     }
 
-    const {nodeType, selectEvent, nodeJSON} = panelParams;
+    const { nodeType, selectEvent, nodeJSON } = panelParams;
 
     const containerNode = WorkflowNodePanelUtils.getContainerNode({
       fromPort,
@@ -157,7 +161,7 @@ export class WorkflowNodePanelService {
 
     // 判断是否可以添加节点
     if (canAddNode) {
-      const canAdd = canAddNode({nodeType, containerNode});
+      const canAdd = canAddNode({ nodeType, containerNode });
       if (!canAdd) {
         return;
       }
@@ -168,7 +172,7 @@ export class WorkflowNodePanelService {
 
     // 自定义坐标
     const nodePosition: PositionSchema = callParams.customPosition
-      ? callParams.customPosition({nodeType, selectPosition})
+      ? callParams.customPosition({ nodeType, selectPosition })
       : WorkflowNodePanelUtils.adjustNodePosition({
         nodeType,
         position: enableSelectPosition ? selectPosition : panelPosition,

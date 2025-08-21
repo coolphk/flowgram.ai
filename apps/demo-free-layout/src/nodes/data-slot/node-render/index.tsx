@@ -19,9 +19,13 @@ export const NodeRender: React.FC = () => {
           Record<string, IFlowValue | undefined> | undefined
         > name="inputsValues">
           {({ field: { value } }) => (
-            <>
+            <div style={{ cursor: 'pointer' }} onClick={(event) => {
+              event.stopPropagation()
+              console.log(value)
+
+            }}>
               <DisplayInputsValues value={value} />
-            </>
+            </div>
           )}
         </Field>
       </div>

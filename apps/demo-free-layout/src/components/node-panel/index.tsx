@@ -23,7 +23,7 @@ export const NodePanel: FC<NodePanelRenderProps> = (props) => {
       trigger="click"
       visible={true}
       onVisibleChange={(v) => (v ? null : onClose())}
-      content={<NodeList onSelect={onSelect} containerNode={containerNode} />}
+      content={<NodeList {...props} />}
       placement="right"
       popupAlign={{ offset: [30, 0] }}
       overlayStyle={{
@@ -34,19 +34,19 @@ export const NodePanel: FC<NodePanelRenderProps> = (props) => {
         style={
           enableNodePlaceholder
             ? {
-                position: 'absolute',
-                top: position.y - 61.5,
-                left: position.x,
-                width: 360,
-                height: 100,
-              }
+              position: 'absolute',
+              top: position.y - 61.5,
+              left: position.x,
+              width: 360,
+              height: 100,
+            }
             : {
-                position: 'absolute',
-                top: position.y,
-                left: position.x,
-                width: 0,
-                height: 0,
-              }
+              position: 'absolute',
+              top: position.y,
+              left: position.x,
+              width: 0,
+              height: 0,
+            }
         }
       >
         {enableNodePlaceholder && <NodePlaceholder />}

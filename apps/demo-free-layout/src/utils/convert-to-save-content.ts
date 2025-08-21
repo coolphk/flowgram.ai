@@ -57,7 +57,8 @@ export const convertToSaveContent = async (dtId: string, documentData: any): Pro
           tools: [],
           from,
           to,
-          uploadFiles: []
+          uploadFiles: [],
+          nodeId: node.id
         }
       };
     } else if (node.type === 'workflow') {
@@ -70,7 +71,8 @@ export const convertToSaveContent = async (dtId: string, documentData: any): Pro
           type: node.type,
           original: nodeData.rawData?.id,
           inputs: nodeData.rawData?.inputs || [],
-          outputs: nodeData.rawData?.outputs || []
+          outputs: nodeData.rawData?.outputs || [],
+          nodeId: node.id
         }
       };
     }

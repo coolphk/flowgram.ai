@@ -3,17 +3,17 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {IJsonSchema} from '@flowgram.ai/json-schema';
-import {Popover} from '@douyinfe/semi-ui';
+import { IJsonSchema } from '@flowgram.ai/json-schema';
+import { Popover } from '@douyinfe/semi-ui';
 
-import {DisplaySchemaTree} from '../display-schema-tree';
-import {useTypeManager} from '../../plugins';
-import {PopoverContent, StyledTag, TitleSpan} from './styles';
+import { DisplaySchemaTree } from '../display-schema-tree';
+import { useTypeManager } from '../../plugins';
+import { PopoverContent, StyledTag, TitleSpan } from './styles';
 
-import {useNodeRender, useWatchFormValueIn} from "@flowgram.ai/free-layout-editor";
-import {TagColor} from "@douyinfe/semi-ui/lib/es/tag";
+import { useNodeRender, useWatchFormValueIn } from "@flowgram.ai/free-layout-editor";
+import { TagColor } from "@douyinfe/semi-ui/lib/es/tag";
 
 interface PropsType {
   title?: JSX.Element | string;
@@ -31,26 +31,73 @@ interface PropsType {
   "filename": string,
   "dt_id": string,
 }*/
-export function DisplaySchemaTag({value = {}, showIconInTree, title, warning}: PropsType) {
+export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }: PropsType) {
   const typeManager = useTypeManager();
   const icon =
-    typeManager?.getDisplayIcon(value) || typeManager.getDisplayIcon({type: 'unknown'});
+    typeManager?.getDisplayIcon(value) || typeManager.getDisplayIcon({ type: 'unknown' });
   console.log('DisplaySchemaTag title', title)
-  const {node} = useNodeRender()
-  const outputSlot = useWatchFormValueIn(node, `outputSlot`)
-  const inputSlot = useWatchFormValueIn(node, `inputSlot`)
+  const { node } = useNodeRender()
 
-  console.log('DisplaySchemaTag outputSlot', outputSlot)
-  console.log('DisplaySchemaTag inputSlot', inputSlot)
-  const [color, setColor] = useState('white')
+  const inputSlot = useWatchFormValueIn(node, `inputSlot`)
+  const outputSlot = useWatchFormValueIn(node, `outputSlot`)
+
+  // 使用 useState 生成 inputSlotStatus 和 outputSlotStatus
+  const [inputSlotStatus, setInputSlotStatus] = useState<string>('')
+  const [outputSlotStatus, setOutputSlotStatus] = useState<string>('')
+  const watchInputSlotStatus = useWatchFormValueIn(node, `inputSlot.${title as string}.status`)
+  const watchOutputSlotStatus = useWatchFormValueIn(node, `outputSlot.${title as string}.status`)
+
+  // 当inputSlot改变时
   useEffect(() => {
-    setColor(inputSlot?.color || 'white')
-  }, [outputSlot, inputSlot]);
+    const status = inputSlot?.[title as string]?.status || ''
+    setInputSlotStatus(status)
+  }, [inputSlot, title])
+
+  // 当outputSlot改变时
+  useEffect(() => {
+    const status = outputSlot?.[title as string]?.status || ''
+    setOutputSlotStatus(status)
+  }, [outputSlot, title])
+
+  //当inputSlot[key].status改变时
+  useEffect(() => {
+    const status = watchInputSlotStatus || ''
+    setInputSlotStatus(status)
+  }, [watchInputSlotStatus])
+
+  //当outputSlot[key].status改变时
+  useEffect(() => {
+    const status = watchOutputSlotStatus || ''
+    setOutputSlotStatus(status)
+  }, [watchOutputSlotStatus])
+  console.log('DisplaySchemaTag outputSlotStatus', outputSlotStatus)
+  console.log('DisplaySchemaTag inputSlotStatus', inputSlotStatus)
+
+  const [color, setColor] = useState('white')
+  const setColorByStatus = (status: string) => {
+    if (status === 'success') {
+      setColor('green')
+    } else if (status === 'failed') {
+      setColor('red')
+    } else if (status === 'notyet') {
+      setColor('grey')
+    } else {
+      setColor('white')
+    }
+  }
+
+  useEffect(() => {
+    setColorByStatus(inputSlotStatus)
+  }, [inputSlotStatus]);
+
+  useEffect(() => {
+    setColorByStatus(outputSlotStatus)
+  }, [outputSlotStatus]);
   return (
     <Popover
       content={
         <PopoverContent>
-          <DisplaySchemaTree value={value} typeManager={typeManager} showIcon={showIconInTree}/>
+          <DisplaySchemaTree value={value} typeManager={typeManager} showIcon={showIconInTree} />
         </PopoverContent>
       }
     >

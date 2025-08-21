@@ -53,6 +53,7 @@ export class WorkflowNodePanelLayer extends Layer<NodePanelLayerOptions> {
       <>
         {Array.from(this.renderList.keys()).map((taskId) => {
           const renderProps = this.renderList.get(taskId)!;
+          // console.log('panel plugin layer render', renderProps.panelProps)
           return <NodePanelRender key={taskId} {...renderProps} />;
         })}
       </>
@@ -62,6 +63,7 @@ export class WorkflowNodePanelLayer extends Layer<NodePanelLayerOptions> {
   private async call(params: CallNodePanelParams): Promise<void> {
     const taskId = nanoid();
     const { onSelect, onClose, enableMultiAdd = false, panelProps = {} } = params;
+    // console.log('panel plugin layer call', panelProps)
     return new Promise((resolve) => {
       const unmount = () => {
         // 清理挂载的组件

@@ -8,7 +8,7 @@ import React, {FC} from 'react';
 
 import styled from 'styled-components';
 import {NodePanelRenderProps} from '@flowgram.ai/free-node-panel-plugin';
-import {useClientContext, WorkflowNodeEntity, WorkflowPortEntity} from '@flowgram.ai/free-layout-editor';
+import {useClientContext, WorkflowPortEntity} from '@flowgram.ai/free-layout-editor';
 
 import {FlowNodeRegistry} from '../../typings';
 import {nodeRegistries, WorkflowNodeType} from '../../nodes';
@@ -46,9 +46,9 @@ function Node(props: NodeProps) {
     <NodeWrap
       data-testid={`demo-free-node-list-${props.label}`}
       onClick={props.disabled ? undefined : props.onClick}
-      style={props.disabled ? {opacity: 0.3} : {}}
+      style={props.disabled ? { opacity: 0.3 } : {}}
     >
-      <div style={{fontSize: 14}}>{props.icon}</div>
+      <div style={{ fontSize: 14 }}>{props.icon}</div>
       <NodeLabel>{props.label}</NodeLabel>
     </NodeWrap>
   );
@@ -63,14 +63,9 @@ const NodesWrap = styled.div`
     }
 `;
 
-interface NodeListProps {
-  onSelect: NodePanelRenderProps['onSelect'];
-  containerNode?: WorkflowNodeEntity;
-  fromPort?: WorkflowPortEntity;
-}
-
-export const NodeList: FC<NodeListProps> = (props) => {
-  const {onSelect, containerNode, fromPort} = props;
+export const NodeList: FC<NodePanelRenderProps> = (props) => {
+  const { onSelect, containerNode, panelProps } = props;
+  console.log('panelProps', panelProps)
   const context = useClientContext();
   const handleClick = (e: React.MouseEvent, registry: FlowNodeRegistry) => {
     const json = registry.onAdd?.(context);
@@ -82,9 +77,10 @@ export const NodeList: FC<NodeListProps> = (props) => {
   };
   return (
     //workflow节点只能添加 data-slot,data-slot节点只能添加workflow
-    <NodesWrap style={{width: 80 * 2 + 20}}>
+    <NodesWrap style={{ width: 80 * 2 + 20 }}>
       {nodeRegistries
         .filter((register) => {
+          const fromPort = panelProps?.fromPort as WorkflowPortEntity
           if (fromPort?.node.flowNodeType === WorkflowNodeType.Workflow) {
             return register.type === WorkflowNodeType.DataSlot;
           } else if (fromPort?.node.flowNodeType === WorkflowNodeType.DataSlot || !fromPort) {
@@ -104,7 +100,7 @@ export const NodeList: FC<NodeListProps> = (props) => {
               key={registry.type}
               disabled={!(registry.canAdd?.(context) ?? true)}
               icon={
-                <img style={{width: 10, height: 10, borderRadius: 4}} src={registry.info?.icon}/>
+                <img style={{ width: 10, height: 10, borderRadius: 4 }} src={registry.info?.icon} />
               }
               label={registry.type as string}
               onClick={(e) => handleClick(e, registry)}

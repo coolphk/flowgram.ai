@@ -6,10 +6,10 @@
 import { Button, Toast } from "@douyinfe/semi-ui";
 import { IconPlay, IconSpin } from "@douyinfe/semi-icons";
 import { useEnv } from "../../../../providers";
-import { getNodeForm, useNodeRender, WorkflowNodeLinesData } from "@flowgram.ai/free-layout-editor";
+import { getNodeForm, useNodeRender, WorkflowNodeEntity, WorkflowNodeLinesData } from "@flowgram.ai/free-layout-editor";
 import { useState } from "react";
 import { useLog } from "../../../../context/log-context";
-import { DataSlotNodeData, RunWorkFlowRequest, Workflow } from "../../../../typings";
+import { DataSlotNodeData, IODataSlot, RunWorkFlowRequest, RunWorkFlowResponse, Workflow, WSAssetStatus } from "../../../../typings";
 import { isEmpty } from "lodash-es";
 import { runWorkFlow } from "../../../../api/workflow";
 // import {runWorkFlow} from "../../../../api/workflow";
@@ -36,8 +36,8 @@ export function WorkflowHeader() {
         line.updateUIState({ flowing: false })
       })
     } else {
-      const preNodeFormData: DataSlotNodeData = getPreNodeFormData()
-      const nextNodeFormData: DataSlotNodeData = getNextNodeFormData()
+      const preNodeFormData: DataSlotNodeData = getPreNodeFormData(node)
+      const nextNodeFormData: DataSlotNodeData = getNextNodeFormData(node)
       const runWorkFlowParam: RunWorkFlowRequest = {
         dt_instance_id: dtInstanceId,
         workflow_id: nodeData.serverId!,
@@ -49,40 +49,52 @@ export function WorkflowHeader() {
         return
       } else {
         if (preNodeFormData.from === 'inputs') {
-          if (isEmpty(preNodeFormData.outputAsset)) {
+          if (isEmpty(preNodeFormData.outputSlot)) {
             Toast.error("请先上传文件")
             return
           } else {
-            runWorkFlowParam.input_assets = Object.values(preNodeFormData.outputAsset!).map((item) => item.asset_id)
+            runWorkFlowParam.input_assets = Object.values(preNodeFormData.outputSlot!).map((item) => item.asset_id)
           }
         }
         if (nextNodeFormData.from === 'outputs') {
           console.log('nextNodeFormData', nextNodeFormData)
           runWorkFlowParam.output_slot_id = Object.values(nextNodeFormData.rawData!['outputs']).map((item) => item.id!)
         }
-
       }
-      runWorkFlow(runWorkFlowParam).then((res) => {
+      runWorkFlow<RunWorkFlowResponse>(runWorkFlowParam).then((res) => {
         //todo 运行不好使
-        if (res) {
-          setIsPlaying(true);
-          setLogVisible(true); // 显示日志组件
-          node.getData(WorkflowNodeLinesData).inputLines.map((line) => {
+        if (res && typeof res === 'object') {
+          // setIsPlaying(true);
+          const nextNode = getNextNodes(node)?.[0]
+          const nextNodeFormData: DataSlotNodeData = getNextNodeFormData(node)
+          for (let key in res) {
+            getNodeForm(nextNode)?.setValueIn<IODataSlot>(`inputSlot`, {
+              [key]: {
+                asset_id: res[key],
+                dataslot_id: getDataSlotId(nextNodeFormData.rawData!, "outputs", key) || '',
+                status: WSAssetStatus.NotYet,
+              }
+            })
+          }
+          // getNodeForm(nextNode)?.setValueIn('inputSlot', )
+          // form?.setValueIn('')
+          // setLogVisible(true); // 显示日志组件
+          /* node.getData(WorkflowNodeLinesData).inputLines.map((line) => {
             line.updateUIState({ flowing: true })
           })
           node.getData(WorkflowNodeLinesData).outputLines.map((line) => {
             line.updateUIState({ flowing: true })
+          }) */
+          // setTimeout(() => {
+          // setIsPlaying(false);
+          // setLogVisible(false); // 隐藏日志组件
+          /* node.getData(WorkflowNodeLinesData).inputLines.map((line) => {
+            line.updateUIState({ flowing: false })
           })
-          setTimeout(() => {
-            setIsPlaying(false);
-            setLogVisible(false); // 隐藏日志组件
-            node.getData(WorkflowNodeLinesData).inputLines.map((line) => {
-              line.updateUIState({ flowing: false })
-            })
-            node.getData(WorkflowNodeLinesData).outputLines.map((line) => {
-              line.updateUIState({ flowing: false })
-            })
-          }, 16000)
+          node.getData(WorkflowNodeLinesData).outputLines.map((line) => {
+            line.updateUIState({ flowing: false })
+          }) */
+          // }, 16000)
         } else {
           Toast.error("运行失败")
         }
@@ -92,17 +104,28 @@ export function WorkflowHeader() {
 
     }
   };
-  const getPreNodeFormData = () => {
-    if (node.pre) {
-      return getNodeForm(node.pre)?.values
+  const getPreNodes = (node: WorkflowNodeEntity) => {
+    return node.getData(WorkflowNodeLinesData).inputNodes
+  }
+  const getNextNodes = (node: WorkflowNodeEntity) => {
+    return node.getData(WorkflowNodeLinesData).outputNodes
+  }
+  const getPreNodeFormData = (node: WorkflowNodeEntity) => {
+    const preNode = getPreNodes?.(node)?.[0]
+    if (preNode) {
+      return getNodeForm(preNode)?.values
     }
     Toast.error("请先连接上一个节点")
   }
-  const getNextNodeFormData = () => {
-    if (node.next) {
-      return getNodeForm(node.next)?.values
+  const getNextNodeFormData = (node: WorkflowNodeEntity) => {
+    const nextNode = getNextNodes?.(node)?.[0]
+    if (nextNode) {
+      return getNodeForm(nextNode)?.values
     }
     Toast.error("请先连接下一个节点")
+  }
+  const getDataSlotId = (rawData: Workflow, io: 'inputs' | 'outputs', name: string) => {
+    return rawData[io].find((item) => item.name)?.id
   }
   return (
     <>

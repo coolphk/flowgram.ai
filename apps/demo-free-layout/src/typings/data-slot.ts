@@ -26,10 +26,10 @@ export interface Asset {
   "asset_id": string,
   "dataslot_id": string,
   "status": WSAssetStatus,
-  "task_id": string,
-  "object_path": string,
-  "filename": string,
-  "dt_id": string,
+  "task_id"?: string,
+  "object_path"?: string,
+  "filename"?: string,
+  "dt_id"?: string,
 }
 // 资产状态对应的颜色配置
 export const DEFAULT_ASSET_STATUS_COLORS: Record<WSAssetStatus, string> = {
@@ -39,7 +39,7 @@ export const DEFAULT_ASSET_STATUS_COLORS: Record<WSAssetStatus, string> = {
 } as const;
 
 export type AssetStatusColors = typeof DEFAULT_ASSET_STATUS_COLORS;
-
+export type IODataSlot = Record<string, Asset>;
 export interface DataSlotNodeData {
   title?: string,
   serverId?: string,
@@ -49,9 +49,9 @@ export interface DataSlotNodeData {
   inputTools?: IOTools,
   inputRadio?: string,
   inputsValues?: Record<string, IFlowValue>,
-  inputSlot?: Record<string, Asset>, //如果需要改成多文件上传，这里可以改成Asset[]
+  inputSlot?: IODataSlot, //如果需要改成多文件上传，这里可以改成Asset[]
   outputs?: JsonSchema,
   outputTools?: IOTools,
   outputRadio?: string,
-  outputSlot?: Record<string, Asset>,
+  outputSlot?: IODataSlot,
 }

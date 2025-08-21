@@ -13,5 +13,5 @@ export const getWorkflows = <T>(dataSlotId?: string) =>
     },
     cacheFor: 0
   });
-export const runWorkFlow = (params: RunWorkFlowRequest) =>
-  alovaInstance.Post<{ dtInstanceId: string }>(`/run-workflow`, params);
+export const runWorkFlow = <T>(params: RunWorkFlowRequest) =>
+  alovaInstance.Post<T>(`/run-workflow`, params);

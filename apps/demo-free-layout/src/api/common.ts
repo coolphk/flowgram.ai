@@ -41,3 +41,7 @@ export const runTool = <T>(param: RunToolRequest) =>
 export const runDt = (dtTemplateId: string) => {
   return alovaInstance.Post<string>("/run?dt_template_id=" + dtTemplateId)
 }
+
+export const showHighLights = () => {
+  return alovaInstance.Get<string>("/highlights")
+}

@@ -218,10 +218,7 @@ export const SidebarRender: React.FC = () => {
                 onSuccess={(res) => {
                   // 这里可以更新节点数据
                   if (form) {
-                    form.setValueIn(`${status}Slot`, {
-                      ...form.getValueIn(`${status}Slot`),
-                      [key]: res.data
-                    });
+                    form.setValueIn(`${status}Slot.${key}`, res.data);
                   }
                 }}
               >
