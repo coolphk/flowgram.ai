@@ -4,6 +4,8 @@
  */
 
 import {
+  DataEvent,
+  EffectFuncProps,
   FormMeta,
   FormRenderProps,
   getNodeForm,
@@ -12,7 +14,7 @@ import {
   useService,
   ValidateTrigger,
 } from "@flowgram.ai/free-layout-editor";
-import { createInferInputsPlugin, provideJsonSchemaOutputs, syncVariableTitle, } from "@flowgram.ai/form-materials";
+import { createInferInputsPlugin, IJsonSchema, provideJsonSchemaOutputs, syncVariableTitle, } from "@flowgram.ai/form-materials";
 
 import { FlowNodeJSON, WSMessageType } from "../../typings";
 import { FormHeader } from "../../form-components";
@@ -80,6 +82,13 @@ export const formMeta: FormMeta<FlowNodeJSON> = {
   effect: {
     title: syncVariableTitle,
     outputs: provideJsonSchemaOutputs,
+    inputs: [{
+      event: DataEvent.onValueInitOrChange,
+      effect: ({ value, form }: EffectFuncProps<IJsonSchema, FormData>) => {
+        // console.log('a.b value onValueInitOrChange:', value);
+        form.setValueIn('outputs', { ...value })
+      },
+    }],
   },
   plugins: [
     createInferInputsPlugin({

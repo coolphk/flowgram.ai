@@ -4,13 +4,13 @@
  */
 
 /* eslint-disable no-console */
-import { useMemo } from "react";
+import {useMemo} from "react";
 
-import { debounce } from "lodash-es";
-import { createMinimapPlugin } from "@flowgram.ai/minimap-plugin";
-import { createFreeSnapPlugin } from "@flowgram.ai/free-snap-plugin";
-import { createFreeNodePanelPlugin } from "@flowgram.ai/free-node-panel-plugin";
-import { createFreeLinesPlugin } from "@flowgram.ai/free-lines-plugin";
+import {debounce} from "lodash-es";
+import {createMinimapPlugin} from "@flowgram.ai/minimap-plugin";
+import {createFreeSnapPlugin} from "@flowgram.ai/free-snap-plugin";
+import {createFreeNodePanelPlugin} from "@flowgram.ai/free-node-panel-plugin";
+import {createFreeLinesPlugin} from "@flowgram.ai/free-lines-plugin";
 import {
   FreeLayoutProps,
   getNodeForm,
@@ -19,31 +19,31 @@ import {
   WorkflowNodeLinesData,
   WorkflowPortEntity,
 } from "@flowgram.ai/free-layout-editor";
-import { createFreeGroupPlugin } from "@flowgram.ai/free-group-plugin";
-import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
+import {createFreeGroupPlugin} from "@flowgram.ai/free-group-plugin";
+import {createContainerNodePlugin} from "@flowgram.ai/free-container-plugin";
 
-import { onDragLineEnd } from "../utils";
-import { FlowDocumentJSON, FlowNodeRegistry, SaveRequest, Workflow } from "../typings";
-import { shortcuts } from "../shortcuts";
-import { CustomService, WebSocketService } from "../services";
-import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
+import {onDragLineEnd} from "../utils";
+import {FlowDocumentJSON, FlowNodeRegistry, SaveRequest, Workflow} from "../typings";
+import {shortcuts} from "../shortcuts";
+import {CustomService, WebSocketService} from "../services";
+import {WorkflowRuntimeService} from "../plugins/runtime-plugin/runtime-service";
 import {
   createContextMenuPlugin,
   createRunHistoryPlugin,
   createRuntimePlugin,
   createVariablePanelPlugin,
 } from "../plugins";
-import { defaultFormMeta } from "../nodes/default-form-meta";
-import { WorkflowNodeType } from "../nodes";
-import { SelectorBoxPopover } from "../components/selector-box-popover";
-import { BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel, } from "../components";
-import { createTypePresetPlugin, IFlowValue } from "@flowgram.ai/form-materials";
-import { IconFile } from "@douyinfe/semi-icons";
-import { Toast } from "@douyinfe/semi-ui";
-import { getUniqueId, save } from "../api/common";
-import { getEnv, updateDtTemplateId } from "../providers";
-import { updateSaveContent } from "../providers/env-provider";
-import { convertToSaveContent } from "../utils/convert-to-save-content";
+import {defaultFormMeta} from "../nodes/default-form-meta";
+import {WorkflowNodeType} from "../nodes";
+import {SelectorBoxPopover} from "../components/selector-box-popover";
+import {BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel,} from "../components";
+import {createTypePresetPlugin, IFlowValue} from "@flowgram.ai/form-materials";
+import {IconFile} from "@douyinfe/semi-icons";
+import {Toast} from "@douyinfe/semi-ui";
+import {getUniqueId, save} from "../api/common";
+import {getEnv, updateDtTemplateId} from "../providers";
+import {updateSaveContent} from "../providers/env-provider";
+import {convertToSaveContent} from "../utils/convert-to-save-content";
 
 const id = 'toastid';
 let dtId = ''
@@ -61,7 +61,7 @@ export function useEditorProps(
    */
   const isWorkflowTemplateSelected = (nodeForm: any): boolean => {
     if (!nodeForm?.values.rawData) {
-      Toast.error({ content: "请先选择工作流的模板类型", id });
+      Toast.error({content: "请先选择工作流的模板类型", id});
       return false;
     }
     return true;
@@ -91,6 +91,7 @@ export function useEditorProps(
    * @param line
    */
   const handleDataSlotToWorkflow = async (from: any, to: any, line: WorkflowLineEntity) => {
+    console.log("handleDataSlotToWorkflow", from, to, line);
     const fromForm = getNodeForm(from); // DataSlotForm
     const toForm = getNodeForm(to); // WorkflowForm
     const inputsValues: Record<string, IFlowValue> = {};
@@ -103,6 +104,9 @@ export function useEditorProps(
       await Promise.all(promiseGetIds);
       fromForm?.setValueIn("rawData", toFormRawData);
       fromForm?.setValueIn("from", "inputs");
+    }
+    if (fromForm?.getValueIn("outputs")) {
+      return
     }
     fromForm?.setValueIn("outputs", toForm?.getValueIn("inputs"));
     const fromOutputs = fromForm?.getValueIn("outputs");
@@ -131,6 +135,7 @@ export function useEditorProps(
    * @param line Line entity containing connection info
    */
   const handleWorkflowToDataSlot = async (from: any, to: any, line: WorkflowLineEntity) => {
+    console.log("handleWorkflowToDataSlot", from, to, line);
     const fromForm = getNodeForm(from); //workflow
     const toForm = getNodeForm(to); //dataslot
     const fromOutputs = fromForm?.getValueIn("outputs");
@@ -306,7 +311,7 @@ export function useEditorProps(
         return true;
       },
       canDropToNode: (ctx, params) => {
-        const { dragNodeType, dropNodeType } = params;
+        const {dragNodeType, dropNodeType} = params;
         /**
          * 开始/结束节点无法更改容器
          * The start and end nodes cannot change container
@@ -416,7 +421,7 @@ export function useEditorProps(
       /**
        * Bind custom service
        */
-      onBind: ({ bind }) => {
+      onBind: ({bind}) => {
         console.log('onBind')
         bind(CustomService).toSelf().inSingletonScope();
         bind(WebSocketService).toSelf().inSingletonScope();
@@ -446,7 +451,7 @@ export function useEditorProps(
         })*/
         console.log("--- Playground rendered ---");
         ctx.document.linesManager.onAvailableLinesChange(e => {
-          console.log("Available lines change: ", e);
+          // console.log("Available lines change: ", e);
           if (ctx.document.loading) return
           if (e.type === WorkflowContentChangeType.ADD_LINE) {
             const line = e.entity as WorkflowLineEntity;
@@ -567,9 +572,9 @@ export function useEditorProps(
               type: 'file',
               label: 'File',
               ConstantRenderer: () => {
-                return (<span style={{ marginLeft: '8px' }}>请选择输入来源</span>);
+                return (<span style={{marginLeft: '8px'}}>请选择输入来源</span>);
               },
-              icon: <IconFile />,
+              icon: <IconFile/>,
               container: false,
             },
           ],
