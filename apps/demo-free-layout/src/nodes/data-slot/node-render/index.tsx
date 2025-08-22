@@ -4,10 +4,10 @@
  */
 
 import React from "react";
-import { DisplayInputsValues, DisplayOutputs, IFlowValue } from "@flowgram.ai/form-materials";
+import {DisplayInputsValues, DisplayOutputs, IFlowValue} from "@flowgram.ai/form-materials";
 
-import { FormContent } from "../../../form-components";
-import { Field, getNodeForm, useCurrentEntity, useForm } from "@flowgram.ai/free-layout-editor";
+import {FormContent} from "../../../form-components";
+import {Field, useForm} from "@flowgram.ai/free-layout-editor";
 // import { Tag } from "@douyinfe/semi-ui";
 
 // console.log('currentNodeForm', currentNodeForm)

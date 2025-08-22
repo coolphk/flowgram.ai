@@ -3,35 +3,33 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
-import { useRefresh } from "@flowgram.ai/free-layout-editor";
-import { useClientContext } from "@flowgram.ai/free-layout-editor";
-import { Tooltip, IconButton, Divider } from "@douyinfe/semi-ui";
-import { IconUndo, IconRedo } from "@douyinfe/semi-icons";
+import {useClientContext, useRefresh} from "@flowgram.ai/free-layout-editor";
+import {Divider, IconButton, Tooltip} from "@douyinfe/semi-ui";
+import {IconRedo, IconUndo} from "@douyinfe/semi-icons";
 
 // import { TestRunButton } from "../testrun/testrun-button";
-import { AddNode } from "../add-node";
-import { ZoomSelect } from "./zoom-select";
-import { SwitchLine } from "./switch-line";
-import { ToolContainer, ToolSection } from "./styles";
-import { Readonly } from "./readonly";
-import { MinimapSwitch } from "./minimap-switch";
-import { Minimap } from "./minimap";
-import { Interactive } from "./interactive";
-import { FitView } from "./fit-view";
-import { Comment } from "./comment";
-import { AutoLayout } from "./auto-layout";
+import {AddNode} from "../add-node";
+import {ZoomSelect} from "./zoom-select";
+import {SwitchLine} from "./switch-line";
+import {ToolContainer, ToolSection} from "./styles";
+import {Readonly} from "./readonly";
+import {MinimapSwitch} from "./minimap-switch";
+import {Minimap} from "./minimap";
+import {Interactive} from "./interactive";
+import {FitView} from "./fit-view";
+import {Comment} from "./comment";
+import {AutoLayout} from "./auto-layout";
 // import { RunHistory } from "./run-history";
-import { RunHistorySwitch } from "./run-history-switch";
-import { EnvButton } from "./env-button";
+import {EnvButton} from "./env-button";
 
 export const DemoTools = () => {
   const { history, playground } = useClientContext();
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [minimapVisible, setMinimapVisible] = useState(true);
-  const [runHistoryVisible, setRunHistoryVisible] = useState(false);
+  // const [runHistoryVisible, setRunHistoryVisible] = useState(false);
   useEffect(() => {
     const disposable = history.undoRedoService.onChange(() => {
       setCanUndo(history.canUndo());

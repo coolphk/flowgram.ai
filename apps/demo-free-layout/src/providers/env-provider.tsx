@@ -18,6 +18,7 @@ interface EnvContextType {
   setDtInstanceId: (id: string) => void;
   saveContent: SaveRequest | undefined;
   setSaveContent: (content: SaveRequest) => void;
+  notifyMap:Map<string, any>;
 }
 
 const EnvContext = createContext<EnvContextType | undefined>(undefined);
@@ -51,7 +52,8 @@ export const EnvProvider: React.FC<EnvProviderProps> = ({
     dtInstanceId,
     setDtInstanceId,
     saveContent,
-    setSaveContent
+    setSaveContent,
+    notifyMap: new Map(),
   };
 
   // 保存引用
@@ -89,4 +91,9 @@ export const getEnv = (): EnvContextType => {
     return envContextRef;
   }
   throw new Error('getEnv must be used within an EnvProvider');
+};
+export const updateNotifySet = (key: string, value: any): void => {
+  if (envContextRef) {
+    envContextRef.notifyMap.set(key, value);
+  }
 };

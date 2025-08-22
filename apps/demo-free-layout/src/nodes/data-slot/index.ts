@@ -33,7 +33,8 @@ export const DataSlotNodeRegistry: FlowNodeRegistry = {
     description: "Data slot for storing and managing data.",
   },
   formMeta,
-  onAdd() {
+  onAdd(ctx) {
+    console.log('on data-slot add', ctx)
     return {
       id: `data-slot_${nanoid(5)}`,
       type: "data-slot",

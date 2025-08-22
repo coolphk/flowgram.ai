@@ -3,22 +3,24 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React from "react";
+import React, {useCallback} from "react";
 import { Button } from "@douyinfe/semi-ui";
 import { useEnv } from "../../providers";
 import { ENV } from "../../constants";
 import { runDt, save } from "../../api/common";
-import { useService } from "@flowgram.ai/free-layout-editor";
+import {usePlayground, useService } from "@flowgram.ai/free-layout-editor";
 import { WebSocketService } from "../../services";
 
 export const EnvButton: React.FC = () => {
   const { setCurrentEnv, isDev, dtTemplateId, setDtInstanceId, saveContent } = useEnv();
   const wsService = useService(WebSocketService);
+  const playground = usePlayground();
   const handleToggleEnv = () => {
     // dtTemplateId 暂定为切换到运行模式时调用run接口，进行运行
     console.log('handleToggleEnv', dtTemplateId)
 
     if (isDev) {
+      playground.config.readonly = true
       if (!saveContent) {
         return;
       }
@@ -41,6 +43,7 @@ export const EnvButton: React.FC = () => {
     } else {
       wsService.dispose()
       setCurrentEnv(ENV.DEV);
+      playground.config.readonly = false
     }
   };
 

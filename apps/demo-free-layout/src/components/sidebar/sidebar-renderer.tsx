@@ -75,9 +75,10 @@ export const SidebarRenderer = () => {
     return !sidebarDisabled;
   }, [node]);
 
-  if (playground.config.readonly) {
+  // 只读模式下不展示sidebar 需要解除注释
+  /*if (playground.config.readonly) {
     return null;
-  }
+  }*/
   /**
    * Add "key" to rerender the sidebar when the node changes
    */

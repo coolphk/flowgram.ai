@@ -3,35 +3,39 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Field, FieldRenderProps, useNodeRender, } from "@flowgram.ai/free-layout-editor";
-import { Button, Checkbox, Collapse, Toast, Upload, Notification } from "@douyinfe/semi-ui";
-import { IconUpload } from "@douyinfe/semi-icons";
-import { IFlowValue, } from "@flowgram.ai/form-materials";
+import React, {useEffect, useMemo, useState} from "react";
+import {Field, FieldRenderProps, useNodeRender,} from "@flowgram.ai/free-layout-editor";
+import {Button, Checkbox, Collapse, Toast, Upload, Notification, Spin} from "@douyinfe/semi-ui";
+import {IconUpload} from "@douyinfe/semi-icons";
+//@ts-ignore
+import {IFlowValue,} from "@flowgram.ai/form-materials";
 
-import { DataSlot, DataSlotNodeData, Input, JsonSchema, ValidationsDataSlot } from "../../../typings";
-import { uploadAction } from "../../../config";
-import { useEnv } from "../../../providers";
-import { FormContent } from "../../../form-components";
-import { RadioInputsValues } from "../../../materials/radio-inputs-values";
-import { RadioJsonSchemaEditor } from "../../../materials/radio-json-schema-editor";
-import { useRequest } from "alova/client";
-import { getTools, runTool } from "../../../api/common";
-import { IOTool, RunToolRequest } from "../../../typings";
-import { nanoid } from "nanoid";
+import {DataSlot, DataSlotNodeData, Input, JsonSchema, ValidationsDataSlot} from "../../../typings";
+import {uploadAction} from "../../../config";
+import {useEnv} from "../../../providers";
+import {FormContent} from "../../../form-components";
+//@ts-ignore
+import {RadioInputsValues} from "../../../materials/radio-inputs-values";
+import {RadioJsonSchemaEditor} from "../../../materials/radio-json-schema-editor";
+import {useRequest} from "alova/client";
+import {getTools, runTool} from "../../../api/common";
+import {IOTool, RunToolRequest} from "../../../typings";
+import {nanoid} from "nanoid";
+import {getNotifyKey} from "../../../utils";
 
 export const SidebarRender: React.FC = () => {
-  const { data, form, node } = useNodeRender();
-  const { isDev, isProd, dtInstanceId, saveContent } = useEnv();
+  const {data, form, node} = useNodeRender();
+  const {isDev, isProd, dtInstanceId, saveContent, notifyMap} = useEnv();
   const [inputRadioValue, setInputRadioValue] = useState<string>(form?.getValueIn("inputRadio") || '');
   const [outputRadioValue, setOutputRadioValue] = useState<string>(form?.getValueIn("outputRadio") || '');
+  //@ts-ignore
   const [inputTools, setInputTools] = useState<Record<string, IOTool[]>>({});
   const [outputTools, setOutputTools] = useState<Record<string, IOTool[]>>({});
   const [selectedInputTools, setSelectedInputTools] = useState<IOTool[]>([]);
   const [selectedOutputTools, setSelectedOutputTools] = useState<IOTool[]>([]);
   const nodeData = data as DataSlotNodeData;
 
-  const { send } = useRequest(getTools<IOTool[]>, {
+  const {send} = useRequest(getTools<IOTool[]>, {
     immediate: false
   });
 
@@ -67,6 +71,7 @@ export const SidebarRender: React.FC = () => {
     }
   }, [inputRadioValue, nodeData?.rawData?.outputs])
 
+  //@ts-ignore
   const handleInputRadioChange = (value: string) => {
     if (!value) {
       Toast.error({
@@ -103,6 +108,7 @@ export const SidebarRender: React.FC = () => {
 
     console.log('handleInputRadioChange', node.id, value)
   }
+  //@ts-ignore
   const saveInputTool = () => {
     if (!inputRadioValue) {
       Toast.error({
@@ -152,17 +158,16 @@ export const SidebarRender: React.FC = () => {
     })
   }
   // 使用useMemo优化传给InputsValues的value值，避免不必要的重新渲染
+  //@ts-ignore
   const inputsValues = useMemo(() => {
     return nodeData?.inputsValues || {};
   }, [nodeData?.inputsValues]);
 
   // 使用useMemo优化传给JsonSchemaEditor的value值，避免不必要的重新渲染
   const outputsSchema = useMemo(() => {
-    return nodeData?.outputs || { type: 'object', properties: {} };
+    return nodeData?.outputs || {type: 'object', properties: {}};
   }, [nodeData?.outputs]);
-  const renderNotification = () => {
 
-  }
   // 获取已经上传的文件列表
   const getFileList = (key: string, direction: 'input' | 'output') => {
     // nodeData?.[`${status}Slot`]?.[key]
@@ -197,7 +202,7 @@ export const SidebarRender: React.FC = () => {
               marginBottom: 16,
             }}
           >
-            <div style={{ marginBottom: 8, fontWeight: 500 }}>{key}</div>
+            <div style={{marginBottom: 8, fontWeight: 500}}>{key}</div>
             {renderToolItems(direction === 'inputs' ? 'input' : 'output', key)}
           </div>
 
@@ -216,86 +221,102 @@ export const SidebarRender: React.FC = () => {
         gap: 8,
       }}>
         {nodeData?.[`${status}Tools`]?.[key]?.tools?.map((item: IOTool) => {
-          // console.log('item', nodeData, item)
-          return (item.name === 'Uploader' ? <Upload
-            action={uploadAction}
-            data={() => {
-              const validationSlot = saveContent?.dataslots
-                .flatMap((dataSlot: DataSlot) => dataSlot.validations)
-                .find((validation: ValidationsDataSlot) => validation.name === key);
-              console.log('dataSlot saveContent', saveContent)
-              return {
-                form: JSON.stringify({
-                  dataSlotId: validationSlot?.id,
-                  outputName: key,
-                  digitalTwinInstanceId: dtInstanceId
-                }),
-              }
-            }}
-            fileName="file"
-            key={key}
-            limit={1}
-            multiple={false}
-            defaultFileList={getFileList(key, status)}
-            // fileList={getFileList(status)}
-            onSuccess={(res) => {
-              // 这里可以更新节点数据
-              if (form) {
-                form.setValueIn(`${status}Slot.${key}`, {
-                  ...res.data,
-                  filename: res.data.name
-                });
-              }
-            }}
-          >
-            <Button icon={<IconUpload />} theme="light">
-              上传文件
-            </Button>
-          </Upload> :
-            <div key={item.id} style={{
-              height: '32px',
-              width: '32px',
-              padding: '8px 12px',
-              borderRadius: 4,
-              border: '1px solid #eee',
-              backgroundColor: '#f0f8ff',
-              cursor: 'pointer',
-            }}
-              onClick={() => {
-                console.log('tool nodeData', nodeData)
-                if (!nodeData?.[`${status}Slot`]?.[key]?.asset_id) {
-                  Toast.error({
-                    content: '请先上传文件',
-                  });
-                  return
-                }
-                if (!nodeData?.[`${status}Tools`]?.[key]?.tools?.find(tool => tool.name === item.name)?.id) {
-                  Toast.error({
-                    content: '请先配置工具',
-                  });
-                  return
-                }
-                const runToolParam: RunToolRequest = {
-                  dt_instance_id: dtInstanceId,
-                  tool_id: item.id,
-                  input_assets: [nodeData?.[`${status}Slot`]?.[key]?.asset_id!],
-                  node_id: node.id
-                }
-                // console.log('runToolParam', runToolParam);
-                // const url = "https://p1.xpra.hitwin.tech";
-                // window.open(url, "_blank", "noopener,noreferrer");                // window.open("https//:pl.xpra.hitwin.tech","_blank")
-                runTool(runToolParam).then(res => {
-                  Notification.info({ content: '工具启动中', duration: 0 })
-                  // console.log('runTool res', res)
-                })
-                /*runTool(runToolParam).then(res => {
-                  console.log('runTool res', res)
-                })*/
+            // console.log('item', nodeData, item)
+            return (item.name === 'Uploader' ? <Upload
+                action={uploadAction}
+                data={() => {
+                  const validationSlot = saveContent?.dataslots
+                    .flatMap((dataSlot: DataSlot) => dataSlot.validations)
+                    .find((validation: ValidationsDataSlot) => validation.name === key);
+                  // console.log('dataSlot saveContent', saveContent)
+                  return {
+                    form: JSON.stringify({
+                      dataSlotId: validationSlot?.id,
+                      outputName: key,
+                      digitalTwinInstanceId: dtInstanceId
+                    }),
+                  }
+                }}
+                fileName="file"
+                key={key}
+                limit={1}
+                multiple={false}
+                defaultFileList={getFileList(key, status)}
+                // fileList={getFileList(status)}
+                onSuccess={(res) => {
+                  // 这里可以更新节点数据
+                  if (form) {
+                    form.setValueIn(`${status}Slot.${key}`, {
+                      ...res.data,
+                      filename: res.data.name
+                    });
+                  }
+                }}
+              >
+                <Button icon={<IconUpload/>} theme="light">
+                  上传文件
+                </Button>
+              </Upload> :
+              <div key={item.id} style={{
+                height: '32px',
+                width: '32px',
+                padding: '8px 12px',
+                borderRadius: 4,
+                border: '1px solid #eee',
+                backgroundColor: '#f0f8ff',
+                cursor: 'pointer',
               }}
-            >
-              {item.name}
-            </div>)
-        }
+                   onClick={() => {
+                     console.log('tool nodeData', nodeData)
+                     const assetId = nodeData?.[`${status}Slot`]?.[key]?.asset_id;
+                     if (!assetId) {
+                       Toast.error({
+                         content: '请先上传文件',
+                       });
+                       return
+                     }
+                     if (!nodeData?.[`${status}Tools`]?.[key]?.tools?.find(tool => tool.name === item.name)?.id) {
+                       Toast.error({
+                         content: '请先配置工具',
+                       });
+                       return
+                     }
+                     const runToolParam: RunToolRequest = {
+                       dt_instance_id: dtInstanceId,
+                       tool_id: item.id,
+                       input_assets: [assetId],
+                       node_id: node.id
+                     }
+                     // console.log('runToolParam', runToolParam);
+                     // const url = "https://p1.xpra.hitwin.tech";
+                     // window.open(url, "_blank", "noopener,noreferrer");                // window.open("https//:pl.xpra.hitwin.tech","_blank")
+                     runTool(runToolParam).then(res => {
+                       const notifyKey = getNotifyKey(assetId, item.id)
+                       // if (!notifyMap.has(notifyKey)) {
+                       const notifyId = Notification.info({
+                         content: (
+                           <div>
+                             {key}工具{item.name}启动中……<Spin/>
+                           </div>
+                         ), duration: 0
+                       })
+                       notifyMap.set(notifyKey, notifyId)
+                       // }
+                       /*else {
+                         Toast.warning({
+                           content: `${key}工具${item.name}已启动`,
+                         })
+                       }*/
+                       // console.log('runTool res', res)
+                     })
+                     /*runTool(runToolParam).then(res => {
+                       console.log('runTool res', res)
+                     })*/
+                   }}
+              >
+                {item.name}
+              </div>)
+          }
         )}
       </div>
     );
@@ -303,24 +324,26 @@ export const SidebarRender: React.FC = () => {
   return (
     <>
       <Collapse defaultActiveKey={["1", "2", "3", "4"]}>
-        {isDev && (
-          <>
-            <Collapse.Panel header="输入参数" itemKey="1">
+        {
+          isDev && (
+            <>
+              {/*<Collapse.Panel header="输入参数" itemKey="1">*/}
+              {/*<Collapse.Panel header="数据插槽" itemKey="1">
               <FormContent>
                 <Field<
-                  Record<string, IFlowValue | undefined> | undefined
-                > name="inputsValues">
-                  {({ field: { value, onChange } }) => {
+                    Record<string, IFlowValue | undefined> | undefined
+                  > name="inputsValues">
+                  {({field: {value, onChange}}) => {
                     return (
                       <RadioInputsValues value={inputsValues}
-                        inputRadioValue={inputRadioValue}
-                        onInputRadioChange={handleInputRadioChange}
-                        onChange={(v) => onChange(v)} />
+                                         inputRadioValue={inputRadioValue}
+                                         onInputRadioChange={handleInputRadioChange}
+                                         onChange={(v) => onChange(v)}/>
                     );
                   }}
                 </Field>
                 <div>
-                  <h4 style={{ margin: '8px 0' }}>工具</h4>
+                  <h4 style={{margin: '8px 0'}}>工具</h4>
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column' as const,
@@ -361,79 +384,83 @@ export const SidebarRender: React.FC = () => {
                   <Button onClick={saveInputTool}>保存</Button>
                 </div>
               </FormContent>
-            </Collapse.Panel>
-            <Collapse.Panel header="输出参数" itemKey="2">
-              <FormContent>
-                <Field
-                  name="outputs"
-                  render={({
-                    field: { value, onChange },
-                  }: FieldRenderProps<JsonSchema>) => {
-                    return (
-                      <RadioJsonSchemaEditor
-                        value={outputsSchema}
-                        onChange={(value) => onChange(value)}
-                        outputRadioValue={outputRadioValue}
-                        onOutputRadioChange={handleOutputRadioChange}
-                      />
-                    );
-                  }}
-                />
-                <div>
-                  <h4 style={{ margin: '8px 0' }}>工具</h4>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 8,
-                    maxHeight: 300,
-                    overflowY: 'auto',
-                    padding: '8px 0'
-                  }}>
-                    {outputTools[outputRadioValue]?.map((item) => (
-                      <Checkbox
-                        key={item.id}
-                        value={item}
-                        checked={selectedOutputTools.some((tool) => tool.id === item.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedOutputTools([...selectedOutputTools, item]);
-                          } else {
-                            setSelectedOutputTools(selectedOutputTools.filter((tool) => tool.id !== item.id));
-                          }
-                        }}
-                        style={{
-                          padding: '6px 12px',
-                          borderRadius: 4,
-                          border: '1px solid #eee',
-                          backgroundColor: selectedOutputTools.some((tool) => tool.id === item.id) ? '#f0f8ff' : 'transparent',
-                          transition: 'all 0.2s ease'
-                        }}
-                      >
+            </Collapse.Panel>*/}
+              {/*<Collapse.Panel header="输出参数" itemKey="2">*/}
+              <Collapse.Panel header="数据插槽" itemKey="2">
+                <FormContent>
+                  <Field
+                    name="outputs"
+                    render={({
+                               field: {value, onChange},
+                             }: FieldRenderProps<JsonSchema>) => {
+                      return (
+                        <RadioJsonSchemaEditor
+                          value={outputsSchema}
+                          onChange={(value) => onChange(value)}
+                          outputRadioValue={outputRadioValue}
+                          onOutputRadioChange={handleOutputRadioChange}
+                        />
+                      );
+                    }}
+                  />
+                  <div>
+                    <h4 style={{margin: '8px 0'}}>工具</h4>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 8,
+                      maxHeight: 300,
+                      overflowY: 'auto',
+                      padding: '8px 0'
+                    }}>
+                      {outputTools[outputRadioValue]?.map((item) => (
+                        <Checkbox
+                          key={item.id}
+                          value={item}
+                          checked={selectedOutputTools.some((tool) => tool.id === item.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedOutputTools([...selectedOutputTools, item]);
+                            } else {
+                              setSelectedOutputTools(selectedOutputTools.filter((tool) => tool.id !== item.id));
+                            }
+                          }}
+                          style={{
+                            padding: '6px 12px',
+                            borderRadius: 4,
+                            border: '1px solid #eee',
+                            backgroundColor: selectedOutputTools.some((tool) => tool.id === item.id) ? '#f0f8ff' : 'transparent',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
                         <span style={{
                           fontSize: 14,
                           color: selectedOutputTools.some((tool) => tool.id === item.id) ? '#1890ff' : 'inherit'
                         }}>
                           {item.name}
                         </span>
-                      </Checkbox>
-                    ))}
+                        </Checkbox>
+                      ))}
+                    </div>
+                    {
+                      <Button onClick={saveOutputTool}>保存</Button>
+                    }
                   </div>
-                  {
-                    <Button onClick={saveOutputTool}>保存</Button>
-                  }
-                </div>
-              </FormContent>
+                </FormContent>
+              </Collapse.Panel>
+            </>
+          )}
+        {/*{
+          isProd && (
+            // <Collapse.Panel header="输入参数" itemKey="3">
+            <Collapse.Panel header="数据插槽" itemKey="3">
+              {renderTools('inputs')}
             </Collapse.Panel>
-          </>
-        )}
-        {isProd && (
-          <Collapse.Panel header="输入参数" itemKey="3">
-            {renderTools('inputs')}
-          </Collapse.Panel>
-        )}
+          )
+        }*/}
         {
           isProd && (
-            <Collapse.Panel header="输出参数" itemKey="4">
+            <Collapse.Panel header="数据插槽" itemKey="4">
               {renderTools('outputs')}
             </Collapse.Panel>
           )

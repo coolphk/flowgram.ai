@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket 模拟服务器测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8ed;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        /* 连接状态区域 */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .status-dot.connected {
+            background-color: #27ae60;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+        }
+
+        .status-dot.connecting {
+            background-color: #f39c12;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-dot.disconnected {
+            background-color: #e74c3c;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-text {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .status-text.connected {
+            color: #27ae60;
+        }
+
+        .status-text.connecting {
+            color: #f39c12;
+        }
+
+        .status-text.disconnected {
+            color: #e74c3c;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: none;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #229954;
+        }
+
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 消息发送按钮区域 */
+        .message-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .reconnect-btn {
+            margin-left: 15px;
+        }
+
+        /* 消息历史区域 */
+        .message-history {
+            grid-column: 1 / -1;
+        }
+
+        .message-log {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            border: 1px solid #34495e;
+        }
+
+        .message-log::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .message-log::-webkit-scrollbar-track {
+            background: #34495e;
+            border-radius: 4px;
+        }
+
+        .message-log::-webkit-scrollbar-thumb {
+            background: #7f8c8d;
+            border-radius: 4px;
+        }
+
+        .message-log::-webkit-scrollbar-thumb:hover {
+            background: #95a5a6;
+        }
+
+        .message-item {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border-left: 3px solid transparent;
+        }
+
+        .message-item.sent {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left-color: #3498db;
+        }
+
+        .message-item.received {
+            background-color: rgba(39, 174, 96, 0.1);
+            border-left-color: #27ae60;
+        }
+
+        .message-item.error {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left-color: #e74c3c;
+        }
+
+        .message-item.system {
+            background-color: rgba(149, 165, 166, 0.1);
+            border-left-color: #95a5a6;
+        }
+
+        .message-timestamp {
+            color: #bdc3c7;
+            font-size: 11px;
+            margin-right: 10px;
+        }
+
+        .message-type {
+            color: #f39c12;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .message-content {
+            color: #ecf0f1;
+            word-break: break-all;
+        }
+
+        .clear-log-btn {
+            margin-top: 15px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .message-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .connection-status {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WebSocket 模拟服务器测试页面</h1>
+            <p>用于测试 WebSocket 连接和各种消息类型的发送与接收</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 连接控制区域 -->
+            <div class="card">
+                <h2>连接控制</h2>
+                <div class="connection-status">
+                    <div class="status-indicator">
+                        <div class="status-dot disconnected" id="statusDot"></div>
+                        <span class="status-text disconnected" id="statusText">未连接</span>
+                    </div>
+                    <button class="btn btn-primary reconnect-btn" id="reconnectBtn">连接服务器</button>
+                </div>
+                <div>
+                    <label for="wsUrl">WebSocket 地址:</label>
+                    <input type="text" id="wsUrl" value="ws://localhost:8080?dt_id=123"
+                           style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+            </div>
+
+            <!-- 消息发送区域 -->
+            <div class="card">
+                <h2>WebSocket 消息发送</h2>
+                <div class="message-buttons">
+                    <button class="btn btn-success" id="sendFileMessage" disabled>
+                        发送 FileMessage
+                    </button>
+                    <button class="btn btn-warning" id="sendRunToolMessage" disabled>
+                        发送 RunToolMessage
+                    </button>
+                    <button class="btn btn-info" id="sendWorkflowMessage" disabled>
+                        发送 WorkflowMessage
+                    </button>
+                    <button class="btn btn-secondary" id="sendAssetMessage" disabled>
+                        发送 AssetMessage
+                    </button>
+                </div>
+            </div>
+
+            <!-- HTTP API 控制区域 -->
+            <div class="card">
+                <h2>HTTP API 控制</h2>
+                <div class="message-buttons">
+                    <button class="btn btn-primary" id="getServerStatus">
+                        获取服务器状态
+                    </button>
+                    <button class="btn btn-info" id="getClientList">
+                        获取客户端列表
+                    </button>
+                    <button class="btn btn-success" id="broadcastMessage">
+                        广播消息
+                    </button>
+                    <button class="btn btn-warning" id="sendApiMessage">
+                        API 发送消息
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 消息历史区域 -->
+        <div class="card message-history">
+            <h2>消息历史</h2>
+            <div class="message-log" id="messageLog">
+                <div class="message-item system">
+                    <span class="message-timestamp">[系统]</span>
+                    <span class="message-content">欢迎使用 WebSocket 测试页面，请点击"连接服务器"开始测试</span>
+                </div>
+            </div>
+            <button class="btn btn-secondary clear-log-btn" id="clearLogBtn">清空日志</button>
+        </div>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>

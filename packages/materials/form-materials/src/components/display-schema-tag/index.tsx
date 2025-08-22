@@ -35,7 +35,7 @@ export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }:
   const typeManager = useTypeManager();
   const icon =
     typeManager?.getDisplayIcon(value) || typeManager.getDisplayIcon({ type: 'unknown' });
-  console.log('DisplaySchemaTag title', title)
+  // console.log('DisplaySchemaTag title', title)
   const { node } = useNodeRender()
 
   const inputSlot = useWatchFormValueIn(node, `inputSlot`)
@@ -70,8 +70,8 @@ export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }:
     const status = watchOutputSlotStatus || ''
     setOutputSlotStatus(status)
   }, [watchOutputSlotStatus])
-  console.log('DisplaySchemaTag outputSlotStatus', outputSlotStatus)
-  console.log('DisplaySchemaTag inputSlotStatus', inputSlotStatus)
+  // console.log('DisplaySchemaTag outputSlotStatus', outputSlotStatus)
+  // console.log('DisplaySchemaTag inputSlotStatus', inputSlotStatus)
 
   const [color, setColor] = useState('white')
   const setColorByStatus = (status: string) => {
