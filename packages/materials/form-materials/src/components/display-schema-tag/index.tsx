@@ -22,15 +22,6 @@ interface PropsType {
   warning?: boolean;
 }
 
-/*interface Asset {
-  "asset_id": string,
-  "dataslot_id": string,
-  "status": WSAssetStatus,
-  "task_id": string,
-  "object_path": string,
-  "filename": string,
-  "dt_id": string,
-}*/
 export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }: PropsType) {
   const typeManager = useTypeManager();
   const icon =
@@ -46,7 +37,7 @@ export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }:
   const [outputSlotStatus, setOutputSlotStatus] = useState<string>('')
   const watchInputSlotStatus = useWatchFormValueIn(node, `inputSlot.${title as string}.status`)
   const watchOutputSlotStatus = useWatchFormValueIn(node, `outputSlot.${title as string}.status`)
-
+  const outlineColor = useWatchFormValueIn(node, `outlineColor`)
   // 当inputSlot改变时
   useEffect(() => {
     const status = inputSlot?.[title as string]?.status || ''
@@ -101,7 +92,7 @@ export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }:
         </PopoverContent>
       }
     >
-      <StyledTag color={warning ? 'amber' : color as TagColor}>
+      <StyledTag color={warning ? 'amber' : color as TagColor} outlineColor={outlineColor}>
         {icon &&
           React.cloneElement(icon, {
             className: 'tag-icon',

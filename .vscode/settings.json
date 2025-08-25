@@ -24,7 +24,13 @@
     "**/lib": true,
     "**/dist": true,
     "**/coverage": true,
-    "common/temp": true
+    "common/temp": true,
+    "e2e/**": true,
+    "apps/docs/**": true,
+    "apps/demo-fixed-layout/**": true,
+    "apps/demo-free-layout-simple/**": true,
+    "**/test-results/**": true,
+    "**/.git/**": true
   },
   "eslint.workingDirectories": [
     {
@@ -60,7 +66,14 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    "**/.rush": true
+    "**/.rush": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/lib": true,
+    "**/coverage": true,
+    "common/temp": true,
+    "apps/demo-fixed-layout": true,
+    "e2e/*/test-results": true
   },
   "files.watcherExclude": {
     "**/.git/objects/**": true,

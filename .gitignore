@@ -127,3 +127,35 @@ dist-storybook/
 
 # rush standard files
 .eslintcache
+
+# Additional monorepo excludes
+# Temporary development files
+**/.vscode/
+**/tmp/
+**/temp/
+**/.cache/
+**/.parcel-cache/
+
+# Build outputs
+**/build/
+**/out/
+**/.output/
+**/.nuxt/
+
+# Test outputs
+**/test-results/
+**/playwright-report/
+**/cypress/videos/
+**/cypress/screenshots/
+
+# IDE files
+**/.idea/
+**/*.iml
+**/.project
+**/.classpath
+**/.settings/
+
+# OS files
+**/Thumbs.db
+**/.DS_Store
+**/desktop.ini

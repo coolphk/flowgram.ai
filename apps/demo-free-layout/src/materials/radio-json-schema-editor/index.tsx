@@ -4,7 +4,7 @@
  */
 
 
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { IJsonSchema } from '@flowgram.ai/json-schema';
 import { Button, Checkbox, IconButton, Radio } from '@douyinfe/semi-ui';
@@ -55,10 +55,13 @@ export function RadioJsonSchemaEditor(props: {
   );
 
   return (
-    <Radio.Group direction={'vertical'} value={props.outputRadioValue} onChange={(v) => props?.onOutputRadioChange?.(v.target.value)}>
+    <Radio.Group direction={'vertical'} value={props.outputRadioValue}
+      onChange={(v) => props?.onOutputRadioChange?.(v.target.value)}>
       <UIContainer className={props.className}>
         {propertyList.map((_property, index) => (
-          <Radio value={_property.name} key={`${'radio'}_${_property.key}`} >
+          <div style={{ display: 'flex', alignItems: 'center' }} key={_property.key}>
+            <Radio value={_property.name} key={`${'radio'}_${_property.key}`}>
+            </Radio>
             <UIProperties key={`ui_${_property.key}`}>
               <PropertyEdit
                 readonly={readonly}
@@ -74,7 +77,8 @@ export function RadioJsonSchemaEditor(props: {
                 }}
               />
             </UIProperties>
-          </Radio>
+
+          </div>
         ))}
         <Button
           disabled={readonly}

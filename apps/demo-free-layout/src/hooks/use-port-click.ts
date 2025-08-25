@@ -12,6 +12,7 @@ import {
 } from '@flowgram.ai/free-node-panel-plugin';
 import {
   delay,
+  getNodeForm,
   usePlayground,
   useService,
   WorkflowDocument,
@@ -21,6 +22,7 @@ import {
   WorkflowNodeJSON,
   WorkflowPortEntity,
 } from '@flowgram.ai/free-layout-editor';
+import {Toast} from "@douyinfe/semi-ui";
 
 /**
  * click port to trigger node select panel
@@ -37,6 +39,10 @@ export const usePortClick = () => {
     const mousePos = playground.config.getPosFromMouseEvent(e);
     const containerNode = port.node.parent;
     console.log('port.node', port.node)
+    if (!getNodeForm(port.node)?.getValueIn("rawData")) {
+      Toast.warning("请先选择工作流模板!")
+      return;
+    }
     // open node selection panel - 打开节点选择面板
     const result = await nodePanelService.singleSelectNodePanel({
       position: mousePos,

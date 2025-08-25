@@ -10,12 +10,6 @@ export enum WSMessageType {
   HightLightMessage = 'HIGHLIGHT_ASSET',
 }
 
-export enum WSAssetStatus {
-  Success = 'success',
-  Failed = 'failed',
-  NotYet = 'notyet',
-}
-
 export interface WSFilePayload {
   description: string
   assetsId: string

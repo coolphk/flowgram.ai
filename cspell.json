@@ -1,6 +1,20 @@
 {
   "version": "0.2",
-  "ignorePaths": [],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/lib/**",
+    "**/coverage/**",
+    "**/.rush/**",
+    "common/temp/**",
+    "**/test-results/**",
+    "**/playwright-report/**",
+    "e2e/**/",
+    "**/*.min.js",
+    "**/*.map",
+    "**/CHANGELOG.md",
+    "**/pnpm-lock.yaml"
+  ],
   "dictionaryDefinitions": [],
   "dictionaries": [],
   "words": [

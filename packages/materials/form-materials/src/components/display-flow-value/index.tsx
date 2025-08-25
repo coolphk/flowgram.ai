@@ -16,9 +16,10 @@ interface PropsType {
   title?: JSX.Element | string;
   showIconInTree?: boolean;
   typeManager?: JsonSchemaTypeManager;
+  onTagClick?: (event: React.MouseEvent, title: JSX.Element | string | undefined, value: IFlowValue | undefined) => void;
 }
 
-export function DisplayFlowValue({ value, title, showIconInTree }: PropsType) {
+export function DisplayFlowValue({ value, title, showIconInTree, onTagClick }: PropsType) {
   const available = useScopeAvailable();
 
   const variable = value?.type === 'ref' ? available.getByKeyPath(value?.content) : undefined;
@@ -49,11 +50,13 @@ export function DisplayFlowValue({ value, title, showIconInTree }: PropsType) {
   }, [value, variable?.hash]);
 
   return (
-    <DisplaySchemaTag
-      title={title}
-      value={schema}
-      showIconInTree={showIconInTree}
-      warning={value?.type === 'ref' && !variable}
-    />
+    <div onClick={(event: React.MouseEvent) => onTagClick?.(event, title, value)}>
+      <DisplaySchemaTag
+        title={title}
+        value={schema}
+        showIconInTree={showIconInTree}
+        warning={value?.type === 'ref' && !variable}
+      />
+    </div>
   );
 }

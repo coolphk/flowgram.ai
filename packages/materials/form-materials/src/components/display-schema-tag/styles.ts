@@ -1,17 +1,46 @@
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
-
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Tag } from '@douyinfe/semi-ui';
 
 export const PopoverContent = styled.div`
   padding: 10px;
 `;
 
-export const StyledTag = styled(Tag)`
+const breathe = keyframes`
+  0% {
+    outline-width: 1px;
+    outline-offset: 0px;
+  }
+  50% {
+    outline-width: 3px;
+    outline-offset: 2px;
+  }
+  100% {
+    outline-width: 1px;
+    outline-offset: 0px;
+  }
+`;
+
+const colorBreathe = keyframes`
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+`;
+
+export const StyledTag = styled(Tag)<{ outlineColor?: string }>`
   padding: 4px;
+  //animation: ${colorBreathe} 2s ease-in-out infinite;
+  
+  ${props => props.outlineColor && `
+    outline: 1px solid ${props.outlineColor};
+    outline-offset: 0px;
+    animation: ${breathe} 2s ease-in-out infinite;
+  `}
 
   /*.tag-icon {
     width: 12px;

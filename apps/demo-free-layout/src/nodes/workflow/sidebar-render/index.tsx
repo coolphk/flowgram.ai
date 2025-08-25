@@ -25,9 +25,9 @@ export const SidebarRender: React.FC = () => {
   const {data: nodeData, form, node} = useNodeRender();
   const preNode = node?.getData(WorkflowNodeLinesData).inputNodes[0]
   const preNodeForm = preNode && getNodeForm?.(preNode)
-  console.log('preNodeForm', preNodeForm)
+  // console.log('preNodeForm', preNodeForm)
   const preNodeRawDataOutputs: ValidationsDataSlot[] = preNodeForm?.getValueIn("rawData")?.outputs || []
-  const preDataSlotId = form?.getValueIn("preDataSlotId") || ""
+  const preDataSlotId = form?.getValueIn("preDataSlotId") || "" //根据前一个节点的dataSlotId来获取工作流
   //如果前一个节点是数据插槽，并且是outputs
   const preNodeIsDataSlotOutputs = useMemo(() => {
     if (preNode) {
@@ -41,7 +41,7 @@ export const SidebarRender: React.FC = () => {
 
   const [wfId, setWfId] = useState<string>(nodeData?.rawData?.id || "");
   // const [dataSlotId, setDataSlotId] = useState<string>(preNodeRawDataOutputs?.[0].id || "")
-  console.log('preDataSlotId', preDataSlotId)
+  // console.log('preDataSlotId', preDataSlotId)
   const {
     data,
     error,

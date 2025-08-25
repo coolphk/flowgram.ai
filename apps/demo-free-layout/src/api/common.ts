@@ -5,7 +5,7 @@
 
 import { alovaInstance } from "./index";
 import { SaveRequest, Validation } from "../typings";
-import { RunToolRequest } from "../typings/api";
+import { LineageResponse, RunToolRequest } from "../typings/api";
 
 export const getUniqueId = <T>() => {
   // console.log("getUniqueId")
@@ -42,6 +42,11 @@ export const runDt = (dtTemplateId: string) => {
   return alovaInstance.Post<string>("/run?dt_template_id=" + dtTemplateId)
 }
 
-export const showHighLights = () => {
-  return alovaInstance.Get<string>("/highlights")
+export const getLineage = (asset_id: string, depth: number = -1) => {
+  return alovaInstance.Get<LineageResponse>("/get-lineage", {
+    params: {
+      asset_id,
+      depth
+    }
+  })
 }

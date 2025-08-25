@@ -54,9 +54,11 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
         }
         const assetForm = getNodeForm(assetNode)
         const inputSlot = assetForm?.getValueIn('inputSlot')
+        console.log('inputSlot', inputSlot)
         for (const key in inputSlot) {
           if (inputSlot[key].id == message.payload.assetsId) {
             inputSlot[key].status = message.payload.status
+            assetForm?.setValueIn('inputSlot', inputSlot)
           }
         }
       }
