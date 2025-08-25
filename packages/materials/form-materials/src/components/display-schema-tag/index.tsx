@@ -35,9 +35,14 @@ export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }:
   // 使用 useState 生成 inputSlotStatus 和 outputSlotStatus
   const [inputSlotStatus, setInputSlotStatus] = useState<string>('')
   const [outputSlotStatus, setOutputSlotStatus] = useState<string>('')
+  const [outlineColor, setOutlineColor] = useState<string>('')
   const watchInputSlotStatus = useWatchFormValueIn(node, `inputSlot.${title as string}.status`)
   const watchOutputSlotStatus = useWatchFormValueIn(node, `outputSlot.${title as string}.status`)
-  const outlineColor = useWatchFormValueIn(node, `outlineColor`)
+  const watchOutlineColor = useWatchFormValueIn(node, `outputSlot.${title as string}.outlineColor`)
+
+  useEffect(() => {
+  }, [watchInputSlotStatus, watchOutputSlotStatus])
+  console.log('outlineColor', outlineColor)
   // 当inputSlot改变时
   useEffect(() => {
     const status = inputSlot?.[title as string]?.status || ''
@@ -47,7 +52,9 @@ export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }:
   // 当outputSlot改变时
   useEffect(() => {
     const status = outputSlot?.[title as string]?.status || ''
+    const outlineColor = watchOutlineColor
     setOutputSlotStatus(status)
+    setOutlineColor(outlineColor)
   }, [outputSlot, title])
 
   //当inputSlot[key].status改变时
@@ -84,6 +91,9 @@ export function DisplaySchemaTag({ value = {}, showIconInTree, title, warning }:
   useEffect(() => {
     setColorByStatus(outputSlotStatus)
   }, [outputSlotStatus]);
+  useEffect(() => {
+
+  }, [outlineColor]);
   return (
     <Popover
       content={

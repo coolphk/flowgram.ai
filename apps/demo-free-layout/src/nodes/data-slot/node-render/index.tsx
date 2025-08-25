@@ -3,32 +3,49 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, { useContext } from "react";
-import { DisplayInputsValues, DisplayOutputs, IFlowValue } from "@flowgram.ai/form-materials";
+import React from "react";
+import {DisplayInputsValues, DisplayOutputs, IFlowValue} from "@flowgram.ai/form-materials";
 
-import { FormContent } from "../../../form-components";
-import { Field, useClientContext, useForm } from "@flowgram.ai/free-layout-editor";
-import { LineageResponse, Workflow } from "../../../typings";
-import { getLineage } from "../../../api/common";
+import {FormContent} from "../../../form-components";
+import {Field, getNodeForm, useClientContext, useForm} from "@flowgram.ai/free-layout-editor";
+import {IODataSlot} from "../../../typings";
+import {getLineage} from "../../../api/common";
+import {Toast} from "@douyinfe/semi-ui";
 // import { Tag } from "@douyinfe/semi-ui";
 
 // console.log('currentNodeForm', currentNodeForm)
 export const NodeRender: React.FC = () => {
   const currentNodeForm = useForm()
   const ctx = useClientContext()
-  console.log('currentNodeForm', currentNodeForm)
+  // console.log('currentNodeForm', currentNodeForm)
   const onTagClick = (event: React.MouseEvent, title: string | JSX.Element | undefined, value: IFlowValue | undefined) => {
     event.stopPropagation()
-    console.log('onTagClick', title, value)
-    const from = currentNodeForm.getValueIn('from')
-    const rawData = currentNodeForm.getValueIn('rawData')
-    console.log('rawData', rawData[from].find((item: Workflow) => item.name === title))
-    const asset_id = rawData[from].find((item: Workflow) => item.name === title)?.id
-    getLineage(asset_id).then((res) => {
-      res.assets.map((item) => {
+    const outputSlot: IODataSlot = currentNodeForm.getValueIn('outputSlot')
+    const asset_id = outputSlot[title as string].asset_id
+    if (!asset_id) {
+      Toast.warning("请先运行工作流，生成数据资产!")
+      return
+    }
 
+    getLineage(asset_id).then((res) => {
+      res.assets.map((asset) => {
+        const targetNode = ctx.document.getNode(asset.nodeId)
+        if (targetNode) {
+          const targetForm = getNodeForm(targetNode)
+          if (targetForm) {
+            const currentOutputSlot = targetForm.getValueIn('outputSlot') || {}
+            // 使用item.type作为key，设置outlineColor值
+            const updatedInputSlot = {
+              ...currentOutputSlot,
+              [asset.type]: {
+                ...currentOutputSlot[asset.type],
+                outlineColor: '#ff6b35' // 设置高亮颜色，可以根据需要调整
+              }
+            }
+            targetForm.setValueIn(`inputSlot`, updatedInputSlot)
+          }
+        }
       })
-      console.log('getLineage', res)
     })
 
   }

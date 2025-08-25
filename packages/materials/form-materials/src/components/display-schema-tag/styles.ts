@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { Tag } from '@douyinfe/semi-ui';
 
 export const PopoverContent = styled.div`
@@ -32,11 +32,11 @@ const colorBreathe = keyframes`
   }
 `;
 
-export const StyledTag = styled(Tag)<{ outlineColor?: string }>`
+export const StyledTag = styled(Tag) <{ outlineColor?: string }>`
   padding: 4px;
   //animation: ${colorBreathe} 2s ease-in-out infinite;
-  
-  ${props => props.outlineColor && `
+
+  ${props => props.outlineColor && css`
     outline: 1px solid ${props.outlineColor};
     outline-offset: 0px;
     animation: ${breathe} 2s ease-in-out infinite;

@@ -1,14 +1,15 @@
-import { WorkflowNodeType } from "../nodes";
-import { IOTools } from "./io-tools";
-import { JsonSchema } from "./json-schema";
-import { Validation, Workflow } from "./workflow";
-import { IFlowValue } from "@flowgram.ai/form-materials";
+import {WorkflowNodeType} from "../nodes";
+import {IOTools} from "./io-tools";
+import {JsonSchema} from "./json-schema";
+import {Validation, Workflow} from "./workflow";
+import {IFlowValue} from "@flowgram.ai/form-materials";
 
 export enum AssetStatus {
   Success = 'success',
   Failed = 'failed',
   NotYet = 'notyet',
 }
+
 export interface DataSlot {
   description: string
   from: string
@@ -26,6 +27,7 @@ export interface ValidationsDataSlot {
   name: string;
   validations: Validation[]
 }
+
 export interface Asset {
   "asset_id": string,
   "dataslot_id": string,
@@ -34,7 +36,9 @@ export interface Asset {
   "object_path"?: string,
   "filename"?: string,
   "dt_id"?: string,
+  "outlineColor"?: string,
 }
+
 // 资产状态对应的颜色配置
 export const DEFAULT_ASSET_STATUS_COLORS: Record<AssetStatus, string> = {
   [AssetStatus.Success]: '#52c41a',  // 绿色
@@ -44,6 +48,7 @@ export const DEFAULT_ASSET_STATUS_COLORS: Record<AssetStatus, string> = {
 
 export type AssetStatusColors = typeof DEFAULT_ASSET_STATUS_COLORS;
 export type IODataSlot = Record<string, Asset>;
+
 export interface DataSlotNodeData {
   title?: string,
   serverId?: string,

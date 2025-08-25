@@ -54,7 +54,7 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
         }
         const assetForm = getNodeForm(assetNode)
         const inputSlot = assetForm?.getValueIn('inputSlot')
-        console.log('inputSlot', inputSlot)
+        // console.log('inputSlot', inputSlot)
         for (const key in inputSlot) {
           if (inputSlot[key].id == message.payload.assetsId) {
             inputSlot[key].status = message.payload.status
@@ -63,7 +63,7 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
         }
       }
       if (message.type === WSMessageType.RunToolMessage) {
-        console.log('RunToolMessage', message.payload)
+        // console.log('RunToolMessage', message.payload)
         const notifyKey = getNotifyKey(message.payload.assetsId[0], message.payload.toolId)
         if (notifyMap.has(notifyKey)) {
           notifyId = notifyMap.get(notifyKey) as string
