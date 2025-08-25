@@ -42,7 +42,8 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
   useEffect(() => {
     let notifyId: null | string = null
     // console.log('data-slot formMeta')
-    const websocketServiceDispose = websocketService.onNodeMessage((message) => {
+    websocketService.onNodeMessage((message) => {
+      console.log(`on DataSlot=${node.id} recive WSMessage`, message)
       if (message.nodeId != node.id) {
         return
       }
@@ -54,7 +55,7 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
         }
         const assetForm = getNodeForm(assetNode)
         const inputSlot = assetForm?.getValueIn('inputSlot')
-        // console.log('inputSlot', inputSlot)
+        // console.log('on DataSlot recive WSMessage', message)
         for (const key in inputSlot) {
           if (inputSlot[key].id == message.payload.assetsId) {
             inputSlot[key].status = message.payload.status
@@ -89,7 +90,8 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
       }
     })
     return () => {
-      websocketServiceDispose.dispose()
+      // websocketServiceDispose.dispose()
+      // websocketService.disconnect()
       if (notifyId) {
         Notification.close(notifyId)
         notifyId = null

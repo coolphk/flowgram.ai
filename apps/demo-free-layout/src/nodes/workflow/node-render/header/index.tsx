@@ -3,38 +3,29 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { Button, Toast } from "@douyinfe/semi-ui";
-import { IconPlay, IconSpin } from "@douyinfe/semi-icons";
-import { useEnv } from "../../../../providers";
+import {Button, Toast} from "@douyinfe/semi-ui";
+import {IconPlay, IconSpin} from "@douyinfe/semi-icons";
+import {useEnv} from "../../../../providers";
+import {getNodeForm, useNodeRender, WorkflowNodeEntity, WorkflowNodeLinesData} from "@flowgram.ai/free-layout-editor";
+import {useState} from "react";
+import {useLog} from "../../../../context/log-context";
 import {
-  getNodeForm,
-  useNodeRender,
-  // useScopeAvailable,
-  WorkflowNodeEntity,
-  WorkflowNodeLinesData
-} from "@flowgram.ai/free-layout-editor";
-import { useState } from "react";
-import { useLog } from "../../../../context/log-context";
-import {
+  AssetStatus,
   DataSlotNodeData,
   IODataSlot,
   RunWorkFlowRequest,
   RunWorkFlowResponse,
-  Workflow,
-  AssetStatus
+  Workflow
 } from "../../../../typings";
-import { isEmpty } from "lodash-es";
-import { runWorkFlow } from "../../../../api/workflow";
-
-// import {runWorkFlow} from "../../../../api/workflow";
-
+import {isEmpty} from "lodash-es";
+import {runWorkFlow} from "../../../../api/workflow";
 
 export function WorkflowHeader() {
-  const { isProd, dtInstanceId } = useEnv();
+  const {isProd, dtInstanceId} = useEnv();
   // const node = useCurrentEntity()
   const [isPlaying, setIsPlaying] = useState(false);
-  const { setLogVisible } = useLog();
-  const { data, node } = useNodeRender()
+  const {setLogVisible} = useLog();
+  const {data, node} = useNodeRender()
   const nodeData = data as Workflow
   // const available = useScopeAvailable()
   const currentNodeForm = getNodeForm(node)
@@ -47,10 +38,10 @@ export function WorkflowHeader() {
       setIsPlaying(false);
       setLogVisible(false); // 隐藏日志组件
       node.getData(WorkflowNodeLinesData).inputLines.map((line) => {
-        line.updateUIState({ flowing: false })
+        line.updateUIState({flowing: false})
       })
       node.getData(WorkflowNodeLinesData).outputLines.map((line) => {
-        line.updateUIState({ flowing: false })
+        line.updateUIState({flowing: false})
       })
     } else {
       const preNodeFormData: DataSlotNodeData = getPreNodeFormData(node)
@@ -99,35 +90,17 @@ export function WorkflowHeader() {
         if (res && Object.keys(res).length) {
           // setIsPlaying(true);
           const nextNode = getNextNodes(node)?.[0]
+          console.log('runWorkFlow nextNode', nextNode)
           const nextNodeFormData: DataSlotNodeData = getNextNodeFormData(node)
+          const inputSlot: IODataSlot = {}
           for (let key in res) {
-            getNodeForm(nextNode)?.setValueIn<IODataSlot>(`inputSlot`, {
-              [key]: {
-                asset_id: res[key],
-                dataslot_id: getDataSlotId(nextNodeFormData.rawData!, "outputs", key) || '',
-                status: AssetStatus.NotYet,
-              }
-            })
+            inputSlot[key] = {
+              asset_id: res[key],
+              dataslot_id: getDataSlotId(nextNodeFormData.rawData!, "outputs", key) || '',
+              status: AssetStatus.NotYet,
+            }
           }
-          // getNodeForm(nextNode)?.setValueIn('inputSlot', )
-          // form?.setValueIn('')
-          // setLogVisible(true); // 显示日志组件
-          /* node.getData(WorkflowNodeLinesData).inputLines.map((line) => {
-            line.updateUIState({ flowing: true })
-          })
-          node.getData(WorkflowNodeLinesData).outputLines.map((line) => {
-            line.updateUIState({ flowing: true })
-          }) */
-          // setTimeout(() => {
-          // setIsPlaying(false);
-          // setLogVisible(false); // 隐藏日志组件
-          /* node.getData(WorkflowNodeLinesData).inputLines.map((line) => {
-            line.updateUIState({ flowing: false })
-          })
-          node.getData(WorkflowNodeLinesData).outputLines.map((line) => {
-            line.updateUIState({ flowing: false })
-          }) */
-          // }, 16000)
+          getNodeForm(nextNode)?.setValueIn<IODataSlot>(`inputSlot`, inputSlot)
         } else {
           Toast.error("运行失败")
         }
@@ -164,7 +137,7 @@ export function WorkflowHeader() {
     <>
       {isProd && (
         <Button
-          icon={isPlaying ? <IconSpin spin /> : <IconPlay />}
+          icon={isPlaying ? <IconSpin spin/> : <IconPlay/>}
           onClick={handlePlay}
           theme="borderless"
           style={{

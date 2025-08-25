@@ -32,7 +32,9 @@ const colorBreathe = keyframes`
   }
 `;
 
-export const StyledTag = styled(Tag) <{ outlineColor?: string }>`
+export const StyledTag = styled(Tag).withConfig({
+  shouldForwardProp: (prop: string | number) => prop !== 'outlineColor'
+}) <{ outlineColor?: string }>`
   padding: 4px;
   //animation: ${colorBreathe} 2s ease-in-out infinite;
 
