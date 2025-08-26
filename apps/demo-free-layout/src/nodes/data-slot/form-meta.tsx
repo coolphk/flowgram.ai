@@ -72,7 +72,7 @@ export const renderForm = ({form}: FormRenderProps<FlowNodeJSON>) => {
             Notification.success({
               content: (
                 <span>
-                  启动完成！<a onClick={() => {
+                  启动完成！<a href={void 0} style={{cursor:"pointer"}} onClick={() => {
                   window.open(message.payload.url, '_blank', 'noopener,noreferrer')
                 }}>点击运行</a>
                 </span>
