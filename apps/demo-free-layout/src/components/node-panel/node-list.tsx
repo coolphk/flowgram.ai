@@ -4,14 +4,14 @@
  */
 
 
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 
 import styled from 'styled-components';
-import {NodePanelRenderProps} from '@flowgram.ai/free-node-panel-plugin';
-import {useClientContext, WorkflowPortEntity} from '@flowgram.ai/free-layout-editor';
+import { NodePanelRenderProps } from '@flowgram.ai/free-node-panel-plugin';
+import { useClientContext, WorkflowPortEntity } from '@flowgram.ai/free-layout-editor';
 
-import {FlowNodeRegistry} from '../../typings';
-import {nodeRegistries, WorkflowNodeType} from '../../nodes';
+import { FlowNodeRegistry } from '../../typings';
+import { nodeRegistries, WorkflowNodeType } from '../../nodes';
 
 const NodeWrap = styled.div`
     width: 100%;
@@ -83,8 +83,10 @@ export const NodeList: FC<NodePanelRenderProps> = (props) => {
           const fromPort = panelProps?.fromPort as WorkflowPortEntity
           if (fromPort?.node.flowNodeType === WorkflowNodeType.Workflow) {
             return register.type === WorkflowNodeType.DataSlot;
-          } else if (fromPort?.node.flowNodeType === WorkflowNodeType.DataSlot || !fromPort) {
+          } else if (fromPort?.node.flowNodeType === WorkflowNodeType.DataSlot) {
             return register.type === WorkflowNodeType.Workflow;
+          } else if (!fromPort) {
+            return register.type === WorkflowNodeType.DataSlot || register.type === WorkflowNodeType.Workflow;
           }
         })
         .filter((register) => register.meta.nodePanelVisible !== false)
