@@ -28,7 +28,7 @@ interface FormHeaderProps {
 
 export function FormHeader({ primaryColor, children }: FormHeaderProps = {}) {
 
-  const { node, expanded, toggleExpand, readonly } = useNodeRenderContext();
+  const { form,node, expanded, toggleExpand, readonly } = useNodeRenderContext();
   const [titleEdit, updateTitleEdit] = useState<boolean>(false);
   const ctx = useClientContext();
   const { setNodeId } = useContext(SidebarContext);
@@ -50,6 +50,9 @@ export function FormHeader({ primaryColor, children }: FormHeaderProps = {}) {
     <Header primaryColor={primaryColor}>
       {getIcon(node)}
       <TitleInput readonly={readonly} updateTitleEdit={updateTitleEdit} titleEdit={titleEdit} />
+      <div>
+        {node.id}--{form?.getValueIn('serverId')}
+      </div>
       {node.renderData.expandable && !isSidebar && (
         <Button
           type="primary"

@@ -8,13 +8,13 @@ export const initialData: FlowDocumentJSON =
         "type": "data-slot",
         "meta": {
           "position": {
-            "x": -1084,
-            "y": -885
+            "x": -1198.286277523775,
+            "y": -1284.1875667842014
           }
         },
         "data": {
           "title": "单质单胞初始结构",
-          "serverId": "120",
+          "serverId": "9",
           "rawData": {
             "id": "d8613d7c-b789-48b0-8e4a-cf8b7aac127f",
             "name": "vasp_relax",
@@ -250,7 +250,7 @@ export const initialData: FlowDocumentJSON =
               ]
             }
           },
-          "outputRadio": "POTCAR"
+          "outputRadio": "POSCAR"
         }
       },
       {
@@ -258,8 +258,8 @@ export const initialData: FlowDocumentJSON =
         "type": "workflow",
         "meta": {
           "position": {
-            "x": -634,
-            "y": -886
+            "x": -1198.286277523775,
+            "y": -1123.2525254923937
           }
         },
         "data": {
@@ -301,52 +301,40 @@ export const initialData: FlowDocumentJSON =
               }
             }
           },
-          "serverId": "118",
+          "serverId": "1",
           "inputsValues": {
             "POSCAR": {
               "type": "ref",
               "content": [
-                "data-slot_fn_wb",
+                "data-slot_0",
                 "POSCAR"
-              ],
-              "extra": {
-                "index": 0
-              }
+              ]
             },
             "KPOINTS": {
               "type": "ref",
               "content": [
-                "data-slot_fn_wb",
+                "data-slot_0",
                 "KPOINTS"
-              ],
-              "extra": {
-                "index": 1
-              }
+              ]
             },
             "INCAR": {
               "type": "ref",
               "content": [
-                "data-slot_fn_wb",
+                "data-slot_0",
                 "INCAR"
-              ],
-              "extra": {
-                "index": 2
-              }
+              ]
             },
             "POTCAR": {
               "type": "ref",
               "content": [
-                "data-slot_fn_wb",
+                "data-slot_0",
                 "POTCAR"
-              ],
-              "extra": {
-                "index": 3
-              }
+              ]
             }
           },
           "outputsValues": {},
           "rawData": {
-            "id": "4d81497c-7dcb-4e47-a662-4cf974231eba",
+            "id": "9700e802-2f63-4ec6-a11d-14c0dc39567e",
             "name": "vasp_relax_mock",
             "description": "使用VASP进行结构弛豫，演示用",
             "tags": [
@@ -370,8 +358,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "POSCAR格式的结构文件"
                   }
                 ],
-                "required": true,
-                "id": "139"
+                "required": true
               },
               {
                 "name": "KPOINTS",
@@ -387,8 +374,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "KPOINTS格式的结构文件"
                   }
                 ],
-                "required": true,
-                "id": "140"
+                "required": true
               },
               {
                 "name": "INCAR",
@@ -404,8 +390,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "INCAR格式的结构文件"
                   }
                 ],
-                "required": true,
-                "id": "141"
+                "required": true
               },
               {
                 "name": "POTCAR",
@@ -421,8 +406,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "POTCAR格式的结构文件"
                   }
                 ],
-                "required": true,
-                "id": "142"
+                "required": true
               }
             ],
             "outputs": [
@@ -440,8 +424,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "POSCAR格式的结构文件"
                   }
                 ],
-                "required": false,
-                "id": "123"
+                "required": false
               }
             ]
           }
@@ -452,13 +435,13 @@ export const initialData: FlowDocumentJSON =
         "type": "data-slot",
         "meta": {
           "position": {
-            "x": -192,
-            "y": -885.5
+            "x": -1198.286277523775,
+            "y": -956.3864252995567
           }
         },
         "data": {
           "title": "单质单胞弛豫后结构",
-          "serverId": "122",
+          "serverId": "10",
           "rawData": {
             "id": "4d81497c-7dcb-4e47-a662-4cf974231eba",
             "name": "vasp_relax_mock",
@@ -555,7 +538,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "123"
+                "id": "14"
               }
             ]
           },
@@ -630,69 +613,37 @@ export const initialData: FlowDocumentJSON =
         "type": "workflow",
         "meta": {
           "position": {
-            "x": 235,
-            "y": -886
+            "x": -1198.286277523775,
+            "y": -770.0737143377155
           }
         },
         "data": {
-          "title": "单质单胞自洽",
+          "title": "Workflow",
           "inputs": {
             "type": "object",
             "properties": {
               "POSCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 0
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 0
                 }
               },
               "KPOINTS": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 1
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 1
                 }
               },
               "INCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 2
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 2
                 }
               },
               "POTCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 3
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 3
                 }
               }
             }
@@ -714,12 +665,15 @@ export const initialData: FlowDocumentJSON =
               }
             }
           },
-          "serverId": "124",
-          "preDataSlotId": "123",
+          "serverId": "2",
+          "preDataSlotId": "14",
           "inputsValues": {
             "POSCAR": {
-              "type": "constant",
-              "content": ""
+              "type": "ref",
+              "content": [
+                "data-slot_6pkpt",
+                "CONTCAR"
+              ]
             },
             "KPOINTS": {
               "type": "constant",
@@ -826,8 +780,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "POSCAR格式的结构文件"
                   }
                 ],
-                "required": false,
-                "id": "165"
+                "required": false
               },
               {
                 "name": "OUTCAR",
@@ -839,8 +792,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "有效的文件路径"
                   }
                 ],
-                "required": false,
-                "id": "166"
+                "required": false
               },
               {
                 "name": "CHGCAR",
@@ -852,8 +804,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "有效的文件路径"
                   }
                 ],
-                "required": false,
-                "id": "167"
+                "required": false
               },
               {
                 "name": "WAVECAR",
@@ -865,8 +816,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "有效的文件路径"
                   }
                 ],
-                "required": false,
-                "id": "168"
+                "required": false
               }
             ]
           }
@@ -877,13 +827,13 @@ export const initialData: FlowDocumentJSON =
         "type": "data-slot",
         "meta": {
           "position": {
-            "x": -1084,
-            "y": -733
+            "x": -785.8784121956513,
+            "y": -1284.1875667842014
           }
         },
         "data": {
           "title": "单胞初始结构",
-          "serverId": "138",
+          "serverId": "11",
           "rawData": {
             "id": "4d81497c-7dcb-4e47-a662-4cf974231eba",
             "name": "vasp_relax_mock",
@@ -1021,8 +971,8 @@ export const initialData: FlowDocumentJSON =
         "type": "workflow",
         "meta": {
           "position": {
-            "x": -634,
-            "y": -733
+            "x": -785.8784121956513,
+            "y": -1123.2525254923937
           }
         },
         "data": {
@@ -1096,7 +1046,7 @@ export const initialData: FlowDocumentJSON =
               }
             }
           },
-          "serverId": "143",
+          "serverId": "3",
           "inputsValues": {
             "POSCAR": {
               "type": "constant",
@@ -1208,7 +1158,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "149"
+                "id": "19"
               }
             ]
           }
@@ -1219,13 +1169,13 @@ export const initialData: FlowDocumentJSON =
         "type": "data-slot",
         "meta": {
           "position": {
-            "x": -192,
-            "y": -732.5
+            "x": -785.8784121956513,
+            "y": -956.3864252995567
           }
         },
         "data": {
           "title": "单胞弛豫后结构",
-          "serverId": "148",
+          "serverId": "12",
           "rawData": {
             "id": "9700e802-2f63-4ec6-a11d-14c0dc39567e",
             "name": "vasp_relax_mock",
@@ -1318,7 +1268,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "149"
+                "id": "19"
               }
             ]
           },
@@ -1358,69 +1308,37 @@ export const initialData: FlowDocumentJSON =
         "type": "workflow",
         "meta": {
           "position": {
-            "x": 235,
-            "y": -732
+            "x": -785.8784121956513,
+            "y": -770.0737143377155
           }
         },
         "data": {
-          "title": "单胞自洽",
+          "title": "Workflow",
           "inputs": {
             "type": "object",
             "properties": {
               "POSCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 0
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 0
                 }
               },
               "KPOINTS": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 1
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 1
                 }
               },
               "INCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 2
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 2
                 }
               },
               "POTCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 3
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 3
                 }
               }
             }
@@ -1442,12 +1360,15 @@ export const initialData: FlowDocumentJSON =
               }
             }
           },
-          "serverId": "150",
-          "preDataSlotId": "149",
+          "serverId": "4",
+          "preDataSlotId": "19",
           "inputsValues": {
             "POSCAR": {
-              "type": "constant",
-              "content": ""
+              "type": "ref",
+              "content": [
+                "data-slot_ch8Bu",
+                "CONTCAR"
+              ]
             },
             "KPOINTS": {
               "type": "constant",
@@ -1554,8 +1475,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "POSCAR格式的结构文件"
                   }
                 ],
-                "required": false,
-                "id": "157"
+                "required": false
               },
               {
                 "name": "OUTCAR",
@@ -1567,8 +1487,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "有效的文件路径"
                   }
                 ],
-                "required": false,
-                "id": "158"
+                "required": false
               },
               {
                 "name": "CHGCAR",
@@ -1580,8 +1499,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "有效的文件路径"
                   }
                 ],
-                "required": false,
-                "id": "159"
+                "required": false
               },
               {
                 "name": "WAVECAR",
@@ -1593,8 +1511,7 @@ export const initialData: FlowDocumentJSON =
                     "description": "有效的文件路径"
                   }
                 ],
-                "required": false,
-                "id": "160"
+                "required": false
               }
             ]
           }
@@ -1605,13 +1522,13 @@ export const initialData: FlowDocumentJSON =
         "type": "data-slot",
         "meta": {
           "position": {
-            "x": 742.1752661840505,
-            "y": -731.5
+            "x": -785.8784121956513,
+            "y": -612.5863376438542
           }
         },
         "data": {
           "title": "单胞自洽后输出与结构",
-          "serverId": "151",
+          "serverId": "13",
           "rawData": {
             "id": "36d8b1cc-0888-49a9-bbdb-3958e30b3b1d",
             "name": "vasp_mock_scf",
@@ -1704,7 +1621,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "157"
+                "id": "20"
               },
               {
                 "name": "OUTCAR",
@@ -1717,7 +1634,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "158"
+                "id": "21"
               },
               {
                 "name": "CHGCAR",
@@ -1730,7 +1647,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "159"
+                "id": "22"
               },
               {
                 "name": "WAVECAR",
@@ -1743,7 +1660,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "160"
+                "id": "23"
               }
             ]
           },
@@ -1831,97 +1748,49 @@ export const initialData: FlowDocumentJSON =
         "type": "workflow",
         "meta": {
           "position": {
-            "x": 1273.5905423499757,
-            "y": -886
+            "x": -1012.8787409895201,
+            "y": -383.0498093711416
           }
         },
         "data": {
-          "title": "化学势计算",
+          "title": "Workflow",
           "inputs": {
             "type": "object",
             "properties": {
               "POSCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 0
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 0
                 }
               },
               "KPOINTS": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 1
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 1
                 }
               },
               "INCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 2
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 2
                 }
               },
               "POTCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 3
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 3
                 }
               },
               "WAVECAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 4
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 4
                 }
               },
               "CHGCAR": {
-                "type": "object",
-                "properties": {
-                  "POSCAR": {
-                    "type": "array",
-                    "extra": {
-                      "index": 5
-                    },
-                    "items": {
-                      "type": "file"
-                    }
-                  }
+                "type": "file",
+                "extra": {
+                  "index": 5
                 }
               }
             }
@@ -1940,8 +1809,8 @@ export const initialData: FlowDocumentJSON =
               }
             }
           },
-          "serverId": "161",
-          "preDataSlotId": "158",
+          "serverId": "5",
+          "preDataSlotId": "20",
           "inputsValues": {
             "POSCAR": {
               "type": "constant",
@@ -2119,40 +1988,17 @@ export const initialData: FlowDocumentJSON =
         }
       },
       {
-        "id": "workflow-D07Gl",
-        "type": "workflow",
-        "meta": {
-          "position": {
-            "x": 1273.5905423499757,
-            "y": -577.3613581171309
-          }
-        },
-        "data": {
-          "title": "能带计算",
-          "inputs": {
-            "type": "object",
-            "properties": {}
-          },
-          "outputs": {
-            "type": "object",
-            "properties": {}
-          },
-          "serverId": "162",
-          "preDataSlotId": "157"
-        }
-      },
-      {
         "id": "data-slot_RAJzw",
         "type": "data-slot",
         "meta": {
           "position": {
-            "x": 732.1364514477846,
-            "y": -885.5
+            "x": -1198.286277523775,
+            "y": -612.5863376438542
           }
         },
         "data": {
           "title": "单质单胞自治后输出",
-          "serverId": "164",
+          "serverId": "14",
           "rawData": {
             "id": "36d8b1cc-0888-49a9-bbdb-3958e30b3b1d",
             "name": "vasp_mock_scf",
@@ -2245,7 +2091,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "165"
+                "id": "29"
               },
               {
                 "name": "OUTCAR",
@@ -2258,7 +2104,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "166"
+                "id": "30"
               },
               {
                 "name": "CHGCAR",
@@ -2271,7 +2117,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "167"
+                "id": "31"
               },
               {
                 "name": "WAVECAR",
@@ -2284,7 +2130,7 @@ export const initialData: FlowDocumentJSON =
                   }
                 ],
                 "required": false,
-                "id": "168"
+                "id": "32"
               }
             ]
           },
@@ -2366,52 +2212,817 @@ export const initialData: FlowDocumentJSON =
             }
           }
         }
+      },
+      {
+        "id": "workflow-uxniY",
+        "type": "workflow",
+        "meta": {
+          "position": {
+            "x": -585.6038216310519,
+            "y": -383.0498093711416
+          }
+        },
+        "data": {
+          "title": "能带计算",
+          "inputs": {
+            "type": "object",
+            "properties": {
+              "POSCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 0
+                }
+              },
+              "KPOINTS": {
+                "type": "file",
+                "extra": {
+                  "index": 1
+                }
+              },
+              "INCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 2
+                }
+              },
+              "POTCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 3
+                }
+              },
+              "WAVECAR": {
+                "type": "file",
+                "extra": {
+                  "index": 4
+                }
+              },
+              "CHGCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 5
+                }
+              }
+            }
+          },
+          "outputs": {
+            "type": "object",
+            "properties": {
+              "OUTCAR": {
+                "type": "file"
+              },
+              "PROCAR": {
+                "type": "file"
+              },
+              "EIGENVAL": {
+                "type": "file"
+              }
+            }
+          },
+          "serverId": "6",
+          "inputsValues": {
+            "POSCAR": {
+              "type": "ref",
+              "content": [
+                "data-slot_LjRfT",
+                "CONTCAR"
+              ]
+            },
+            "KPOINTS": {
+              "type": "constant",
+              "content": ""
+            },
+            "INCAR": {
+              "type": "constant",
+              "content": ""
+            },
+            "POTCAR": {
+              "type": "constant",
+              "content": ""
+            },
+            "WAVECAR": {
+              "type": "constant",
+              "content": ""
+            },
+            "CHGCAR": {
+              "type": "constant",
+              "content": ""
+            }
+          },
+          "outputsValues": {},
+          "rawData": {
+            "id": "a88c22ee-ceab-4424-ada3-cf314edf5bc4",
+            "name": "vasp_mock_band",
+            "description": "使用VASP进行能带计算，演示用",
+            "tags": [
+              "演示",
+              "vasp",
+              "能带计算"
+            ],
+            "version": "1.0.0",
+            "inputs": [
+              {
+                "name": "POSCAR",
+                "type": "string",
+                "description": "POSCAR文件的MinIO URL (e.g., 'bucket-name/path/to/POSCAR')",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POSCAR_FILE",
+                    "description": "POSCAR格式的结构文件"
+                  }
+                ],
+                "required": true
+              },
+              {
+                "name": "KPOINTS",
+                "type": "string",
+                "description": "KPOINTS文件的MinIO URL，定义能带路径的高对称k点（如Γ-X-M-Γ），通常比自洽计算的k点更密集。",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "KPOINTS_FILE",
+                    "description": "KPOINTS格式的结构文件"
+                  }
+                ],
+                "required": true
+              },
+              {
+                "name": "INCAR",
+                "type": "string",
+                "description": "INCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "INCAR_FILE",
+                    "description": "INCAR格式的结构文件"
+                  }
+                ],
+                "required": true
+              },
+              {
+                "name": "POTCAR",
+                "type": "string",
+                "description": "POTCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POTCAR_FILE",
+                    "description": "POTCAR格式的结构文件"
+                  }
+                ],
+                "required": true
+              },
+              {
+                "name": "WAVECAR",
+                "type": "string",
+                "description": "WAVECAR文件",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "WAVECAR_FILE",
+                    "description": "WAVECAR文件"
+                  }
+                ],
+                "required": false
+              },
+              {
+                "name": "CHGCAR",
+                "type": "string",
+                "description": "CHGCAR文件",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "CHGCAR_FILE",
+                    "description": "CHGCAR文件"
+                  }
+                ],
+                "required": false
+              }
+            ],
+            "outputs": [
+              {
+                "name": "OUTCAR",
+                "type": "file",
+                "description": "OUTCAR文件",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  }
+                ],
+                "required": false
+              },
+              {
+                "name": "PROCAR",
+                "type": "file",
+                "description": "轨道投影信息（用于Fat Bands分析）",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  }
+                ],
+                "required": false
+              },
+              {
+                "name": "EIGENVAL",
+                "type": "file",
+                "description": "用于提取能带数据",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  }
+                ],
+                "required": false
+              }
+            ]
+          },
+          "preDataSlotId": "20"
+        }
+      },
+      {
+        "id": "workflow-Cwc3-",
+        "type": "workflow",
+        "meta": {
+          "position": {
+            "x": -324.2842313197759,
+            "y": -1123.2525254923937
+          }
+        },
+        "data": {
+          "title": "超胞弛豫",
+          "inputs": {
+            "type": "object",
+            "properties": {
+              "POSCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 0
+                }
+              },
+              "KPOINTS": {
+                "type": "file",
+                "extra": {
+                  "index": 1
+                }
+              },
+              "INCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 2
+                }
+              },
+              "POTCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 3
+                }
+              }
+            }
+          },
+          "outputs": {
+            "type": "object",
+            "properties": {
+              "CONTCAR": {
+                "type": "file"
+              }
+            }
+          },
+          "serverId": "7",
+          "inputsValues": {
+            "POSCAR": {
+              "type": "ref",
+              "content": [
+                "data-slot_Nl4U9",
+                "POSCAR"
+              ],
+              "extra": {
+                "index": 0
+              }
+            },
+            "KPOINTS": {
+              "type": "ref",
+              "content": [
+                "data-slot_Nl4U9",
+                "KPOINTS"
+              ],
+              "extra": {
+                "index": 1
+              }
+            },
+            "INCAR": {
+              "type": "ref",
+              "content": [
+                "data-slot_Nl4U9",
+                "INCAR"
+              ],
+              "extra": {
+                "index": 2
+              }
+            },
+            "POTCAR": {
+              "type": "ref",
+              "content": [
+                "data-slot_Nl4U9",
+                "POTCAR"
+              ],
+              "extra": {
+                "index": 3
+              }
+            }
+          },
+          "outputsValues": {},
+          "rawData": {
+            "id": "9700e802-2f63-4ec6-a11d-14c0dc39567e",
+            "name": "vasp_relax_mock",
+            "description": "使用VASP进行结构弛豫，演示用",
+            "tags": [
+              "演示",
+              "vasp",
+              "弛豫"
+            ],
+            "version": "1.0.0",
+            "inputs": [
+              {
+                "name": "POSCAR",
+                "type": "string",
+                "description": "POSCAR文件的MinIO URL (e.g., 'bucket-name/path/to/POSCAR')",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POSCAR_FILE",
+                    "description": "POSCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "185"
+              },
+              {
+                "name": "KPOINTS",
+                "type": "string",
+                "description": "KPOINTS文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "KPOINTS_FILE",
+                    "description": "KPOINTS格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "186"
+              },
+              {
+                "name": "INCAR",
+                "type": "string",
+                "description": "INCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "INCAR_FILE",
+                    "description": "INCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "187"
+              },
+              {
+                "name": "POTCAR",
+                "type": "string",
+                "description": "POTCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POTCAR_FILE",
+                    "description": "POTCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "188"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONTCAR",
+                "type": "file",
+                "description": "CONTCAR文件",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POSCAR_FILE",
+                    "description": "POSCAR格式的结构文件"
+                  }
+                ],
+                "required": false,
+                "id": "27"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "data-slot_Nl4U9",
+        "type": "data-slot",
+        "meta": {
+          "position": {
+            "x": -324.2842313197759,
+            "y": -1284.1875667842014
+          }
+        },
+        "data": {
+          "title": "扩胞并产生完美初始结构",
+          "serverId": "15",
+          "rawData": {
+            "id": "9700e802-2f63-4ec6-a11d-14c0dc39567e",
+            "name": "vasp_relax_mock",
+            "description": "使用VASP进行结构弛豫，演示用",
+            "tags": [
+              "演示",
+              "vasp",
+              "弛豫"
+            ],
+            "version": "1.0.0",
+            "inputs": [
+              {
+                "name": "POSCAR",
+                "type": "string",
+                "description": "POSCAR文件的MinIO URL (e.g., 'bucket-name/path/to/POSCAR')",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POSCAR_FILE",
+                    "description": "POSCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "185"
+              },
+              {
+                "name": "KPOINTS",
+                "type": "string",
+                "description": "KPOINTS文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "KPOINTS_FILE",
+                    "description": "KPOINTS格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "186"
+              },
+              {
+                "name": "INCAR",
+                "type": "string",
+                "description": "INCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "INCAR_FILE",
+                    "description": "INCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "187"
+              },
+              {
+                "name": "POTCAR",
+                "type": "string",
+                "description": "POTCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POTCAR_FILE",
+                    "description": "POTCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "188"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONTCAR",
+                "type": "file",
+                "description": "CONTCAR文件",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POSCAR_FILE",
+                    "description": "POSCAR格式的结构文件"
+                  }
+                ],
+                "required": false
+              }
+            ]
+          },
+          "from": "inputs",
+          "outputs": {
+            "type": "object",
+            "properties": {
+              "POSCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 0
+                }
+              },
+              "KPOINTS": {
+                "type": "file",
+                "extra": {
+                  "index": 1
+                }
+              },
+              "INCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 2
+                }
+              },
+              "POTCAR": {
+                "type": "file",
+                "extra": {
+                  "index": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "data-slot_UmRgf",
+        "type": "data-slot",
+        "meta": {
+          "position": {
+            "x": -324.2842313197759,
+            "y": -956.3864252995567
+          }
+        },
+        "data": {
+          "title": "data-slot",
+          "rawData": {
+            "id": "9700e802-2f63-4ec6-a11d-14c0dc39567e",
+            "name": "vasp_relax_mock",
+            "description": "使用VASP进行结构弛豫，演示用",
+            "tags": [
+              "演示",
+              "vasp",
+              "弛豫"
+            ],
+            "version": "1.0.0",
+            "inputs": [
+              {
+                "name": "POSCAR",
+                "type": "string",
+                "description": "POSCAR文件的MinIO URL (e.g., 'bucket-name/path/to/POSCAR')",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POSCAR_FILE",
+                    "description": "POSCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "185"
+              },
+              {
+                "name": "KPOINTS",
+                "type": "string",
+                "description": "KPOINTS文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "KPOINTS_FILE",
+                    "description": "KPOINTS格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "186"
+              },
+              {
+                "name": "INCAR",
+                "type": "string",
+                "description": "INCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "INCAR_FILE",
+                    "description": "INCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "187"
+              },
+              {
+                "name": "POTCAR",
+                "type": "string",
+                "description": "POTCAR文件的MinIO URL",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POTCAR_FILE",
+                    "description": "POTCAR格式的结构文件"
+                  }
+                ],
+                "required": true,
+                "id": "188"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONTCAR",
+                "type": "file",
+                "description": "CONTCAR文件",
+                "validation": [
+                  {
+                    "rule": "FILE_URL",
+                    "description": "有效的文件路径"
+                  },
+                  {
+                    "rule": "POSCAR_FILE",
+                    "description": "POSCAR格式的结构文件"
+                  }
+                ],
+                "required": false,
+                "id": "27"
+              }
+            ]
+          },
+          "from": "outputs",
+          "inputs": {
+            "type": "object",
+            "properties": {
+              "CONTCAR": {
+                "type": "file"
+              }
+            }
+          },
+          "outputs": {
+            "type": "object",
+            "properties": {
+              "CONTCAR": {
+                "type": "file"
+              }
+            }
+          },
+          "inputsValues": {
+            "CONTCAR": {
+              "type": "ref",
+              "content": [
+                "workflow-Cwc3-",
+                "CONTCAR"
+              ],
+              "extra": {
+                "index": 0
+              }
+            }
+          },
+          "serverId": "21"
+        }
       }
     ],
     "edges": [
       {
         "sourceNodeID": "data-slot_0",
-        "targetNodeID": "workflow_0"
+        "targetNodeID": "workflow_0",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
       },
       {
         "sourceNodeID": "workflow_0",
-        "targetNodeID": "data-slot_6pkpt"
+        "targetNodeID": "data-slot_6pkpt",
+        "sourcePortID": "workflow-bottom",
+        "targetPortID": "data-slot-top"
       },
       {
         "sourceNodeID": "data-slot_6pkpt",
-        "targetNodeID": "workflow-vFJEc"
+        "targetNodeID": "workflow-vFJEc",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
       },
       {
         "sourceNodeID": "workflow-vFJEc",
-        "targetNodeID": "data-slot_RAJzw"
+        "targetNodeID": "data-slot_RAJzw",
+        "sourcePortID": "workflow-bottom",
+        "targetPortID": "data-slot-top"
       },
       {
         "sourceNodeID": "data-slot_fn_wb",
-        "targetNodeID": "workflow-RuGjD"
+        "targetNodeID": "workflow-RuGjD",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
       },
       {
         "sourceNodeID": "workflow-RuGjD",
-        "targetNodeID": "data-slot_ch8Bu"
+        "targetNodeID": "data-slot_ch8Bu",
+        "sourcePortID": "workflow-bottom",
+        "targetPortID": "data-slot-top"
       },
       {
         "sourceNodeID": "data-slot_ch8Bu",
-        "targetNodeID": "workflow-FZ424"
+        "targetNodeID": "workflow-FZ424",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
+      },
+      {
+        "sourceNodeID": "data-slot_ch8Bu",
+        "targetNodeID": "data-slot_Nl4U9"
       },
       {
         "sourceNodeID": "workflow-FZ424",
-        "targetNodeID": "data-slot_LjRfT"
+        "targetNodeID": "data-slot_LjRfT",
+        "sourcePortID": "workflow-bottom",
+        "targetPortID": "data-slot-top"
       },
       {
         "sourceNodeID": "data-slot_LjRfT",
-        "targetNodeID": "workflow-YozPB"
+        "targetNodeID": "workflow-YozPB",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
       },
       {
         "sourceNodeID": "data-slot_LjRfT",
-        "targetNodeID": "workflow-D07Gl"
+        "targetNodeID": "workflow-uxniY",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
       },
       {
         "sourceNodeID": "data-slot_RAJzw",
-        "targetNodeID": "workflow-YozPB"
+        "targetNodeID": "workflow-YozPB",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
+      },
+      {
+        "sourceNodeID": "data-slot_Nl4U9",
+        "targetNodeID": "workflow-Cwc3-",
+        "sourcePortID": "data-slot-bottom",
+        "targetPortID": "workflow-top"
+      },
+      {
+        "sourceNodeID": "workflow-Cwc3-",
+        "targetNodeID": "data-slot_UmRgf",
+        "sourcePortID": "workflow-bottom",
+        "targetPortID": "data-slot-top"
       }
     ]
   }

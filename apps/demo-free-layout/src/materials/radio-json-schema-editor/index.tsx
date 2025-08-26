@@ -60,7 +60,7 @@ export function RadioJsonSchemaEditor(props: {
       <UIContainer className={props.className}>
         {propertyList.map((_property, index) => (
           <div style={{ display: 'flex', alignItems: 'center' }} key={_property.key}>
-            <Radio value={_property.name} key={`${'radio'}_${_property.key}`}>
+            <Radio mode='advanced' value={_property.name} key={`${'radio'}_${_property.key}`}>
             </Radio>
             <UIProperties key={`ui_${_property.key}`}>
               <PropertyEdit

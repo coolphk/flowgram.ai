@@ -73,6 +73,7 @@ export function useEditorProps(
    */
   const handleNodeDataFlow = (line: WorkflowLineEntity) => {
     // Data slot to workflow connection
+    // console.log('handleNodeDataFlow')
     if (line.from.flowNodeType === WorkflowNodeType.DataSlot &&
       line.to?.flowNodeType === WorkflowNodeType.Workflow) {
       handleDataSlotToWorkflow(line.from, line.to, line);

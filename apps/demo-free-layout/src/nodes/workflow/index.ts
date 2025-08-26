@@ -20,7 +20,20 @@ export const WorkflowNodeRegistry: FlowNodeRegistry = {
   },
   meta: {
     nodePanelVisible: true,
-    defaultPorts: [{type: "input"}, {type: "output"}],
+    defaultPorts: [
+      {type: "input"},
+      {type: "output"},
+      {
+        portID: `workflow-top`,
+        type: 'input',
+        location: 'top'
+      },
+      {
+        portID: `workflow-bottom`,
+        type: 'output',
+        location: 'bottom'
+      }
+    ],
     expandable: true,
     runnable: true,
   },

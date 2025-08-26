@@ -22,6 +22,16 @@ export const DataSlotNodeRegistry: FlowNodeRegistry = {
       {
         type: "output",
       },
+      {
+        portID: `data-slot-top`,
+        type: 'input',
+        location: 'top'
+      },
+      {
+        portID: `data-slot-bottom`,
+        type: 'output',
+        location: 'bottom'
+      }
     ],
     size: {
       width: 360,

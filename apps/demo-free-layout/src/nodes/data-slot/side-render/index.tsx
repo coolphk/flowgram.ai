@@ -34,7 +34,7 @@ export const SidebarRender: React.FC = () => {
   const [selectedInputTools, setSelectedInputTools] = useState<IOTool[]>([]);
   const [selectedOutputTools, setSelectedOutputTools] = useState<IOTool[]>([]);
   const nodeData = data as DataSlotNodeData;
-
+  const nodeFrom = nodeData.from
   const {send} = useRequest(getTools<IOTool[]>, {
     immediate: false
   });
@@ -44,7 +44,7 @@ export const SidebarRender: React.FC = () => {
       return
     }
     const value = outputRadioValue
-    const validation = nodeData?.rawData?.inputs?.find((item: Input) => (item.name === value))?.validation;
+    const validation = nodeData?.rawData?.[nodeFrom!]?.find((item: Input) => (item.name === value))?.validation;
     send(validation!).then((res) => {
       setOutputTools({
         [value]: res,
@@ -53,7 +53,7 @@ export const SidebarRender: React.FC = () => {
     if (form?.getValueIn("outputTools")?.[value]?.tools) {
       setSelectedOutputTools(form?.getValueIn("outputTools")?.[value]?.tools)
     }
-  }, [outputRadioValue, nodeData?.rawData?.inputs])
+  }, [outputRadioValue, nodeData?.rawData?.inputs,nodeData?.rawData?.outputs])
 
   useEffect(() => {
     if (!inputRadioValue) {
@@ -205,7 +205,6 @@ export const SidebarRender: React.FC = () => {
             <div style={{marginBottom: 8, fontWeight: 500}}>{key}</div>
             {renderToolItems(direction === 'inputs' ? 'input' : 'output', key)}
           </div>
-
         );
       }
     );
