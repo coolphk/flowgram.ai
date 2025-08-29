@@ -72,7 +72,7 @@ export const NodeRender: React.FC = () => {
               //   // })
               //
               // }}>
-                <DisplayInputsValues value={value} onTagClick={onTagClick} />
+              <DisplayInputsValues value={value} onTagClick={onTagClick} />
               // </div>
             )}
           </Field>

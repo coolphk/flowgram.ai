@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { alovaInstance } from "./index";
-import { SaveRequest, Validation } from "../typings";
-import { LineageResponse, RunToolRequest } from "../typings/api";
+import {alovaInstance} from "./index";
+import {SaveRequest, Validation} from "../typings";
+import {LineageResponse, RunToolRequest} from "../typings/api";
 
 export const getUniqueId = <T>() => {
   // console.log("getUniqueId")
@@ -29,7 +29,7 @@ export const save = async (content: SaveRequest) => {
   }
 }
 export const getTools = <T>(param: Validation[]) =>
-  alovaInstance.Post<T>("/tool", { Validations: param }, {
+  alovaInstance.Post<T>("/tool", {Validations: param}, {
     cacheFor: 0,
   });
 
@@ -47,6 +47,7 @@ export const getLineage = (asset_id: string, depth: number = -1) => {
     params: {
       asset_id,
       depth
-    }
+    },
+    cacheFor: 0,
   })
 }
