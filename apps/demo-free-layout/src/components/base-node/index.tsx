@@ -12,7 +12,6 @@ import { NodeStatusBar } from "../testrun/node-status-bar";
 import { NodeRenderContext } from "../../context";
 import { ErrorIcon } from "./styles";
 import { NodeWrapper } from "./node-wrapper";
-import { TerminalLog } from "../terminal-log";
 import { LogProvider } from "../../context/log-context";
 
 export const BaseNode = ({ node }: { node: FlowNodeEntity }) => {
@@ -49,7 +48,6 @@ export const BaseNode = ({ node }: { node: FlowNodeEntity }) => {
               {form?.render()}
             </div>
           </NodeWrapper>
-          <TerminalLog />
           <NodeStatusBar />
         </NodeRenderContext.Provider>
       </ConfigProvider>

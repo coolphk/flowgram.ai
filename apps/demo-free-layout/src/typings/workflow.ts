@@ -5,11 +5,11 @@
 import { DataSlot } from "./data-slot";
 
 export enum WorkflowStatus {
-  Pending = 'pending',
-  Running = 'running',
-  Completed = 'completed',
-  Failed = 'failed',
-  Canceled = 'canceled',
+    Pending = 'pending',
+    Running = 'running',
+    Completed = 'completed',
+    Failed = 'failed',
+    Canceled = 'canceled',
 }
 export interface Workflow {
     description: string;

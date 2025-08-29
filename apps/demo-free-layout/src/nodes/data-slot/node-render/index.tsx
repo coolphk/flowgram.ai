@@ -7,16 +7,42 @@ import React, { useCallback } from "react";
 import { DisplayInputsValues, DisplayOutputs, IFlowValue } from "@flowgram.ai/form-materials";
 
 import { FormContent } from "../../../form-components";
-import { Field, getNodeForm, useClientContext, useForm } from "@flowgram.ai/free-layout-editor";
+import { Field, getNodeForm, useClientContext, useForm, useService } from "@flowgram.ai/free-layout-editor";
 import { IODataSlot } from "../../../typings";
 import { getLineage } from "../../../api/common";
 import { Toast } from "@douyinfe/semi-ui";
+import { AnimationBorderService } from "../../../services";
+import { WorkflowStatus } from "../../../typings/workflow";
 // import { Tag } from "@douyinfe/semi-ui";
 
 // console.log('currentNodeForm', currentNodeForm)
 export const NodeRender: React.FC = () => {
   const currentNodeForm = useForm()
   const ctx = useClientContext()
+  const animationService = useService(AnimationBorderService)
+
+  // 辅助方法：判断是否应该为某个状态启动动画
+  const shouldAnimateForStatus = (status: WorkflowStatus): boolean => {
+    return status === WorkflowStatus.Running || status === WorkflowStatus.Pending || status === WorkflowStatus.Completed
+  }
+
+  // 辅助方法：根据工作流状态获取对应的颜色
+  const getColorForStatus = (status: WorkflowStatus): string => {
+    switch (status) {
+      case WorkflowStatus.Pending:
+        return '#FFA500' // 橙色
+      case WorkflowStatus.Running:
+        return '#00BFFF' // 深天蓝
+      case WorkflowStatus.Completed:
+        return '#32CD32' // 酸橙绿
+      case WorkflowStatus.Failed:
+        return '#FF4500' // 橙红色
+      case WorkflowStatus.Canceled:
+        return '#808080' // 灰色
+      default:
+        return '#ff6b35' // 默认颜色
+    }
+  }
   // console.log('currentNodeForm', currentNodeForm)
   const onTagClick = useCallback((event: React.MouseEvent, title: string | JSX.Element | undefined, value: IFlowValue | undefined) => {
     event.stopPropagation()
@@ -28,6 +54,7 @@ export const NodeRender: React.FC = () => {
     }
 
     getLineage(asset_id).then((res) => {
+      // 处理assets的边框效果（原有逻辑完全保持不变）
       res.assets.map((asset) => {
         const targetNode = ctx.document.getNode(asset.nodeId)
         if (targetNode) {
@@ -50,9 +77,36 @@ export const NodeRender: React.FC = () => {
           }
         }
       })
+
+      // 新增：处理tasks的节点动画效果（基于WorkflowStatus）
+      res.tasks.forEach(task => {
+        const targetNode = ctx.document.getNode(task.nodeId)
+        if (targetNode) {
+          const shouldAnimate = shouldAnimateForStatus(task.status)
+          const animationColor = getColorForStatus(task.status)
+
+          if (shouldAnimate) {
+            // 根据task状态启动动画
+            animationService.startAnimation(targetNode.id, {
+              color: animationColor,
+              duration: 1000
+            })
+            // 更新服务中的状态颜色
+            animationService.updateStatusColor(targetNode.id, task.status)
+          } else {
+            // 对于非活跃状态，可以选择停止动画或使用静态颜色
+            // 这里保持动画但使用状态对应的静态颜色
+            animationService.startAnimation(targetNode.id, {
+              color: animationColor,
+              duration: 0 // 静态显示，无动画
+            })
+            animationService.updateStatusColor(targetNode.id, task.status)
+          }
+        }
+      })
     })
 
-  }, [currentNodeForm, ctx])
+  }, [currentNodeForm, ctx, animationService, shouldAnimateForStatus, getColorForStatus])
   return (
     <FormContent>
       {currentNodeForm.getValueIn('from') === 'outputs' &&

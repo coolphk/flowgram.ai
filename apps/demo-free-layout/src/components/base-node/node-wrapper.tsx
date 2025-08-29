@@ -15,6 +15,7 @@ import { useNodeRenderContext, usePortClick } from '../../hooks';
 import { SidebarContext } from '../../context';
 import { scrollToView } from './utils';
 import { NodeWrapperStyle } from './styles';
+import { AnimateBorderWrapper } from '../animate-border-wrapper';
 
 export interface NodeWrapperProps {
   isScrollToView?: boolean;
@@ -74,7 +75,9 @@ export const NodeWrapper: React.FC<NodeWrapperProps> = (props) => {
           outline: form?.state.invalid ? '1px solid red' : 'none',
         }}
       >
-        {children}
+        <AnimateBorderWrapper nodeId={node.id}>
+          {children}
+        </AnimateBorderWrapper>
       </NodeWrapperStyle>
       {portsRender}
     </>

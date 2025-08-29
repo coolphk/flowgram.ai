@@ -6,3 +6,4 @@
 
 export {CustomService} from './custom-service';
 export {WebSocketService} from './web-socket-service';
+export {AnimationBorderService} from './animation-border-service';

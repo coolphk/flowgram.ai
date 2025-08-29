@@ -25,7 +25,7 @@ import { createContainerNodePlugin } from "@flowgram.ai/free-container-plugin";
 import { onDragLineEnd } from "../utils";
 import { FlowDocumentJSON, FlowNodeRegistry, SaveRequest, Workflow } from "../typings";
 import { shortcuts } from "../shortcuts";
-import { CustomService, WebSocketService } from "../services";
+import { CustomService, WebSocketService, AnimationBorderService } from "../services";
 import { WorkflowRuntimeService } from "../plugins/runtime-plugin/runtime-service";
 import {
   createContextMenuPlugin,
@@ -426,6 +426,7 @@ export function useEditorProps(
         console.log('onBind')
         bind(CustomService).toSelf().inSingletonScope();
         bind(WebSocketService).toSelf().inSingletonScope();
+        bind(AnimationBorderService).toSelf().inSingletonScope();
       },
       /**
        * Playground init
