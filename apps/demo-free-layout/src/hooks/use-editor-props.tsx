@@ -141,7 +141,9 @@ export function useEditorProps(
     const toForm = getNodeForm(to); //dataslot
     const fromOutputs = fromForm?.getValueIn("outputs");
     const inputsValues: Record<string, IFlowValue> = {};
-
+    if (toForm?.getValueIn("rawData")) {
+      return
+    }
     // 获取原始数据并设置ID
     const rawData = fromForm?.getValueIn("rawData");
     if (rawData?.outputs) {

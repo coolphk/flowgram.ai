@@ -35,6 +35,8 @@ export const SidebarRender: React.FC = () => {
   const [selectedOutputTools, setSelectedOutputTools] = useState<IOTool[]>([]);
   const nodeData = data as DataSlotNodeData;
   const nodeFrom = nodeData.from
+  const dataSlotOutputTitle = `数据插槽(输出)`
+  const dataSlotInputTitle = `数据插槽(输入)`
   const { send } = useRequest(getTools<IOTool[]>, {
     immediate: false
   });
@@ -249,6 +251,8 @@ export const SidebarRender: React.FC = () => {
                   ...res.data,
                   filename: res.data.name
                 });
+
+
               }
             }}
           >
@@ -297,7 +301,7 @@ export const SidebarRender: React.FC = () => {
                     toolName: item.name,
                     nodeId: node.id,
                     notifyKey,
-                    serverId: data.serverId || 'N/A'
+                    serverId: data.serverId
                   })
                   // if (!notifyMap.has(notifyKey)) {
                   const notifyId = Notification.info({
@@ -339,65 +343,65 @@ export const SidebarRender: React.FC = () => {
           isDev && (
             <>
               {/*<Collapse.Panel header="输入参数" itemKey="1">*/}
-              {/*<Collapse.Panel header="数据插槽" itemKey="1">
-              <FormContent>
-                <Field<
+              <Collapse.Panel header={dataSlotInputTitle} itemKey="1">
+                <FormContent>
+                  <Field<
                     Record<string, IFlowValue | undefined> | undefined
                   > name="inputsValues">
-                  {({field: {value, onChange}}) => {
-                    return (
-                      <RadioInputsValues value={inputsValues}
-                                         inputRadioValue={inputRadioValue}
-                                         onInputRadioChange={handleInputRadioChange}
-                                         onChange={(v) => onChange(v)}/>
-                    );
-                  }}
-                </Field>
-                <div>
-                  <h4 style={{margin: '8px 0'}}>工具</h4>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column' as const,
-                    gap: 8,
-                    maxHeight: 300,
-                    overflowY: 'auto',
-                    padding: '8px 0'
-                  }}>
-                    {inputTools[inputRadioValue]?.map((item) => (
-                      <Checkbox
-                        key={item.id}
-                        value={item}
-                        checked={selectedInputTools.some(tool => tool.id === item.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedInputTools([...selectedInputTools, item]);
-                          } else {
-                            setSelectedInputTools(selectedInputTools.filter((tool) => tool.id !== item.id));
-                          }
-                        }}
-                        style={{
-                          padding: '6px 12px',
-                          borderRadius: 4,
-                          border: '1px solid #eee',
-                          backgroundColor: selectedInputTools.some(tool => tool.id === item.id) ? '#f0f8ff' : 'transparent',
-                          transition: 'all 0.2s ease'
-                        }}
-                      >
-                        <span style={{
-                          fontSize: 14,
-                          color: selectedInputTools.some(tool => tool.id === item.id) ? '#1890ff' : 'inherit'
-                        }}>
-                          {item.name}
-                        </span>
-                      </Checkbox>
-                    ))}
+                    {({ field: { value, onChange } }) => {
+                      return (
+                        <RadioInputsValues value={inputsValues}
+                          inputRadioValue={inputRadioValue}
+                          onInputRadioChange={handleInputRadioChange}
+                          onChange={(v) => onChange(v)} />
+                      );
+                    }}
+                  </Field>
+                  <div>
+                    <h4 style={{ margin: '8px 0' }}>工具</h4>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column' as const,
+                      gap: 8,
+                      maxHeight: 300,
+                      overflowY: 'auto',
+                      padding: '8px 0'
+                    }}>
+                      {inputTools[inputRadioValue]?.map((item) => (
+                        <Checkbox
+                          key={item.id}
+                          value={item}
+                          checked={selectedInputTools.some(tool => tool.id === item.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedInputTools([...selectedInputTools, item]);
+                            } else {
+                              setSelectedInputTools(selectedInputTools.filter((tool) => tool.id !== item.id));
+                            }
+                          }}
+                          style={{
+                            padding: '6px 12px',
+                            borderRadius: 4,
+                            border: '1px solid #eee',
+                            backgroundColor: selectedInputTools.some(tool => tool.id === item.id) ? '#f0f8ff' : 'transparent',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          <span style={{
+                            fontSize: 14,
+                            color: selectedInputTools.some(tool => tool.id === item.id) ? '#1890ff' : 'inherit'
+                          }}>
+                            {item.name}
+                          </span>
+                        </Checkbox>
+                      ))}
+                    </div>
+                    <Button onClick={saveInputTool}>保存</Button>
                   </div>
-                  <Button onClick={saveInputTool}>保存</Button>
-                </div>
-              </FormContent>
-            </Collapse.Panel>*/}
+                </FormContent>
+              </Collapse.Panel>
               {/*<Collapse.Panel header="输出参数" itemKey="2">*/}
-              <Collapse.Panel header="数据插槽" itemKey="2">
+              <Collapse.Panel header={dataSlotOutputTitle} itemKey="2">
                 <FormContent>
                   <Field
                     name="outputs"
@@ -461,17 +465,17 @@ export const SidebarRender: React.FC = () => {
               </Collapse.Panel>
             </>
           )}
-        {/*{
+        {
           isProd && (
             // <Collapse.Panel header="输入参数" itemKey="3">
-            <Collapse.Panel header="数据插槽" itemKey="3">
+            <Collapse.Panel header={dataSlotInputTitle} itemKey="3">
               {renderTools('inputs')}
             </Collapse.Panel>
           )
-        }*/}
+        }
         {
           isProd && (
-            <Collapse.Panel header="数据插槽" itemKey="4">
+            <Collapse.Panel header={dataSlotOutputTitle} itemKey="4">
               {renderTools('outputs')}
             </Collapse.Panel>
           )

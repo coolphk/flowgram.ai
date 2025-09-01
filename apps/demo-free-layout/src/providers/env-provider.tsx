@@ -18,7 +18,7 @@ interface EnvContextType {
   setDtInstanceId: (id: string) => void;
   saveContent: SaveRequest | undefined;
   setSaveContent: (content: SaveRequest) => void;
-  notifyMap:Map<string, any>;
+  notifyMap: Map<string, any>;
 }
 
 const EnvContext = createContext<EnvContextType | undefined>(undefined);
@@ -39,6 +39,7 @@ export const EnvProvider: React.FC<EnvProviderProps> = ({
   const [dtTemplateId, setDtTemplateId] = useState<string>('');
   const [dtInstanceId, setDtInstanceId] = useState<string>('');
   const [saveContent, setSaveContent] = useState<SaveRequest | undefined>();
+  const [notifyMap] = useState<Map<string, any>>(() => new Map()); // 使用useState保持Map的持久性
   const isDev = currentEnv === ENV.DEV;
   const isProd = currentEnv === ENV.PROD;
 
@@ -53,7 +54,7 @@ export const EnvProvider: React.FC<EnvProviderProps> = ({
     setDtInstanceId,
     saveContent,
     setSaveContent,
-    notifyMap: new Map(),
+    notifyMap,
   };
 
   // 保存引用

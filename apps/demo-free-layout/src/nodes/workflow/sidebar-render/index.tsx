@@ -169,6 +169,7 @@ export const SidebarRender: React.FC = () => {
                     style={{ width: "100%", marginBottom: '8px' }}
                     placeholder="请选择数据插槽"
                     value={value} // 绑定 value 到 preDataSlotId 状态
+                    showClear={true}
                     onChange={(value) => {
                       console.log(222, value)
                       // setDataSlotId(value as string);
@@ -189,6 +190,7 @@ export const SidebarRender: React.FC = () => {
               style={{ width: "100%" }}
               placeholder="请选择工作流"
               value={wfId} // 绑定 value 到 wfId 状态
+              showClear
               onChange={(value) => {
                 setWfId(value as string);
               }}

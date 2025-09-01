@@ -1,0 +1,9 @@
+{
+  "action": "regenerate",
+  "scope": "full",
+  "includeCodeAnalysis": true,
+  "includeDependencies": true,
+  "includeComments": true,
+  "forceRefresh": true,
+  "timestamp": "2025-01-01"
+}

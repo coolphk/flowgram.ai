@@ -40,6 +40,9 @@ export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
   const { notifyMap } = useEnv()
   // const nodeData = data as DataSlotNodeData
   useEffect(() => {
+    if (isSidebar) {
+      return
+    }
     let notifyId: null | string = null
     console.log('🟡 [初始化] data-slot WebSocket监听器:', {
       nodeId: node.id,
@@ -48,6 +51,10 @@ export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
     })
     // console.log('data-slot formMeta')
     websocketService.onNodeMessage((message) => {
+
+      if (message.nodeId != node.id) {
+        return
+      }
       console.log(`📬 [收到消息] DataSlot=${node.id} 收到WSMessage:`, {
         messageType: message.type,
         messageNodeId: message.nodeId,
@@ -55,9 +62,6 @@ export const renderForm = ({ form }: FormRenderProps<FlowNodeJSON>) => {
         isForCurrentNode: message.nodeId === node.id,
         payload: message.payload
       })
-      if (message.nodeId != node.id) {
-        return
-      }
       if (message.type === WSMessageType.AssetMessage) {
         // message
         const assetNode = ctx.document.getNode(message.nodeId)
